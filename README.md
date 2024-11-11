@@ -7,3 +7,6 @@ This project deploys an Azure Firewall with customizable rules using Terraform. 
 - **Easily Modifiable Firewall Rules**: Simplified rule management with loops.
 - **Reusable Variables**: Key settings are managed via variables for reusability and modularity.
 - **Remote State Management**: Uses a Key Vault for remote state management with versioning.
+
+
+Note: set subscription id in in features block using export ARM_SUBSCRIPTION_ID=00000000-xxxx-xxxx-xxxx-xxxxxxxxxxxx
