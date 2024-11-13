@@ -9,4 +9,10 @@ This project deploys an Azure Firewall with customizable rules using Terraform. 
 - **Remote State Management**: Uses a Key Vault for remote state management with versioning.
 
 
+
+Fix: 
 Note: set subscription id in in features block using export ARM_SUBSCRIPTION_ID=00000000-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+also, script for creating state container...
+-Kan vara att du med PowerShell skapar en RG + SA + Container. 
+-Ibland måste man skapa många statefiler, skönt med ett script då!
