@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "storage_account" {
-  name                     = "storage_account-${random_string.random_suffix}"
+  name                     = "storage_account-${random_string.random_suffix.result}"
   location            = azurerm_resource_group.rg-project.location
   resource_group_name = azurerm_resource_group.rg-project.name
   account_tier             = "Standard"
@@ -24,4 +24,13 @@ resource "azurerm_storage_container" "state_container" {
   name                  = "tfstate"
   storage_account_id    = azurerm_storage_account.storage_account.id
   container_access_type = "private"
+}
+
+terraform {
+  backend "azurerm" {
+    resource_group_name   = 
+    storage_account_name  = azurerm_storage_account.storage_account.name
+    container_name        = azurerm_storage_container.state_container.name
+    key                   = "terraform.tfstate"
+  }
 }
