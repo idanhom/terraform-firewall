@@ -1,7 +1,7 @@
 resource "azurerm_firewall" "firewall" {
   name                = var.firewall_name
-  location            = azurerm_resource_group.rg-project.location
-  resource_group_name = azurerm_resource_group.rg-project.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   sku_name            = "AZFW_VNet"
   sku_tier            = "Standard"
 
