@@ -7,7 +7,7 @@ resource "azurerm_firewall" "firewall" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = azurerm_subnet.firewall-subnet.id
-    public_ip_address_id = azurerm_public_ip.firewall-ip.id
+    subnet_id            = azurerm_subnet.firewall_subnet.id
+    public_ip_address_id = azurerm_public_ip.firewall_ip.id
   }
 }

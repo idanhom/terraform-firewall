@@ -1,21 +1,21 @@
-resource "azurerm_virtual_network" "my-vnet" {
+resource "azurerm_virtual_network" "my_vnet" {
   name                = var.vnet_name
-  address_space       = ["10.0.0.0/16"]
+  address_space       = var.vnet_prefix
   location            = var.location
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_subnet" "firewall-subnet" {
-  name                 = var.firewall_subnet_name
+resource "azurerm_subnet" "firewall_subnet" {
+  name                 = "AzureFirewallSubnet" //firewall subnet should always have this name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.my-vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  virtual_network_name = azurerm_virtual_network.my_vnet.name
+  address_prefixes     = var.firewall_subnet_prefix
 }
 
-resource "azurerm_public_ip" "firewall-ip" {
+resource "azurerm_public_ip" "firewall_ip" {
   name                = var.firewall_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
-  sku                 = "Standard"
+  sku                 = "Standard" //public ip 
 }
