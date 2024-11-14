@@ -23,11 +23,6 @@ variable "firewall_subnet_prefix" {
   type        = list(string)
 }
 
-variable "firewall_subnet_prefix" {
-  description = "CIDR for the firewall subnet prefix"
-  type        = list(string)
-}
-
 variable "firewall_name" {
   description = "Name of the firewall"
   type        = string
