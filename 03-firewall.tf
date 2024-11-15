@@ -11,3 +11,5 @@ resource "azurerm_firewall" "firewall" {
     public_ip_address_id = azurerm_public_ip.firewall_ip.id
   }
 }
+
+
