@@ -33,6 +33,8 @@ module "networking" {
     vnet_prefix = var.vnet_prefix
     resource_group_name = var.resource_group_name
     location = var.location
+    subnet_address_prefix = var.subnet_address_prefix
+    subnet_name = var.subnet_name
     firewall_subnet_prefix = var.firewall_subnet_prefix
 }
 

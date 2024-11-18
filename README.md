@@ -60,3 +60,9 @@ https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/
 ------
 
 när vi är helt nöjd med koden, använda github actions.
+
+
+---
+
+"Modules should be opinionated and designed to do one thing well. If a module's function or purpose is hard to explain, the module is probably too complex. When initially scoping your module, aim for small and simple to start." - https://developer.hashicorp.com/terraform/tutorials/modules/pattern-module-creation#scope-the-requirements-into-appropriate-modules
+

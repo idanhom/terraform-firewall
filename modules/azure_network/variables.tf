@@ -18,6 +18,17 @@ variable "vnet_prefix" {
   type        = list(string)
 }
 
+variable "subnet_name" {
+  description = "name of the subnet"
+  type = string
+}
+
+variable "subnet_address_prefix" {
+  description = "CIDR block for subnet"
+  type = string
+  
+}
+
 variable "firewall_subnet_prefix" {
   description = "CIDR for the firewall subnet prefix"
   type        = list(string)

@@ -5,3 +5,4 @@ firewall_name          = "firewall"
 location               = "North Europe"
 vnet_prefix            = ["10.0.0.0/16"]
 firewall_subnet_prefix = ["10.0.1.0/24"]
+subnet_name = ["subnet1"]
