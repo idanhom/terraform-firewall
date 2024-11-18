@@ -28,13 +28,13 @@ resource "azurerm_resource_group" "rg_project" {
 }
 
 module "networking" {
-    source = "./modules/azure_network"
-    vnet_name = var.vnet_name
-    vnet_prefix = var.vnet_prefix
-    resource_group_name = var.resource_group_name
-    location = var.location
-    subnet_address_prefix = var.subnet_address_prefix
-    subnet_name = var.subnet_name
-    firewall_subnet_prefix = var.firewall_subnet_prefix
+  source                 = "./modules/azure_network"
+  vnet_name              = var.vnet_name
+  vnet_prefix            = var.vnet_prefix
+  resource_group_name    = var.resource_group_name
+  location               = var.location
+  subnet_address_prefix  = var.subnet_address_prefix
+  subnet_name            = var.subnet_name
+  firewall_subnet_prefix = var.firewall_subnet_prefix
 }
 
