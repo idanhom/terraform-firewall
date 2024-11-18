@@ -25,8 +25,7 @@ variable "subnet_name" {
 
 variable "subnet_address_prefix" {
   description = "CIDR block for subnet"
-  type = string
-  
+  type = list(string)
 }
 
 variable "firewall_subnet_prefix" {

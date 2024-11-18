@@ -6,4 +6,4 @@ location               = "North Europe"
 vnet_prefix            = ["10.0.0.0/16"]
 firewall_subnet_prefix = ["10.0.3.0/24"]
 subnet_name            = ["subnet1"]
-subnet_address_prefix  = ["10.0.1.0/24"]
+subnet_address_prefix  = ["10.0.1.0/24", "10.0.1.0/24"]
