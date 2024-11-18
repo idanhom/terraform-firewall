@@ -17,3 +17,8 @@ variable "firewall_name" {
   description = "Name of the firewall"
   type        = string
 }
+
+variable "firewall_subnet_id" {
+  description = "The ID of the firewall subnet"
+  type        = string
+}
