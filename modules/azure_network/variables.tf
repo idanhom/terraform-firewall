@@ -48,3 +48,9 @@ variable "firewall_ip_name" {
   description = "name of ip for firewall"
   type        = string
 }
+
+
+# variable "nsg_rule_name" {
+#   description = "name for nsg rule"
+#   type = string
+# }
