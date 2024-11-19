@@ -41,6 +41,11 @@ module "networking" {
 
   firewall_subnet_name   = var.firewall_subnet_name
   firewall_subnet_prefix = var.firewall_subnet_prefix
+
+  firewall_name = var.firewall_name
+  firewall_ip_name = var.firewall_ip_name
+
+
 }
 
 

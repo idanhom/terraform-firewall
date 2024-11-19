@@ -37,3 +37,13 @@ variable "firewall_subnet_name" {
   description = "name of firewall subnet (do not change)"
   type        = string
 }
+
+variable "firewall_name" {
+  description = "name of firewall"
+  type = string 
+}
+
+variable "firewall_ip_name" {
+  description = "name of ip for firewall"
+  type = string
+}
