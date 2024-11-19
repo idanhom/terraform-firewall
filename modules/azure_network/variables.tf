@@ -21,7 +21,7 @@ variable "vnet_prefix" {
 
 variable "subnet_name" {
   description = "name of the subnet"
-  type        = string
+  type        = list(string)
 }
 
 variable "subnet_address_prefix" {
