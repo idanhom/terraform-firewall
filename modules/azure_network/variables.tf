@@ -41,10 +41,10 @@ variable "firewall_subnet_name" {
 
 variable "firewall_name" {
   description = "name of firewall"
-  type = string 
+  type        = string
 }
 
 variable "firewall_ip_name" {
   description = "name of ip for firewall"
-  type = string
+  type        = string
 }

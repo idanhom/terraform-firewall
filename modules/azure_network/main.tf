@@ -6,11 +6,13 @@ resource "azurerm_virtual_network" "my_vnet" {
 }
 
 resource "azurerm_subnet" "my_subnet" {
+  for_each = toset(var.subnet_name)
+
   resource_group_name = var.resource_group_name
 
-  name                 = var.subnet_name
+  name                 = each.value
   virtual_network_name = var.vnet_name
-  address_prefixes     = var.subnet_address_prefix
+  address_prefixes     = [zipmap(var.subnet_name, var.subnet_address_prefix)[each.value]]
 }
 
 resource "azurerm_subnet" "firewall_subnet" {

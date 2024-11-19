@@ -4,8 +4,8 @@ output "vnet_id" {
 }
 
 output "subnet_id" {
-  description = "id of subnets"
-  value       = azurerm_subnet.my_subnet[*].id
+  description = "map of subnet names to their id"
+  value       = { for name, subnet in azurerm_subnet.my_subnet : name => subnet.id } //learn this better
 }
 
 output "firewall_subnet_id" {
