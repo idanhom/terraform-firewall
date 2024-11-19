@@ -5,6 +5,27 @@ resource "azurerm_virtual_network" "my_vnet" {
   address_space       = var.vnet_prefix
 }
 
+//azurerm_network_security_group...
+//https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group
+resource "azurerm_network_security_group" "example" {
+  name                = "acceptanceTestSecurityGroup1"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  security_rule {
+    name                       = "test123"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+
 resource "azurerm_subnet" "my_subnet" {
   for_each = toset(var.subnet_name)
 
@@ -17,8 +38,7 @@ resource "azurerm_subnet" "my_subnet" {
   depends_on = [ azurerm_virtual_network.my_vnet ]
 }
 
-
-
+//resource "azurerm_subnet_network_security_group_association"...
 
 resource "azurerm_subnet" "firewall_subnet" {
   name                 = var.firewall_subnet_name //firewall subnet should always have the name "AzureFirewallSubnet"
@@ -29,8 +49,6 @@ resource "azurerm_subnet" "firewall_subnet" {
   depends_on = [ azurerm_virtual_network.my_vnet ]
 }
 
-//more subnet... for_each relevant to vms?
 
-//nsg...
 
 //peering-functionality between vnets?
