@@ -53,12 +53,11 @@ variable "firewall_ip_name" {
 #   type = string
 # }
 
-
 variable "nsg_rules" {
   description = "rules for nsg"
   type = list(object({
     name                       = string
-    priority                   = 100
+    priority                   = number
     direction                  = string
     access                     = string
     protocol                   = string
@@ -68,11 +67,11 @@ variable "nsg_rules" {
     destination_address_prefix = string
   }))
 
-  default = [ {
+  default = [{
 
-  //Standard inbound
+    //Standard inbound
     name                       = "AllowVNetInBound"
-    priority                   = 65000
+    priority                   = 4000
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "*"
@@ -80,83 +79,61 @@ variable "nsg_rules" {
     destination_port_range     = "*"
     source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
-  },
-  {
-    name                       = "AllowAzureLoadBalancerInBound"
-    priority                   = 65001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "AzureLoadBalancer"
-    destination_address_prefix = "AzureLoadBalancer"
-  },
-  {
-    name                       = "DenyAllInbound"
-    priority                   = 65500
-    direction                  = "Inbound"
-    access                     = "Deny"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "Internet"
-  
-  //Standard outbound
-    name                       = "AllowVnetOutBound"
-    priority                   = 65000
-    direction                  = "Outbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "VirtualNetwork"
-    destination_address_prefix = "VirtualNetwork"
-  },
-  {
-    name                       = "AllowAzureLoadBalancerOutBound"
-    priority                   = 65001
-    direction                  = "Outbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "AzureLoadBalancer"
-    destination_address_prefix = "AzureLoadBalancer"
-  },
-  {
-    name                       = "DenyAllOutbound"
-    priority                   = 65500
-    direction                  = "Outbound"
-    access                     = "Deny"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "Internet"
+    },
+    {
+      name                       = "AllowAzureLoadBalancerInBound"
+      priority                   = 4001
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "AzureLoadBalancer"
+      destination_address_prefix = "AzureLoadBalancer"
+    },
+    {
+      name                       = "DenyAllInbound"
+      priority                   = 4095
+      direction                  = "Inbound"
+      access                     = "Deny"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "Internet"
+      destination_address_prefix = "Internet"
 
-
-
-
-  }
-
-
-
-  
-  
-  
-  
-  
-  
-   ]
-  
-
-
-
-
-
-
-
+      //Standard outbound
+      name                       = "AllowVnetOutBound"
+      priority                   = 4000
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "AllowAzureLoadBalancerOutBound"
+      priority                   = 4001
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "AzureLoadBalancer"
+      destination_address_prefix = "AzureLoadBalancer"
+    },
+    {
+      name                       = "DenyAllOutbound"
+      priority                   = 4095
+      direction                  = "Outbound"
+      access                     = "Deny"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "Internet"
+      destination_address_prefix = "Internet"
+    }
+  ]
 }
-   

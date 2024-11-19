@@ -16,21 +16,21 @@ resource "azurerm_network_security_group" "my_nsg" {
     for_each = var.nsg_rules
 
     content {
-      
+      name                       = security_rule.value.name
+      priority                   = security_rule.value.priority
+      direction                  = security_rule.value.direction
+      access                     = security_rule.value.access
+      protocol                   = security_rule.value.protocol
+      source_port_range          = security_rule.value.source_port_range
+      destination_port_range     = security_rule.value.destination_port_range
+      source_address_prefix      = security_rule.value.source_port_range
+      destination_address_prefix = security_rule.value.destination_port_range
+
+
     }
   }
 
-  security_rule {
-    name                       = "test123"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+
 }
 
 resource "azurerm_subnet" "my_subnet" {
@@ -42,7 +42,7 @@ resource "azurerm_subnet" "my_subnet" {
   virtual_network_name = var.vnet_name
   address_prefixes     = [zipmap(var.subnet_name, var.subnet_address_prefix)[each.value]]
 
-  depends_on = [ azurerm_virtual_network.my_vnet ]
+  depends_on = [azurerm_virtual_network.my_vnet]
 }
 
 //resource "azurerm_subnet_network_security_group_association"...
@@ -53,7 +53,7 @@ resource "azurerm_subnet" "firewall_subnet" {
   virtual_network_name = var.vnet_name
   address_prefixes     = var.firewall_subnet_prefix
 
-  depends_on = [ azurerm_virtual_network.my_vnet ]
+  depends_on = [azurerm_virtual_network.my_vnet]
 }
 
 
