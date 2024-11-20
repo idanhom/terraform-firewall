@@ -71,3 +71,9 @@ variable "nsg_rules" {
 
   default = []
 }
+
+
+variable "nic_name" {
+  description = "name of nic"
+  type = list(string)
+}

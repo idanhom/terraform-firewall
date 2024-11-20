@@ -45,10 +45,7 @@ module "networking" {
   firewall_name    = var.firewall_name
   firewall_ip_name = var.firewall_ip_name
 
-
-  //nsg...
-
-
+  //should nsg be specified here? it's already created and associated with subnet...
 }
 
 
