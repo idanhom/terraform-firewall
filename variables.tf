@@ -33,10 +33,11 @@ variable "firewall_subnet_prefix" {
   type        = list(string)
 }
 
-variable "firewall_subnet_name" {
-  description = "name of firewall subnet (do not change)"
-  type        = string
-}
+//commented out because firewall subnet name needs only one naming
+# variable "firewall_subnet_name" {
+#   description = "name of firewall subnet (do not change)"
+#   type        = string
+# }
 
 variable "firewall_name" {
   description = "name of firewall"
