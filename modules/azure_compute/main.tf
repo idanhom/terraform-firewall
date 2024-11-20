@@ -1,5 +1,6 @@
 
-resource "azurerm_network_interface" "my_nic" {
+resource "azurerm_network_interface" "my_nics" {
+  for_each = azurerm_subnet.my_subnet
   name                = var.nic_name
   location            = var.location
   resource_group_name = var.resource_group_name
