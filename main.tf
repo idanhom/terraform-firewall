@@ -39,7 +39,7 @@ module "networking" {
   subnet_name           = var.subnet_name
   subnet_address_prefix = var.subnet_address_prefix
 
-  firewall_subnet_name   = var.firewall_subnet_name
+  //firewall_subnet_name   = var.firewall_subnet_name
   firewall_subnet_prefix = var.firewall_subnet_prefix
 
   firewall_name    = var.firewall_name
