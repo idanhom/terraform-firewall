@@ -11,6 +11,7 @@ resource "azurerm_network_security_group" "my_nsg" {
   name                = "nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
+  depends_on          = [azurerm_virtual_network.my_vnet]
 
   dynamic "security_rule" {
     for_each = var.nsg_rules
@@ -25,12 +26,8 @@ resource "azurerm_network_security_group" "my_nsg" {
       destination_port_range     = security_rule.value.destination_port_range
       source_address_prefix      = security_rule.value.source_port_range
       destination_address_prefix = security_rule.value.destination_port_range
-
-
     }
   }
-
-
 }
 
 resource "azurerm_subnet" "my_subnet" {
@@ -45,7 +42,12 @@ resource "azurerm_subnet" "my_subnet" {
   depends_on = [azurerm_virtual_network.my_vnet]
 }
 
-//resource "azurerm_subnet_network_security_group_association"...
+resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_association" {
+  for_each                  = azurerm_subnet.my_subnet
+
+  subnet_id                 = each.value.id
+  network_security_group_id = azurerm_network_security_group.my_nsg.id
+}
 
 resource "azurerm_subnet" "firewall_subnet" {
   name                 = var.firewall_subnet_name //firewall subnet should always have the name "AzureFirewallSubnet"
