@@ -48,16 +48,7 @@ module "networking" {
   //should nsg be specified here? it's already created and associated with subnet...
 }
 
-module "compute" {
-  source = "./modules/azure_compute"
-  resource_group_name = var.resource_group_name
-  location = var.location
-
-  nic_name = var.nic_name
-}
-
-
-
+//test
 
 
 # module "firewall" {
