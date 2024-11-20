@@ -51,13 +51,6 @@ variable "firewall_ip_name" {
 }
 
 
-# variable "nsg_rule_name" {
-#   description = "name for nsg rule"
-#   type = string
-# }
-
-
-
 //what happens if i remove these? when applied, i get both standard and my rules, which is not what i want.
 variable "nsg_rules" {
   description = "rules for nsg"
