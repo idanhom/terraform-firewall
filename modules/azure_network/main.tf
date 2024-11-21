@@ -31,13 +31,13 @@ resource "azurerm_network_security_group" "my_nsg" {
 }
 
 resource "azurerm_subnet" "my_subnet" {
-  for_each = toset(var.subnet_name)
+  for_each = var.subnets
 
   resource_group_name = var.resource_group_name
 
-  name                 = each.value
+  name                 = each.key
   virtual_network_name = var.vnet_name
-  address_prefixes     = [zipmap(var.subnet_name, var.subnet_address_prefix)[each.value]]
+  address_prefixes     = each.value
 
   depends_on = [azurerm_virtual_network.my_vnet]
 }
