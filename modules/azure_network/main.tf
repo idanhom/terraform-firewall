@@ -43,14 +43,14 @@ resource "azurerm_subnet" "my_subnet" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_association" {
-  for_each                  = azurerm_subnet.my_subnet
+  for_each = azurerm_subnet.my_subnet
 
   subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
-  name                 = "AzureFirewallSubnet" 
+  name                 = "AzureFirewallSubnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.vnet_name
   address_prefixes     = var.firewall_subnet_prefix
