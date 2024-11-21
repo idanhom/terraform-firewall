@@ -2,11 +2,27 @@
 
 This project deploys an Azure Firewall with customizable rules using Terraform. The configuration is designed to be reusable, easily modifiable, and follows best practices in file structure, naming conventions, and state management. 
 
-## Features
 
-- **Easily Modifiable Firewall Rules**: Simplified rule management with loops.
-- **Reusable Variables**: Key settings are managed via variables for reusability and modularity.
-- **Remote State Management**: Has remote state management with versioning.
+
+Todo: 
+
+currently:
+
+    endast ett vnet skapas (som innefattar två subnets)
+        dåligt, eftersom vill ha två vnet med sina respektive subnet i.
+            för att sedan peera, så udr (next hop) för alla vms går till och genom brandväggen. 
+
+
+
+sedan, kolla nedan:            
+    efter löst:
+        deploya nic till respektive vnet och subnet
+            attacha nics till rätt subnät
+        deploya vm's till respektive vnet och subnet.
+
+   efter peering är löst, sätta upp monitoring
+
+
 
 
 
@@ -20,17 +36,9 @@ also, script for creating state container...
 
 
 
-todo
-
-skapa modul för att skapa vm, se till så den fungerar, sedan återanvända modulen. innefatta också NSG, vnet, subnet.
 
 
-
-
-sedan, peera vnet för alla (genom route table) så next hop från alla moduler går till (och genom) brandväggen.
-
-
-route-tablea vnet att gå igenom brandväggen (next-hop för vm är brandväggen)
+sedan, 
 
 
 resource "azurerm_firewall_network_rule_collection" "name" {
