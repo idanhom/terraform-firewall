@@ -74,6 +74,6 @@ variable "nsg_rules" {
 
 
 variable "nic_name" {
-  description = "name of nic"
-  type = list(string)
+  description = "map of subnet names to their IDs"
+  type = map(string)
 }

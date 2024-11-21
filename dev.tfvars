@@ -13,4 +13,7 @@ firewall_name        = "firewall"
 
 firewall_subnet_prefix = ["10.0.3.0/24"]
 
-nic_name = ["nic1", "nic2"]
+nic_name = {
+  subnet1 = "nic1"
+  subnet2 = "nic2"
+}

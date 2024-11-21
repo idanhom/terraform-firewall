@@ -50,7 +50,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_asso
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
-  name                 = "AzureFirewallSubnet" // var.firewall_subnet_name //firewall subnet should always have the name "AzureFirewallSubnet"
+  name                 = "AzureFirewallSubnet" 
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.vnet_name
   address_prefixes     = var.firewall_subnet_prefix
