@@ -37,7 +37,7 @@ resource "azurerm_subnet" "my_subnet" {
 
   name                 = each.key
   virtual_network_name = var.vnet_name
-  address_prefixes     = each.value
+  address_prefixes     = [each.value]
 
   depends_on = [azurerm_virtual_network.my_vnet]
 }

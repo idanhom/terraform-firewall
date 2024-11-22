@@ -19,20 +19,20 @@ variable "vnet_prefix" {
 }
 
 
-variable "subnet_name" {
-  description = "name of the subnet"
-  type        = list(string)
-}
+# variable "subnet_name" {
+#   description = "name of the subnet"
+#   type        = list(string)
+# }
 
 variable "subnets" {
   description = "map of subnet names to their address prefixes"
   type = map(string)
 }
 
-variable "subnet_address_prefix" {
-  description = "CIDR block for subnet"
-  type        = list(string)
-}
+# variable "subnet_address_prefix" {
+#   description = "CIDR block for subnet"
+#   type        = list(string)
+# }
 
 variable "firewall_subnet_prefix" {
   description = "CIDR for the firewall subnet prefix"
