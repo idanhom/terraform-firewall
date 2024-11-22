@@ -4,7 +4,7 @@ resource "azurerm_virtual_network" "my_vnet" {
   name                = var.vnet_name
   address_space       = var.vnet_prefix
 
-  depends_on = [ var.resource_group_name ]
+  depends_on = [ azurerm_resource_group.rg_project ]
 }
 
 //azurerm_network_security_group...
