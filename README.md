@@ -1,3 +1,8 @@
+Understand and implement:
+Learn and implement:
+https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67444a9f-2ae4-800b-919b-736a4fbda120 
+
+
 # Azure Firewall with Terraform
 
 This project deploys an Azure Firewall with customizable rules using Terraform. The configuration is designed to be reusable, easily modifiable, and follows best practices in file structure, naming conventions, and state management. 
@@ -10,17 +15,16 @@ currently:
 
     endast ett vnet skapas (som innefattar två subnets)
         dåligt, eftersom vill ha två vnet med sina respektive subnet i.
-            för att sedan peera, så udr (next hop) för alla vms går till och genom brandväggen. 
-
 
 
 sedan, kolla nedan:            
-    efter löst:
-        deploya nic till respektive vnet och subnet
-            attacha nics till rätt subnät
-        deploya vm's till respektive vnet och subnet.
+    för att sedan peera, så udr (next hop) för alla vms går till och genom brandväggen.     
+        efter löst:
+            deploya nic till respektive vnet och subnet
+                attacha nics till rätt subnät
+            deploya vm's till respektive vnet och subnet.
 
-   efter peering är löst, sätta upp monitoring
+   efter detta är löst, sätta upp monitoring
 
 
 

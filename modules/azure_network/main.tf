@@ -4,15 +4,9 @@ resource "azurerm_virtual_network" "my_vnet" {
   name                = var.vnet_name
   address_space       = var.vnet_prefix
 
-  # depends_on = [ azurerm_resource_group.rg_project ]
-  //notera: skapa datablock för att importera resursgruppen
-  //data.x 
+  depends_on = [ var.resource_group_name ]
 }
-# data "azurerm_resource_group" "rg_project" {
-#   name = "rg_project"
-  
-  
-# }
+
 //azurerm_network_security_group...
 //https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group
 resource "azurerm_network_security_group" "my_nsg" {
