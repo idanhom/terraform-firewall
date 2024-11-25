@@ -4,11 +4,8 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~>4.9"
     }
-    # random = {
-    #   source  = "hashicorp/random"
-    #   version = "3.6.3"
-    # }
   }
+
   backend "azurerm" {
     resource_group_name  = "terraformstate-rg"
     storage_account_name = "statecontainer001"
@@ -37,8 +34,6 @@ module "networking" {
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
   subnets = var.subnets
-
-  //should nsg be specified here? it's already created and associated with subnet...
 }
 
 module "compute" {
