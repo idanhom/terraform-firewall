@@ -33,12 +33,11 @@ module "networking" {
   location               = var.location
   vnet_name              = var.vnet_name
   vnet_prefix            = var.vnet_prefix
-  #subnet_name            = var.subnet_name
-  #subnet_address_prefix  = var.subnet_address_prefix
   firewall_subnet_prefix = var.firewall_subnet_prefix
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
   subnets = var.subnets
+
   //should nsg be specified here? it's already created and associated with subnet...
 }
 
@@ -48,8 +47,6 @@ module "compute" {
   location            = var.location
   nic_name            = var.nic_name
   subnet_ids          = module.networking.subnet_id
-
-
 }
 
 

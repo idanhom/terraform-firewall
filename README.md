@@ -65,6 +65,9 @@ https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/
 
 "hur gör jag för att hämta ut data från modul 1 till modul 2 för det går alltid att hämta ut saker"
 
+
+//bygga keyvault och secret för att lösenordet för min vm inte ska skrivas ut i klartext. behöver miniscritp för att slumpa lösenord. "kallar på lösenordet som variabel men denna skrivs aldrig ut. notera: keyvault får inte tas bort. purge_protection_enabled = false"
+
 ------
 
 när vi är helt nöjd med koden, använda github actions.
