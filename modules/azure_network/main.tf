@@ -1,8 +1,10 @@
 resource "azurerm_virtual_network" "my_vnet" {
+  for_each = var.vnets
+  
   resource_group_name = var.resource_group_name
   location            = var.location
-  name                = var.vnet_name
-  address_space       = var.vnet_prefix
+  name                = each.value.vnet_name
+  address_space       = each.value.vnet_prefix
 
   depends_on = [ var.resource_group_name ]
 }

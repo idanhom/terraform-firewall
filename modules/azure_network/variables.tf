@@ -8,15 +8,27 @@ variable "location" {
   type        = string
 }
 
-variable "vnet_name" {
-  description = "Name of the virtual network"
-  type        = string
+variable "vnets" {
+  description = "map, collection of vnet and subnets"
+  type = map(object({
+    vnet_name = string
+    vnet_prefix = list(string)
+    subnet_name = string
+    subnet_prefix = list(string)
+  }))
 }
 
-variable "vnet_prefix" {
-  description = "CIDR for the virtual network"
-  type        = list(string)
-}
+# variable "vnet_name" {
+#   description = "Name of the virtual network"
+#   type        = string
+# }
+
+# variable "vnet_prefix" {
+#   description = "CIDR for the virtual network"
+#   type        = list(string)
+# }
+
+
 
 variable "subnets" {
   description = "map of subnet names to their address prefixes"
