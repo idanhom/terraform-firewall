@@ -8,6 +8,7 @@ variable "location" {
   type        = string
 }
 
+
 variable "vnets" {
   description = "map, collection of vnet and subnets"
   type = map(object({
@@ -15,9 +16,12 @@ variable "vnets" {
     vnet_prefix = list(string)
     subnet_name = string
     subnet_prefix = list(string)
+
+    nic_name = string
     # note, add vm-attributes here, which works from having broken out fw subnet to its own
   }))
 }
+
 
 # variable "vnet_name" {
 #   description = "Name of the virtual network"
