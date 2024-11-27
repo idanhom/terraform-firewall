@@ -35,16 +35,18 @@ resource "azurerm_network_security_group" "my_nsg" {
 }
 
 resource "azurerm_subnet" "my_subnet" {
-  for_each = var.subnets
+  for_each = var.vnets
 
   resource_group_name = var.resource_group_name
 
-  name                 = each.key
-  virtual_network_name = var.vnet_name
-  address_prefixes     = [each.value]
+  name                 = each.value.subnet_name
+  virtual_network_name = each.value.vnet_name
+  address_prefixes     = [each.value.subnet_prefix]
 
   depends_on = [azurerm_virtual_network.my_vnet]
 }
+
+https://chatgpt.com/g/g-duAEb2Su1-terraform-transcript-transformer/c/6744738d-5b94-800b-a4b0-2b450b043e78
 
 resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_association" {
   for_each = azurerm_subnet.my_subnet

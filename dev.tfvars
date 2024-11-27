@@ -25,6 +25,8 @@ vnets = {
     subnet_prefix = ["10.1.1.0/24"]
   }
 
+  # note, this should be broken out, since that means I can add more variables (vm) to the deployment.
+  # fits better with each.value.vm_name etc. and then fw is separate.
   vnet3 = {
     vnet_name = "FWVnet"
     vnet_prefix = ["10.2.0.0/16"]
