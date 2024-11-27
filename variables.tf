@@ -23,10 +23,10 @@ variable "vnet_prefix" {
 #   type        = list(string)
 # }
 
-variable "subnets" {
-  description = "map of subnet names to their address prefixes"
-  type = map(string)
-}
+# variable "subnets" {
+#   description = "map of subnet names to their address prefixes"
+#   type = map(string)
+# }
 
 # variable "subnet_address_prefix" {
 #   description = "CIDR block for subnet"
