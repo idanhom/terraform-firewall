@@ -18,10 +18,10 @@ variable "firewall_name" {
   type        = string
 }
 
-variable "firewall_subnet_id" {
-  description = "The ID of the firewall subnet"
-  type        = string
-}
+# variable "firewall_subnet_id" {
+#   description = "The ID of the firewall subnet"
+#   type        = string
+# }
 
 variable "firewall_vnet_name" {
   description = "name of firewall vnet name"

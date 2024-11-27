@@ -31,10 +31,10 @@ variable "vnets" {
 
 
 
-variable "subnets" {
-  description = "map of subnet names to their address prefixes"
-  type = map(string)
-}
+# variable "subnets" {
+#   description = "map of subnet names to their address prefixes"
+#   type = map(string)
+# }
 
 variable "firewall_subnet_prefix" {
   description = "CIDR for the firewall subnet prefix"
