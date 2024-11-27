@@ -16,6 +16,9 @@ vnets = {
     vnet_prefix = ["10.0.0.0/16"]
     subnet_name = "subnet1"
     subnet_prefix = ["10.0.1.0/24"]
+
+    nic_name = "nic1"
+
   }
 
   vnet2 = {
@@ -23,15 +26,15 @@ vnets = {
     vnet_prefix = ["10.1.0.0/16"]
     subnet_name = "subnet2"
     subnet_prefix = ["10.1.1.0/24"]
+
+    nic_name = "nic2"
+
   }
 
-  # note, this should be broken out, since that means I can add more variables (vm) to the deployment.
-  # fits better with each.value.vm_name etc. and then fw is separate.
-  
 }
 
 firewall = {
-    firewall_name= "FWVnet"
+    firewall_vnet_name= "FWVnet"
     firewall_vnet_prefix = ["10.2.0.0/16"]
 
     firewall_subnet_name = "AzureFirewallSubnet"
@@ -40,9 +43,3 @@ firewall = {
     firewall_ip_name = "firewall_pip"
     firewall_name    = "firewall"
   }
-
-nic_name = {
-  subnet1 = "nic1"
-  subnet2 = "nic2"
-}
-

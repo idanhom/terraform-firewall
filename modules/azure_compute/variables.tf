@@ -17,3 +17,4 @@ variable "subnet_ids" {
   description = "map of subnet names to their IDs"
   type        = map(string)
 }
+

@@ -1,4 +1,26 @@
+resource "azurerm_virtual_network" "firewall_vnet" {
+  
+  resource_group_name = var.resource_group_name
+  location = var.location
+
+  name = var.firewall_vnet_name
+  address_space = var.firewall_vnet_prefix
+}
+
+resource "azurerm_subnet" "firewall_subnet" {
+
+  resource_group_name  = var.resource_group_name
+
+  name                 = 
+  virtual_network_name = each.value.firewall_vnet_name
+
+  address_prefixes     = each.value.firewall_subnet_prefix
+
+  depends_on = [azurerm_virtual_network.firewall_vnet]
+}
+
 resource "azurerm_public_ip" "firewall_ip" {
+
   name                = var.firewall_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
