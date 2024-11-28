@@ -21,11 +21,6 @@ variable "vnets" {
   }))
 }
 
-# variable "nic_name" {
-#   description = "liset of nic names"
-#   type        = map(string)
-# }
-
 variable "subnet_ids" {
   description = "map of subnet names to their IDs"
   type        = map(string)

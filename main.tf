@@ -36,13 +36,10 @@ module "networking" {
   source              = "./modules/azure_network"
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
-  #vnet_name              = var.vnet_name
-  #vnet_prefix            = var.vnet_prefix
   firewall_subnet_prefix = var.firewall_subnet_prefix
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
   vnets                  = var.vnets
-  #subnets = var.subnets
 }
 
 module "compute" {

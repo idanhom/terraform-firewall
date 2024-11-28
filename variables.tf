@@ -8,11 +8,6 @@ variable "location" {
   type        = string
 }
 
-# variable "subnets" {
-#   description = "map of subnet names to their address prefixes"
-#   type = map(string)
-# }
-
 variable "firewall_subnet_prefix" {
   description = "CIDR for the firewall subnet prefix"
   type        = list(string)
@@ -46,11 +41,6 @@ variable "vnets" {
     # note, add vm-attributes here, which works from having broken out fw subnet to its own
   }))
 }
-
-# variable "nsg_rule_name" {
-#   description = "name for nsg rule"
-#   type = string
-# }
 
 //what happens if i remove these? when applied, i get both standard and my rules, which is not what i want.
 variable "nsg_rules" {

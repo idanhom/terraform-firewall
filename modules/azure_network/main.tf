@@ -43,9 +43,6 @@ resource "azurerm_network_security_group" "my_nsg" {
   }
 }
 
-
-# https://chatgpt.com/g/g-duAEb2Su1-terraform-transcript-transformer/c/6744738d-5b94-800b-a4b0-2b450b043e78
-
 resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_association" {
   for_each = azurerm_subnet.my_subnet
 
