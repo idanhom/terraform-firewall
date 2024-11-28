@@ -15,7 +15,7 @@ resource "azurerm_network_interface" "my_nics" {
 
 
 resource "azurerm_linux_virtual_machine" "my_vms" {
-  for_each = var.vnets
+  for_each              = var.vnets
   name                  = "vm-${each.key}"
   resource_group_name   = var.resource_group_name
   location              = var.location

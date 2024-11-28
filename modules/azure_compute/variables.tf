@@ -11,9 +11,9 @@ variable "location" {
 variable "vnets" {
   description = "map, collection of vnet and subnets"
   type = map(object({
-    vnet_name = string
-    vnet_prefix = list(string)
-    subnet_name = string
+    vnet_name     = string
+    vnet_prefix   = list(string)
+    subnet_name   = string
     subnet_prefix = list(string)
 
     nic_name = string

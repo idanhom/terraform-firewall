@@ -1,20 +1,20 @@
 resource "azurerm_virtual_network" "firewall_vnet" {
-  
-  resource_group_name = var.resource_group_name
-  location = var.location
 
-  name = var.firewall_vnet_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+
+  name          = var.firewall_vnet_name
   address_space = var.firewall_vnet_prefix
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
 
-  resource_group_name  = var.resource_group_name
+  resource_group_name = var.resource_group_name
 
   name                 = var.firewall_subnet_name
   virtual_network_name = var.firewall_vnet_name
 
-  address_prefixes     = var.firewall_subnet_prefix
+  address_prefixes = var.firewall_subnet_prefix
 
   depends_on = [azurerm_virtual_network.firewall_vnet]
 }
@@ -40,7 +40,7 @@ resource "azurerm_firewall" "firewall" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = azurerm_subnet.firewall_subnet.id 
-    public_ip_address_id = azurerm_public_ip.firewall_ip.id 
+    subnet_id            = azurerm_subnet.firewall_subnet.id
+    public_ip_address_id = azurerm_public_ip.firewall_ip.id
   }
 }

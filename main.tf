@@ -25,15 +25,15 @@ resource "azurerm_resource_group" "rg_project" {
 }
 
 module "networking" {
-  source                 = "./modules/azure_network"
-  resource_group_name    = var.resource_group_name
-  location               = var.location
+  source              = "./modules/azure_network"
+  resource_group_name = var.resource_group_name
+  location            = var.location
   #vnet_name              = var.vnet_name
   #vnet_prefix            = var.vnet_prefix
   firewall_subnet_prefix = var.firewall_subnet_prefix
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
-  vnets = var.vnets
+  vnets                  = var.vnets
   #subnets = var.subnets
 }
 
@@ -41,7 +41,7 @@ module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = var.resource_group_name
   location            = var.location
-  vnets = var.vnets
+  vnets               = var.vnets
   #subnet_ids          = module.networking.subnet_id
 }
 

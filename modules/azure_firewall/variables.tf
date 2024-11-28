@@ -25,33 +25,33 @@ variable "firewall_name" {
 
 variable "firewall_vnet_name" {
   description = "name of firewall vnet name"
-  type = string
+  type        = string
 }
 
 
 variable "firewall_vnet_prefix" {
   description = "cidr of firewall vnet prefix"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "firewall_subnet_name" {
   description = "name of firewall subnet name"
-  type = string
+  type        = string
 }
 
 variable "firewall_subnet_prefix" {
   description = "cidr of firewall subnet prefix"
-  type = list(string)
-  
+  type        = list(string)
+
 }
 
 variable "firewall_ip_name" {
   description = "firewall ip name"
-  type = string
+  type        = string
 }
 
 variable "firewall_ip_name" {
   description = "firewall name"
-  type = string  
+  type        = string
 }
 

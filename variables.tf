@@ -57,9 +57,9 @@ variable "firewall_ip_name" {
 variable "vnets" {
   description = "map, collection of vnet and subnets"
   type = map(object({
-    vnet_name = string
-    vnet_prefix = list(string)
-    subnet_name = string
+    vnet_name     = string
+    vnet_prefix   = list(string)
+    subnet_name   = string
     subnet_prefix = list(string)
 
     nic_name = string
@@ -97,17 +97,17 @@ variable "nsg_rules" {
 
 variable "firewall_vnet_name" {
   description = "name of firewall vnet name"
-  type = string
+  type        = string
 }
 
 variable "firewall_vnet_prefix" {
   description = "cidr of firewall vnet prefix"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "firewall_subnet_name" {
   description = "name of firewall subnet name"
-  type = string
+  type        = string
 }
 
 # variable "nic_name" {
