@@ -7,7 +7,7 @@ resource "azurerm_network_interface" "my_nics" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = each.value.subnet_id
+    subnet_id                     = var.subnet_ids[each.key]
     private_ip_address_allocation = "Dynamic"
   }
 }
