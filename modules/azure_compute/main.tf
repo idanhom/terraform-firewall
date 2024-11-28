@@ -21,7 +21,7 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   location              = var.location
   size                  = "Standard_F2"
   admin_username        = "adminuser"
-  admin_password        = "Redeploy2024!!"
+  admin_password        = "Redeploy2024!!" # use key vault
   network_interface_ids = [azurerm_network_interface.my_nics[each.key].id]
 
   disable_password_authentication = false
