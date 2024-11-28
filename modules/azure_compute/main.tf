@@ -37,4 +37,8 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
