@@ -1,12 +1,32 @@
+Understand and implement:
+Learn and implement:
+https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67444a9f-2ae4-800b-919b-736a4fbda120 
+
+
 # Azure Firewall with Terraform
 
 This project deploys an Azure Firewall with customizable rules using Terraform. The configuration is designed to be reusable, easily modifiable, and follows best practices in file structure, naming conventions, and state management. 
 
-## Features
 
-- **Easily Modifiable Firewall Rules**: Simplified rule management with loops.
-- **Reusable Variables**: Key settings are managed via variables for reusability and modularity.
-- **Remote State Management**: Has remote state management with versioning.
+
+Todo: 
+
+currently:
+
+    endast ett vnet skapas (som innefattar två subnets)
+        dåligt, eftersom vill ha två vnet med sina respektive subnet i.
+
+
+sedan, kolla nedan:            
+    för att sedan peera, så udr (next hop) för alla vms går till och genom brandväggen.     
+        efter löst:
+            deploya nic till respektive vnet och subnet
+                attacha nics till rätt subnät
+            deploya vm's till respektive vnet och subnet.
+
+   efter detta är löst, sätta upp monitoring
+
+
 
 
 
@@ -20,17 +40,9 @@ also, script for creating state container...
 
 
 
-todo
-
-skapa modul för att skapa vm, se till så den fungerar, sedan återanvända modulen. innefatta också NSG, vnet, subnet.
 
 
-
-
-sedan, peera vnet för alla (genom route table) så next hop från alla moduler går till (och genom) brandväggen.
-
-
-route-tablea vnet att gå igenom brandväggen (next-hop för vm är brandväggen)
+sedan, 
 
 
 resource "azurerm_firewall_network_rule_collection" "name" {
@@ -56,6 +68,9 @@ https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/
 
 
 "hur gör jag för att hämta ut data från modul 1 till modul 2 för det går alltid att hämta ut saker"
+
+
+//bygga keyvault och secret för att lösenordet för min vm inte ska skrivas ut i klartext. behöver miniscritp för att slumpa lösenord. "kallar på lösenordet som variabel men denna skrivs aldrig ut. notera: keyvault får inte tas bort. purge_protection_enabled = false"
 
 ------
 

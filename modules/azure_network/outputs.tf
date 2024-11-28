@@ -1,14 +1,13 @@
+output "debug_vnets" {
+  value = var.vnets
+}
+
 output "vnet_id" {
-  description = "The ID of the vnet"
-  value       = azurerm_virtual_network.my_vnet.id
+  description = "Map of vnet names to their ID"
+  value       = { for name, vnet in azurerm_virtual_network.my_vnet : name => vnet.id }
 }
 
 output "subnet_id" {
   description = "map of subnet names to their id"
   value       = { for name, subnet in azurerm_subnet.my_subnet : name => subnet.id } //learn this better
-}
-
-output "firewall_subnet_id" {
-  description = "The ID of the firewall subnet"
-  value       = azurerm_subnet.firewall_subnet.id
 }
