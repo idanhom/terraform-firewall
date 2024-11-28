@@ -8,29 +8,9 @@ variable "location" {
   type        = string
 }
 
-# variable "vnet_name" {
-#   description = "Name of the virtual network"
-#   type        = string
-# }
-
-# variable "vnet_prefix" {
-#   description = "CIDR for the virtual network"
-#   type        = list(string)
-# }
-
-# variable "subnet_name" {
-#   description = "name of subnet"
-#   type        = list(string)
-# }
-
 # variable "subnets" {
 #   description = "map of subnet names to their address prefixes"
 #   type = map(string)
-# }
-
-# variable "subnet_address_prefix" {
-#   description = "CIDR block for subnet"
-#   type        = list(string)
 # }
 
 variable "firewall_subnet_prefix" {

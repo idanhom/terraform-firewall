@@ -1,15 +1,6 @@
 resource_group_name = "rg_project"
 location            = "North Europe"
 
-#before making map of vnets and subnets
-# vnet_name           = "my_vnet"
-# vnet_prefix         = ["10.0.0.0/16"]
-
-# subnets = {
-#   subnet1 = "10.0.1.0/24"
-#   subnet2 = "10.0.2.0/24"
-# }
-
 vnets = {
   vnet1 = {
     vnet_name     = "vnet1"
@@ -18,7 +9,6 @@ vnets = {
     subnet_prefix = ["10.0.1.0/24"]
 
     nic_name = "nic1"
-
   }
 
   vnet2 = {
@@ -28,9 +18,7 @@ vnets = {
     subnet_prefix = ["10.1.1.0/24"]
 
     nic_name = "nic2"
-
   }
-
 }
 
 firewall_vnet_name   = "FWVnet"
