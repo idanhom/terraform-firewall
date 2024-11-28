@@ -1,3 +1,6 @@
+# review before begin
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67489a47-2648-800b-99b3-d8fdc7becfc7
+
 resource "azurerm_virtual_network" "firewall_vnet" {
 
   resource_group_name = var.resource_group_name
