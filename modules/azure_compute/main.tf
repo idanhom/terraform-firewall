@@ -1,4 +1,3 @@
-
 resource "azurerm_network_interface" "my_nics" {
   for_each            = var.vnets
   name                = each.value.nic_name
@@ -11,8 +10,6 @@ resource "azurerm_network_interface" "my_nics" {
     private_ip_address_allocation = "Dynamic"
   }
 }
-
-
 
 resource "azurerm_linux_virtual_machine" "my_vms" {
   for_each              = var.vnets

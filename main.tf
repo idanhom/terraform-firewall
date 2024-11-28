@@ -28,9 +28,13 @@ resource "azurerm_resource_group" "rg_project" {
   location = var.location
 }
 
+output "resource_group_name" {
+  value = azurerm_resource_group.rg_project.name
+}
+
 module "networking" {
   source              = "./modules/azure_network"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
   #vnet_name              = var.vnet_name
   #vnet_prefix            = var.vnet_prefix
