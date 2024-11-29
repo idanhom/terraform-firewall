@@ -28,6 +28,7 @@ resource "azurerm_resource_group" "rg_project" {
   location = var.location
 }
 
+# needed for networking module below to create its vnet inside the rg. (implicit depends-on)
 output "resource_group_name" {
   value = azurerm_resource_group.rg_project.name
 }
