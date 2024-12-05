@@ -37,15 +37,14 @@ module "networking" {
   source              = "./modules/azure_network"
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
-  vnets                  = var.vnets
+  vnets               = var.vnets
   //for future, place the afw as map (like vnets below, also move to module "firewall" below)
   firewall_subnet_prefix = var.firewall_subnet_prefix
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
   # afw = var.afw 
-
-  
 }
+
 
 module "compute" {
   source              = "./modules/azure_compute"
