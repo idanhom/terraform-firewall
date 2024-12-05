@@ -28,6 +28,7 @@ resource "azurerm_resource_group" "rg_project" {
   location = var.location
 }
 
+# needed for networking module below to create its vnet inside the rg. (implicit depends-on)
 output "resource_group_name" {
   value = azurerm_resource_group.rg_project.name
 }
@@ -36,11 +37,9 @@ module "networking" {
   source              = "./modules/azure_network"
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
-  firewall_subnet_prefix = var.firewall_subnet_prefix
-  firewall_name          = var.firewall_name
-  firewall_ip_name       = var.firewall_ip_name
-  vnets                  = var.vnets
+  vnets               = var.vnets
 }
+
 
 module "compute" {
   source              = "./modules/azure_compute"
@@ -51,8 +50,12 @@ module "compute" {
 }
 
 
-# module "firewall" {
+module "firewall" {
+  source              = "./modules/azure_firewall"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  afw                 = var.afw
 
-# }
+}
 
 

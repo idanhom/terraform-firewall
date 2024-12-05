@@ -8,18 +8,16 @@ variable "location" {
   type        = string
 }
 
-variable "firewall_subnet_prefix" {
+/* variable "firewall_subnet_prefix" {
   description = "CIDR for the firewall subnet prefix"
   type        = list(string)
-}
+} */
 
 //commented out because firewall subnet name needs only one naming
 # variable "firewall_subnet_name" {
 #   description = "name of firewall subnet (do not change)"
 #   type        = string
-# }
-
-variable "firewall_name" {
+/* variable "firewall_name" {
   description = "name of firewall"
   type        = string
 }
@@ -27,7 +25,7 @@ variable "firewall_name" {
 variable "firewall_ip_name" {
   description = "name of ip for firewall"
   type        = string
-}
+} */
 
 variable "vnets" {
   description = "map, collection of vnet and subnets"
@@ -60,12 +58,25 @@ variable "nsg_rules" {
   default = []
 }
 
+
+variable "afw" {
+  type = object({
+    firewall_vnet_name     = string
+    firewall_vnet_prefix   = list(string)
+    firewall_subnet_name   = string
+    firewall_subnet_prefix = list(string)
+    firewall_ip_name       = string
+    firewall_name          = string
+  })
+}
+
+
 # variable "firewall_subnet_id" {
 #   description = "The ID of the firewall subnet"
 #   type        = string
 # }
 
-variable "firewall_vnet_name" {
+/* variable "firewall_vnet_name" {
   description = "name of firewall vnet name"
   type        = string
 }
@@ -78,7 +89,7 @@ variable "firewall_vnet_prefix" {
 variable "firewall_subnet_name" {
   description = "name of firewall subnet name"
   type        = string
-}
+} */
 
 # variable "nic_name" {
 #   description = "map of subnet names to their IDs"

@@ -21,6 +21,10 @@ vnets = {
   }
 }
 
+//make the afw vars into map, revise in root main.tf (others too?)
+
+afw = {
+
 firewall_vnet_name   = "FWVnet"
 firewall_vnet_prefix = ["10.2.0.0/16"]
 
@@ -29,3 +33,5 @@ firewall_subnet_prefix = ["10.2.2.0/24"]
 
 firewall_ip_name = "firewall_pip"
 firewall_name    = "firewall"
+
+}

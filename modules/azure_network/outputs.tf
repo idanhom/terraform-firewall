@@ -4,10 +4,10 @@ output "debug_vnets" {
 
 output "vnet_id" {
   description = "Map of vnet names to their ID"
-  value       = { for name, vnet in azurerm_virtual_network.my_vnet : name => vnet.id }
+  value       = { for key, vnet in azurerm_virtual_network.my_vnet : key => vnet.id }
 }
 
 output "subnet_id" {
   description = "map of subnet names to their id"
-  value       = { for name, subnet in azurerm_subnet.my_subnet : name => subnet.id } //learn this better
+  value       = { for key, subnet in azurerm_subnet.my_subnet : key => subnet.id } //learn this better
 }
