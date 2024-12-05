@@ -37,6 +37,7 @@ module "networking" {
   source              = "./modules/azure_network"
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
+  //for future, place the firewalls as map (like vnets below)
   firewall_subnet_prefix = var.firewall_subnet_prefix
   firewall_name          = var.firewall_name
   firewall_ip_name       = var.firewall_ip_name
