@@ -22,20 +22,20 @@ variable "vnets" {
   }))
 }
 
-variable "firewall_subnet_prefix" {
-  description = "CIDR for the firewall subnet prefix"
-  type        = list(string)
-}
+# variable "firewall_subnet_prefix" {
+#   description = "CIDR for the firewall subnet prefix"
+#   type        = list(string)
+# }
 
-variable "firewall_name" {
-  description = "name of firewall"
-  type        = string
-}
+# variable "firewall_name" {
+#   description = "name of firewall"
+#   type        = string
+# }
 
-variable "firewall_ip_name" {
-  description = "name of ip for firewall"
-  type        = string
-}
+# variable "firewall_ip_name" {
+#   description = "name of ip for firewall"
+#   type        = string
+# }
 
 
 //what happens if i remove these? when applied, i get both standard and my rules, which is not what i want.

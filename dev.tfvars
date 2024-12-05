@@ -9,7 +9,7 @@ vnets = {
     subnet_prefix = ["10.0.1.0/24"]
 
     nic_name = "nic1"
-  } 
+  }
 
   vnet2 = {
     vnet_name     = "vnet2"

@@ -39,10 +39,9 @@ module "networking" {
   location            = var.location
   vnets               = var.vnets
   //for future, place the afw as map (like vnets below, also move to module "firewall" below)
-  firewall_subnet_prefix = var.firewall_subnet_prefix
-  firewall_name          = var.firewall_name
-  firewall_ip_name       = var.firewall_ip_name
-  # afw = var.afw 
+  # firewall_subnet_prefix = var.firewall_subnet_prefix
+  # firewall_name          = var.firewall_name
+  # firewall_ip_name       = var.firewall_ip_name
 }
 
 
@@ -55,8 +54,12 @@ module "compute" {
 }
 
 
-# module "firewall" {
+module "firewall" {
+  source              = "./modules/azure_firewall"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  afw                 = var.afw
 
-# }
+}
 
 
