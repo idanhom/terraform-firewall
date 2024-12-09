@@ -11,11 +11,6 @@ This project deploys an Azure Firewall with customizable rules using Terraform. 
 
 Todo: 
 
-currently:
-
-    endast ett vnet skapas (som innefattar två subnets)
-        dåligt, eftersom vill ha två vnet med sina respektive subnet i.
-
 
 sedan, kolla nedan:            
     för att sedan peera, så udr (next hop) för alla vms går till och genom brandväggen.     
@@ -26,6 +21,45 @@ sedan, kolla nedan:
 
    efter detta är löst, sätta upp monitoring
 
+
+
+
+
+
+current problem, when deploying from scratch, get this error: 
+╷
+│ Error: creating Virtual Network (Subscription: "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
+│ Resource Group Name: "rg_project"
+│ Virtual Network Name: "FWVnet"): performing CreateOrUpdate: unexpected status 404 (404 Not Found) with error: ResourceGroupNotFound: Resource group 'rg_project' could not be found.
+│ 
+│   with module.firewall.azurerm_virtual_network.firewall_vnet,
+│   on modules/azure_firewall/main.tf line 7, in resource "azurerm_virtual_network" "firewall_vnet":
+│    7: resource "azurerm_virtual_network" "firewall_vnet" {
+│ 
+╵
+╷
+│ Error: updating Public I P Address (Subscription: "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
+│ Resource Group Name: "rg_project"
+│ Public I P Addresses Name: "firewall_pip"): performing CreateOrUpdate: unexpected status 404 (404 Not Found) with error: ResourceGroupNotFound: Resource group 'rg_project' could not be found.
+│ 
+│   with module.firewall.azurerm_public_ip.firewall_ip,
+│   on modules/azure_firewall/main.tf line 28, in resource "azurerm_public_ip" "firewall_ip":
+│   28: resource "azurerm_public_ip" "firewall_ip" {
+
+
+
+
+
+
+
+därefter:
+log analytics workspace
+
+resource "azurerm_log_analytics_saved_search" "name" {
+  
+}
+
+https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_saved_search 
 
 
 
@@ -56,15 +90,6 @@ resource "azurerm_firewall_application_rule_collection" "name" {
 
 ----
 
-
-därefter:
-log analytics workspace
-
-resource "azurerm_log_analytics_saved_search" "name" {
-  
-}
-
-https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_saved_search 
 
 
 "hur gör jag för att hämta ut data från modul 1 till modul 2 för det går alltid att hämta ut saker"

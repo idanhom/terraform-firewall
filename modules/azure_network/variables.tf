@@ -39,5 +39,4 @@ variable "nsg_rules" {
   }))
 
   default = []
-
 }
