@@ -38,6 +38,7 @@ module "networking" {
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
   vnets               = var.vnets
+  afw                 = var.afw
 }
 
 
@@ -48,14 +49,4 @@ module "compute" {
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
 }
-
-
-module "firewall" {
-  source              = "./modules/azure_firewall"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  afw                 = var.afw
-
-}
-
 
