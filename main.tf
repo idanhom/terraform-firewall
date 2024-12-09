@@ -39,6 +39,7 @@ module "networking" {
   location            = var.location
   vnets               = var.vnets
   afw                 = var.afw
+  firewall_route_table = var.firewall_route_table
 }
 
 
@@ -49,4 +50,3 @@ module "compute" {
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
 }
-

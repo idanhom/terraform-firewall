@@ -31,3 +31,5 @@ firewall_subnet_prefix = ["10.2.2.0/24"]
 firewall_ip_name = "firewall_pip"
 firewall_name    = "firewall"
 }
+
+firewall_route_table = "firewall_route_table"

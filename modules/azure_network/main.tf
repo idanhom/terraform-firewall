@@ -106,6 +106,19 @@ resource "azurerm_firewall" "firewall" {
 }
 
 
+# ChatGPT for WAN settings to make sure all traffic goes through firewall
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/6756b04f-9f34-800b-9bd1-0b425c147697
 
+resource "azurerm_route_table" "firewall_route_table" {
+  resource_group_name = var.resource_group_name
+  location = var.location
+  name = var.firewall_route_table
+  route = {
+    name = "default-route"
+    address_prefix =
+    next
+  
+  }
+  
+}
 
-//peering-functionality between vnets?

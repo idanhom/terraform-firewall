@@ -54,3 +54,8 @@ variable "afw" {
   })
 }
 
+
+variable "firewall_route_table" {
+  description = "name of firewall route table"
+  type = string
+}

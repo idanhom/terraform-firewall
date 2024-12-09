@@ -50,3 +50,8 @@ variable "afw" {
     firewall_name          = string
   })
 }
+
+variable "firewall_route_table" {
+  description = "name of firewall route table"
+  type = string
+}
