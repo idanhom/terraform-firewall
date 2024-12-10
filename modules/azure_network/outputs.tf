@@ -3,6 +3,11 @@ output "debug_vnets" {
   value = var.vnets
 }
 
+# how to make sure both subnet names are outputted?
+output "subnet_outputs" {
+  value = azurerm_subnet.my_subnet.id
+}
+
 output "vnet_id" {
   description = "Map of vnet names to their ID"
   value       = { for key, vnet in azurerm_virtual_network.my_vnet : key => vnet.id }

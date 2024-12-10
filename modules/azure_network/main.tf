@@ -73,9 +73,8 @@ resource "azurerm_subnet" "firewall_subnet" {
 
   name                 = var.afw.firewall_subnet_name
   virtual_network_name = var.afw.firewall_vnet_name   
-
   address_prefixes = var.afw.firewall_subnet_prefix 
-
+  
   depends_on = [azurerm_virtual_network.firewall_vnet]
 }
 
@@ -105,20 +104,49 @@ resource "azurerm_firewall" "firewall" {
   }
 }
 
-
-# ChatGPT for WAN settings to make sure all traffic goes through firewall
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/6756b04f-9f34-800b-9bd1-0b425c147697
-
-resource "azurerm_route_table" "firewall_route_table" {
+resource "azurerm_virtual_hub" "secure_hub" {
+  name                = "secure-virtual-hub"
   resource_group_name = var.resource_group_name
-  location = var.location
-  name = var.firewall_route_table
-  route = {
-    name = "default-route"
-    address_prefix =
-    next
-  
-  }
-  
+  location            = var.location
+  sku = "Standard"
+  address_prefix      = "10.3.0.0/23"
 }
 
+resource "azurerm_virtual_hub_connection" "vnet_connections" {
+  for_each = var.vnets
+  name                      = "connection-${each.key}"
+  virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
+  remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
+}
+
+
+# ongoing fixing
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/6756b04f-9f34-800b-9bd1-0b425c147697
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_hub_route_table
+resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
+  name           = "vnet_route_table"
+  virtual_hub_id = azurerm_virtual_hub.secure_hub.id
+
+  route {
+    name              = "internet-traffic"
+    destinations_type = "0.0.0.0/0"
+    destinations      = ["10.0.0.0/16"]
+    next_hop_type     = "ResourceId"
+    next_hop          = azurerm_firewall.firewall.id
+  } 
+
+  # VNet to VNet routes
+
+  dynamic "route" {
+    for_each = var.vnets
+    
+    name              = "to-${route.key}"
+    destinations      = route.value.vnet_prefix[0]
+    next_hop_type     = "ResourceId"
+    next_hop          = azurerm_firewall.firewall.id
+  } 
+
+  }
+  
+
+}
