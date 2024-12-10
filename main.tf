@@ -34,11 +34,11 @@ output "resource_group_name" {
 }
 
 module "networking" {
-  source              = "./modules/azure_network"
-  resource_group_name = azurerm_resource_group.rg_project.name
-  location            = var.location
-  vnets               = var.vnets
-  afw                 = var.afw
+  source               = "./modules/azure_network"
+  resource_group_name  = azurerm_resource_group.rg_project.name
+  location             = var.location
+  vnets                = var.vnets
+  afw                  = var.afw
   firewall_route_table = var.firewall_route_table
 }
 
