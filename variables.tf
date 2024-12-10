@@ -52,6 +52,20 @@ variable "afw" {
 }
 
 variable "firewall_route_table" {
-  description = "name of firewall route table"
-  type        = string
-}
+  description = "object containing firewall route table"
+  type        = object({
+    name = string
+    internet_traffic = object({
+      destinations_type = string
+      destinations = list(string)
+      next_hop_type = string
+      next_hop_id = string
+    })
+    vnet_to_vnet = object({
+      destinations_type = string
+      destinations = list(string)
+      next_hop_type = string
+      next_hop_id = string
+      })    
+    }) 
+  }

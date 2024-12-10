@@ -32,4 +32,18 @@ afw = {
   firewall_name    = "firewall"
 }
 
-firewall_route_table = "firewall_route_table"
+firewall_route_table = {
+  name = "vnet_route_table"
+  internet_traffic = {
+    destinations_type = "Service" # Or CIDR here and  ["0.0.0.0/0"] at destionation
+    destinations = ["Internet"]
+    next_hop_type = "ResourceId"
+    next_hop_id = "" # Dynamically assigned
+  }
+  vnet_to_vnet = {
+    destinations_type = "Service"
+    destinations = ["VirtualNetwork"]
+    next_hop_type = "ResourceId"
+    next_hop_id = ""
+  }
+}

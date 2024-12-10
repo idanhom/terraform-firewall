@@ -109,7 +109,6 @@ resource "azurerm_virtual_hub" "secure_hub" {
   resource_group_name = var.resource_group_name
   location            = var.location
   sku                 = "Standard"
-  address_prefix      = "10.3.0.0/23"
 }
 
 resource "azurerm_virtual_hub_connection" "vnet_connections" {
@@ -123,15 +122,16 @@ resource "azurerm_virtual_hub_connection" "vnet_connections" {
 # ongoing fixing
 # https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/6756b04f-9f34-800b-9bd1-0b425c147697
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_hub_route_table
+# check content with the parameterizing https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67584fe8-51f8-800b-a171-02477217b9f3
 resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
   name           = "vnet_route_table"
   virtual_hub_id = azurerm_virtual_hub.secure_hub.id
 
   route {
     name              = "internet-traffic"
-    destinations_type = "Service" # Or CIDR here and  ["0.0.0.0/0"] at destionation
-    destinations      = ["Internet"]
-    next_hop_type     = "ResourceId"
+    destinations_type = var.firewall_route_table.internet_traffic.destinations_type # Or CIDR here and  ["0.0.0.0/0"] at destionation
+    destinations      = var.firewall_route_table.internet_traffic.destinations #or destination?
+    next_hop_type     = var.firewall_route_table.internet_traffic.next_hop_type
     next_hop          = azurerm_firewall.firewall.id
   }
 
@@ -140,11 +140,10 @@ resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
   dynamic "route" {
     for_each = var.vnets
     content {
-
       name              = "to-${route.key}"
-      destinations_type = "Service"
-      destinations      = ["VirtualNetwork"]
-      next_hop_type     = "ResourceId"
+      destinations_type = var.firewall_route_table.vnet_to_vnet.destinations_type
+      destinations      = var.firewall_route_table.vnet_to_vnet.destinations # or destination? dev.tfvars has destinations
+      next_hop_type     = var.firewall_route_table.vnet_to_vnet.next_hop_type
       next_hop          = azurerm_firewall.firewall.id
     }
   }
