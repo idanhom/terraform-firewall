@@ -36,14 +36,14 @@ firewall_route_table = {
   name = "vnet_route_table"
   internet_traffic = {
     destinations_type = "CIDR"
-    destinations = ["0.0.0.0/0"]
-    next_hop_type = "ResourceId"
-    next_hop_id = "" # Dynamically assigned
+    destinations      = ["0.0.0.0/0"]
+    next_hop_type     = "ResourceId"
+    next_hop_id       = ""# Dynamically assigned
   }
   vnet_to_vnet = {
     destinations_type = "CIDR"
-    destinations = []
-    next_hop_type = "ResourceId"
-    next_hop_id = ""
+    destinations      = []
+    next_hop_type     = "ResourceId"
+    next_hop_id       = ""
   }
 }

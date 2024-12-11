@@ -94,20 +94,27 @@ resource "azurerm_firewall" "firewall" {
   name                = var.afw.firewall_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  sku_name            = "AZFW_VNet"
+  sku_name            = "AZFW_Hub"
   sku_tier            = "Standard"
 
-  ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.firewall_subnet.id
-    public_ip_address_id = azurerm_public_ip.firewall_ip.id
+  virtual_hub {
+    virtual_hub_id = azurerm_virtual_hub.secure_hub.id
+    public_ip_count = 1
+    # when there are optional arguments, like "public_ip_count" that has 1 as default, should these be added?
   }
+
+  # pre before integrating afw with virtual hub
+  # ip_configuration {
+  #   name                 = "configuration"
+  #   subnet_id            = azurerm_subnet.firewall_subnet.id
+  #   public_ip_address_id = azurerm_public_ip.firewall_ip.id
+  # }
 }
 
 
 
 ########### Virtual WAN and Virtual Hub config
-# where i am currently https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67584fe8-51f8-800b-a171-02477217b9f3
+# where i am currently https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67596a12-9810-800b-80c8-017548277626
 resource "azurerm_virtual_wan" "secure_wan" {
   name                = "secure-virtual-wan"
   resource_group_name = var.resource_group_name
@@ -118,18 +125,18 @@ resource "azurerm_virtual_hub" "secure_hub" {
   name                = "secure-virtual-hub"
   resource_group_name = var.resource_group_name
   location            = var.location
-  virtual_wan_id = azurerm_virtual_wan.secure_wan.id
+  virtual_wan_id      = azurerm_virtual_wan.secure_wan.id
   sku                 = "Standard" # Standard needed for AFW
-  address_prefix = "10.3.0.0/23"
+  address_prefix      = "10.3.0.0/23"
 }
 
-resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
+resource "azurerm_virtual_hub_route_table" "vnet_route_table" { # rename it from vnet_route_table to something that has both capabilities
   name           = var.firewall_route_table.name
   virtual_hub_id = azurerm_virtual_hub.secure_hub.id
 
   route {
     name              = "internet-traffic"
-    destinations_type = var.firewall_route_table.internet_traffic.destinations_type # Or CIDR here and  ["0.0.0.0/0"] at destionation
+    destinations_type = var.firewall_route_table.internet_traffic.destinations_type
     destinations      = var.firewall_route_table.internet_traffic.destinations
     next_hop_type     = var.firewall_route_table.internet_traffic.next_hop_type
     next_hop          = azurerm_firewall.firewall.id
@@ -137,7 +144,6 @@ resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
   }
 
   # VNet to VNet routes
-
   dynamic "route" {
     for_each = var.vnets
     content {
@@ -145,18 +151,26 @@ resource "azurerm_virtual_hub_route_table" "vnet_route_table" {
       destinations_type = var.firewall_route_table.vnet_to_vnet.destinations_type
       destinations      = route.value.vnet_prefix
       next_hop_type     = var.firewall_route_table.vnet_to_vnet.next_hop_type
-      next_hop          = azurerm_firewall.firewall.id
+      next_hop          = azurerm_virtual_hub_connection.vnet_connections[route.key].id
     }
   }
 }
+
+/* resource "azurerm_virtual_hub_connection" "internet_connection" {
+  name = "internet-connection"
+  virtual_hub_id = azurerm_virtual_hub.secure_hub.id
+  remote_virtual_network_id = null
+} */
+
+
 
 resource "azurerm_virtual_hub_connection" "vnet_connections" {
   for_each                  = var.vnets
   name                      = "connection-${each.key}"
   virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
   remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
-  
-  depends_on = [ azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall ]
+
+  depends_on = [azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall]
 }
 
 
