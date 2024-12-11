@@ -169,6 +169,9 @@ resource "azurerm_virtual_hub_connection" "vnet_connections" {
   name                      = "connection-${each.key}"
   virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
   remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
+  #   internet_security_enabled = true check further about this
+    # This ensures that traffic routed through these connections is inspected by Azure Firewall.
+
 
   depends_on = [azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall]
 }
