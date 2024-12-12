@@ -50,3 +50,15 @@ module "compute" {
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
 }
+
+
+module "monitoring" {
+  source = "./modules/azure_monitoring"
+  resource_group_name = 
+  location = 
+  
+
+  firewall_id = module.networking.firewall_id
+
+
+}

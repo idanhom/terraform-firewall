@@ -69,3 +69,9 @@ variable "firewall_route_table" {
     })
   })
 }
+
+
+variable "retention_in_days" {
+  description = "log analytics workspace saved in days"
+  type = number
+}
