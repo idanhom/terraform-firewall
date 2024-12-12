@@ -99,6 +99,23 @@ resource "azurerm_firewall" "firewall" {
 }
 
 ########### Virtual WAN and Virtual Hub config
+
+# Todo:
+# virtual_hub_routing_intent
+
+# virtual hub connnections -> enable default routing 
+# (^default hub connection)
+
+# monitoring (diagnostics) solution is done in the firewall itself
+# target resouce id -> firewall id -> specify audit settings (which category of logs to import -> deploy diagnostics manually, import, check state, reverse configure as terraform)
+# Manish will check with some terraform infra guy and reconnect with me
+
+
+
+
+
+
+
 resource "azurerm_virtual_wan" "secure_wan" {
   name                = "secure-virtual-wan"
   resource_group_name = var.resource_group_name
