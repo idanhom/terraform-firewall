@@ -38,7 +38,7 @@ firewall_route_table = {
     destinations_type = "CIDR"
     destinations      = ["0.0.0.0/0"]
     next_hop_type     = "ResourceId"
-    next_hop_id       = ""# Dynamically assigned
+    next_hop_id       = ""
   }
   vnet_to_vnet = {
     destinations_type = "CIDR"

@@ -52,12 +52,6 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_asso
 #########################
 
 # Firewall resources
-
-# review before begin
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67489a47-2648-800b-99b3-d8fdc7becfc7
-
-
-
 resource "azurerm_virtual_network" "firewall_vnet" {
 
   resource_group_name = var.resource_group_name
@@ -102,19 +96,9 @@ resource "azurerm_firewall" "firewall" {
     public_ip_count = 1
     # when there are optional arguments, like "public_ip_count" that has 1 as default, should these be added?
   }
-
-  # pre before integrating afw with virtual hub
-  # ip_configuration {
-  #   name                 = "configuration"
-  #   subnet_id            = azurerm_subnet.firewall_subnet.id
-  #   public_ip_address_id = azurerm_public_ip.firewall_ip.id
-  # }
 }
 
-
-
 ########### Virtual WAN and Virtual Hub config
-# where i am currently https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67596a12-9810-800b-80c8-017548277626
 resource "azurerm_virtual_wan" "secure_wan" {
   name                = "secure-virtual-wan"
   resource_group_name = var.resource_group_name
@@ -128,6 +112,17 @@ resource "azurerm_virtual_hub" "secure_hub" {
   virtual_wan_id      = azurerm_virtual_wan.secure_wan.id
   sku                 = "Standard" # Standard needed for AFW
   address_prefix      = "10.3.0.0/23"
+}
+
+resource "azurerm_virtual_hub_connection" "vnet_connections" {
+  for_each                  = var.vnets
+  name                      = "connection-${each.key}"
+  virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
+  remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
+  internet_security_enabled = true    
+  # This ensures that traffic routed through these connections is inspected by Azure Firewall.
+
+  depends_on = [azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall]
 }
 
 resource "azurerm_virtual_hub_route_table" "vnet_route_table" { # rename it from vnet_route_table to something that has both capabilities
@@ -156,25 +151,6 @@ resource "azurerm_virtual_hub_route_table" "vnet_route_table" { # rename it from
   }
 }
 
-/* resource "azurerm_virtual_hub_connection" "internet_connection" {
-  name = "internet-connection"
-  virtual_hub_id = azurerm_virtual_hub.secure_hub.id
-  remote_virtual_network_id = null
-} */
-
-
-
-resource "azurerm_virtual_hub_connection" "vnet_connections" {
-  for_each                  = var.vnets
-  name                      = "connection-${each.key}"
-  virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
-  remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
-  #   internet_security_enabled = true check further about this
-    # This ensures that traffic routed through these connections is inspected by Azure Firewall.
-
-
-  depends_on = [azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall]
-}
 
 
  
