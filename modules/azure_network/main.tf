@@ -99,6 +99,8 @@ resource "azurerm_firewall" "firewall" {
 }
 
 resource "azurerm_route_table" "firewall_route_table" {
+  depends_on = [azurerm_firewall.firewall]
+
   name                = "firewall_route_table"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -126,7 +128,9 @@ resource "azurerm_subnet_route_table_association" "subnet_and_route_table_associ
   route_table_id = azurerm_route_table.firewall_route_table.id
 }
 
-
+output "firewall_private_ip" {
+  value = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
+}
 
 
   #note: since I'm removing vWAN architecture, remove the virtual_hub too.

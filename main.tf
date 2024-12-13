@@ -53,6 +53,11 @@ module "compute" {
 }
 
 
+output "firewall_private_ip_debug" {
+  value = module.networking.firewall_private_ip
+}
+
+
 # module "monitoring" {
 #   source = "./modules/azure_monitoring"
 #   resource_group_name = 
