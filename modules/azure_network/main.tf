@@ -108,22 +108,22 @@ resource "azurerm_route_table" "firewall_route_table" {
 
   # Routing vnet1 to firewall
   route {
-    name = var.vnet_route_table.vnet1.internet_traffic.name
-    address_prefix = var.vnet_route_table.vnet1.internet_traffic.address_prefix
-    next_hop_type = var.vnet_route_table.vnet1.internet_traffic.next_hop_type
+    name                   = var.vnet_route_table.vnet1.internet_traffic.name
+    address_prefix         = var.vnet_route_table.vnet1.internet_traffic.address_prefix
+    next_hop_type          = var.vnet_route_table.vnet1.internet_traffic.next_hop_type
     next_hop_in_ip_address = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
   }
 
   route {
-    name = var.vnet_route_table.vnet2.internet_traffic.name
-    address_prefix = var.vnet_route_table.vnet2.internet_traffic.address_prefix
-    next_hop_type = var.vnet_route_table.vnet2.internet_traffic.next_hop_type
+    name                   = var.vnet_route_table.vnet2.internet_traffic.name
+    address_prefix         = var.vnet_route_table.vnet2.internet_traffic.address_prefix
+    next_hop_type          = var.vnet_route_table.vnet2.internet_traffic.next_hop_type
     next_hop_in_ip_address = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
   }
 }
 
 resource "azurerm_subnet_route_table_association" "subnet_and_route_table_association" {
-  for_each = azurerm_subnet.my_subnet
+  for_each       = azurerm_subnet.my_subnet
   subnet_id      = each.value.id
   route_table_id = azurerm_route_table.firewall_route_table.id
 }
@@ -133,7 +133,7 @@ output "firewall_private_ip" {
 }
 
 
-  #note: since I'm removing vWAN architecture, remove the virtual_hub too.
+#note: since I'm removing vWAN architecture, remove the virtual_hub too.
 /*   virtual_hub {
     virtual_hub_id = azurerm_virtual_hub.secure_hub.id
     public_ip_count = 1 

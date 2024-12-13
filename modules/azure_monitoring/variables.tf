@@ -14,6 +14,6 @@ variable "location" {
 # }
 
 variable "firewall_id" {
-    description = "ID of azure firewall"
-    type = string
+  description = "ID of azure firewall"
+  type        = string
 }

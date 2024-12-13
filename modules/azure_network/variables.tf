@@ -56,9 +56,9 @@ variable "afw" {
 variable "vnet_route_table" {
   description = "mapping of routes for vnets"
   type = map(map(object({
-    name = string
+    name           = string
     address_prefix = string
-    next_hop_type = string
+    next_hop_type  = string
   })))
 }
 

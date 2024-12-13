@@ -34,12 +34,12 @@ output "resource_group_name" {
 }
 
 module "networking" {
-  source               = "./modules/azure_network"
-  resource_group_name  = azurerm_resource_group.rg_project.name
-  location             = var.location
-  vnets                = var.vnets
-  afw                  = var.afw
-  vnet_route_table = var.vnet_route_table
+  source              = "./modules/azure_network"
+  resource_group_name = azurerm_resource_group.rg_project.name
+  location            = var.location
+  vnets               = var.vnets
+  afw                 = var.afw
+  vnet_route_table    = var.vnet_route_table
   # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
@@ -62,7 +62,7 @@ output "firewall_private_ip_debug" {
 #   source = "./modules/azure_monitoring"
 #   resource_group_name = 
 #   location = 
-  
+
 
 #   firewall_id = module.networking.firewall_id
 
