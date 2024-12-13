@@ -52,13 +52,13 @@ module "compute" {
 }
 
 
-module "monitoring" {
-  source = "./modules/azure_monitoring"
-  resource_group_name = 
-  location = 
+# module "monitoring" {
+#   source = "./modules/azure_monitoring"
+#   resource_group_name = 
+#   location = 
   
 
-  firewall_id = module.networking.firewall_id
+#   firewall_id = module.networking.firewall_id
 
 
-}
+# }

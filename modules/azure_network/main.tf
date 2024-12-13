@@ -111,6 +111,28 @@ resource "azurerm_firewall" "firewall" {
 # Manish will check with some terraform infra guy and reconnect with me
 
 
+# -------------------------------------------------------------
+
+# Jimmys kommentar:
+
+/* hub and spoke -> brandvägg är hub och alla andra vnet är spokes.
+
+hub är connectitivty landing zone. allt som berör nätverksdelar (enterprise scale), ddos protection, dns, allt är i connectivity landing zone. för allt annat -> får vnet med route tables och allt pekar mot branväggen.
+
+peera vnet mot brandväggens nätverk.
+
+alltså för mig, ta bort Wvan, all traffik är next-hop -> brandvägg.
+
+hopp mellan vnet och 
+
+
+"hubben är där vnet för brandväggen ligger i"
+-------------
+
+https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke?tabs=cli
+
+
+ */
 
 
 
@@ -136,9 +158,8 @@ resource "azurerm_virtual_hub_connection" "vnet_connections" {
   name                      = "connection-${each.key}"
   virtual_hub_id            = azurerm_virtual_hub.secure_hub.id
   remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
-  internet_security_enabled = true    
-  # This ensures that traffic routed through these connections is inspected by Azure Firewall.
-
+  internet_security_enabled = true 
+  # internet_security to make vnet pass through AFW
   depends_on = [azurerm_virtual_hub.secure_hub, azurerm_firewall.firewall]
 }
 
@@ -152,7 +173,6 @@ resource "azurerm_virtual_hub_route_table" "vnet_route_table" { # rename it from
     destinations      = var.firewall_route_table.internet_traffic.destinations
     next_hop_type     = var.firewall_route_table.internet_traffic.next_hop_type
     next_hop          = azurerm_firewall.firewall.id
-
   }
 
   # VNet to VNet routes

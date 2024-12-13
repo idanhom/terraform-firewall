@@ -8,10 +8,10 @@ variable "location" {
   type        = string
 }
 
-variable "workspace_retention_in_days" {
-  description = "log analytics workspace saved in days"
-  type = number
-}
+# variable "workspace_retention_in_days" {
+#   description = "log analytics workspace saved in days"
+#   type = number
+# }
 
 variable "firewall_id" {
     description = "ID of azure firewall"
