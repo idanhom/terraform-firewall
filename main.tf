@@ -39,7 +39,8 @@ module "networking" {
   location             = var.location
   vnets                = var.vnets
   afw                  = var.afw
-  firewall_route_table = var.firewall_route_table
+  vnet_route_table = var.vnet_route_table
+  # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
 

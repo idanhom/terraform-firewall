@@ -51,7 +51,17 @@ variable "afw" {
   })
 }
 
-variable "firewall_route_table" {
+
+variable "vnet_route_table" {
+  description = "mapping of routes for vnets"
+  type = map(map(object({
+    name = string
+    address_prefix = string
+    next_hop_type = string
+  })))
+}
+#Uncommented because removed vWAN to simplify topology
+/* variable "firewall_route_table" {
   description = "object containing firewall route table"
   type = object({
     name = string
@@ -69,7 +79,7 @@ variable "firewall_route_table" {
     })
   })
 }
-
+ */
 
 # variable "retention_in_days" {
 #   description = "log analytics workspace saved in days"

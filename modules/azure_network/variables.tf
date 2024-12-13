@@ -53,21 +53,31 @@ variable "afw" {
   })
 }
 
-variable "firewall_route_table" {
-  description = "object containing firewall route table"
-  type = object({
+variable "vnet_route_table" {
+  description = "mapping of routes for vnets"
+  type = map(map(object({
     name = string
-    internet_traffic = object({
-      destinations_type = string
-      destinations      = list(string)
-      next_hop_type     = string
-      next_hop_id       = string
-    })
-    vnet_to_vnet = object({
-      destinations_type = string
-      destinations      = list(string)
-      next_hop_type     = string
-      next_hop_id       = string
-    })
-  })
+    address_prefix = string
+    next_hop_type = string
+  })))
 }
+
+#Uncommented because removed vWAN to simplify topology
+# variable "firewall_route_table" {
+#   description = "object containing firewall route table"
+#   type = object({
+#     name = string
+#     internet_traffic = object({
+#       destinations_type = string
+#       destinations      = list(string)
+#       next_hop_type     = string
+#       next_hop_id       = string
+#     })
+#     vnet_to_vnet = object({
+#       destinations_type = string
+#       destinations      = list(string)
+#       next_hop_type     = string
+#       next_hop_id       = string
+#     })
+#   })
+# }

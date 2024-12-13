@@ -32,7 +32,51 @@ afw = {
   firewall_name    = "firewall"
 }
 
-firewall_route_table = {
+vnet_route_table = {
+  vnet1 = {
+    internet_traffic = {
+      name = "internet_traffic"
+      address_prefix = "0.0.0.0/0" # CIDR for Internet
+      next_hop_type = "VirtualAppliance"
+      }
+    vnet_to_vnet = {
+      name = "SpokeToSpokeTraffic"
+      address_prefix = "10.1.0.0/16" # CIDR for vnet2
+      next_hop_type = "VirtualAppliance"
+    }
+    vnet2 = {
+    internet_traffic = {
+      name = "internet_traffic"
+      address_prefix = "0.0.0.0/0" # CIDR for Internet
+      next_hop_type = "VirtualAppliance"
+      }
+    vnet_to_vnet = {
+      name = "SpokeToSpokeTraffic"
+      address_prefix = "10.0.0.0/16" # CIDR for vnet1
+      next_hop_type = "VirtualAppliance"
+    }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+  vnet_to_vnet = {
+    name = "VNetToVNetTraffic"
+    address_prefix = "0.0.0.0/0" # CIDR for Internet
+    next_hop_type = "VirtualAppliance"
+  }
+}
+
+
+# Removed because no longer using virtual_hub and vWAN
+/* firewall_route_table = {
   name = "vnet_route_table"
   internet_traffic = {
     destinations_type = "CIDR"
@@ -46,4 +90,4 @@ firewall_route_table = {
     next_hop_type     = "ResourceId"
     next_hop_id       = ""
   }
-}
+} */
