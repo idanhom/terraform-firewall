@@ -11,6 +11,7 @@ variable "location" {
 # variable "workspace_retention_in_days" {
 #   description = "log analytics workspace saved in days"
 #   type = number
+#   default = 30
 # }
 
 variable "firewall_id" {

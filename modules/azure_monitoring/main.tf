@@ -4,7 +4,7 @@
 #   location            = var.location
 #   sku                 = "PerGB2018"
 #   retention_in_days   = var.workspace_retention_in_days
-# }
+#  }
 
 
 # resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
