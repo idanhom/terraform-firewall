@@ -94,7 +94,6 @@ resource "azurerm_firewall" "firewall" {
   ip_configuration {
     name                 = "configuration"
     subnet_id            = azurerm_subnet.firewall_subnet.id
-    
     public_ip_address_id = azurerm_public_ip.firewall_ip.id
   }
 }
@@ -123,15 +122,39 @@ resource "azurerm_route_table" "firewall_route_table" {
   }
 }
 
+
 resource "azurerm_subnet_route_table_association" "subnet_and_route_table_association" {
   for_each       = azurerm_subnet.my_subnet
   subnet_id      = each.value.id
   route_table_id = azurerm_route_table.firewall_route_table.id
 }
 
-output "firewall_private_ip" {
-  value = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
+
+################
+resource "azurerm_virtual_network_peering" "hub_to_spoke" {
+  for_each = var.vnets
+  name                      = "peer-hub-to-${each.key}"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.firewall_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.my_vnet[each.key].id
+
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
 }
+
+resource "azurerm_virtual_network_peering" "spoke_to_hub" {
+  for_each = var.vnets
+  name                      = "peer-spoke-to-${each.key}"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.my_vnet[each.key].name
+  remote_virtual_network_id = azurerm_virtual_network.firewall_vnet.idhttps://portal.azure.com/#@pson93hotmail.onmicrosoft.com/resource/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/overview
+  
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+
+
 
 
 
@@ -142,6 +165,7 @@ output "firewall_private_ip" {
 
 
 # Jimmys kommentar:
+
 
 /* hub and spoke -> brandvägg är hub och alla andra vnet är spokes.
 
