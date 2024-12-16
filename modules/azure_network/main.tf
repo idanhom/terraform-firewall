@@ -147,7 +147,7 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
   name                      = "peer-spoke-to-${each.key}"
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.my_vnet[each.key].name
-  remote_virtual_network_id = azurerm_virtual_network.firewall_vnet.idhttps://portal.azure.com/#@pson93hotmail.onmicrosoft.com/resource/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/overview
+  remote_virtual_network_id = azurerm_virtual_network.firewall_vnet.id
   
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
