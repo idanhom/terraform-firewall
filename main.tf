@@ -54,10 +54,29 @@ module "compute" {
 
 
 output "firewall_private_ip_debug" {
-  value = module.networking.firewall_private_ip
+  value = module.networking.firewall_ip
 }
 
 
+output "vnet_ids" {
+  description = "Map of vnet names to their IDs"
+  value       = module.networking.vnet_ids
+}
+
+output "subnet_ids" {
+  description = "map of subnet names to their id"
+  value = module.networking.subnet_id
+}
+
+output "vm_private_ip" {
+  description = "map of private ip for vms"
+  value = module.compute.vm_private_ip
+  
+}
+
+
+
+ 
 # module "monitoring" {
 #   source = "./modules/azure_monitoring"
 #   resource_group_name = 
