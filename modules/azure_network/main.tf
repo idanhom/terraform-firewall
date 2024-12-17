@@ -26,7 +26,6 @@ resource "azurerm_subnet" "my_subnet" {
 }
 
 
-
 resource "azurerm_network_security_group" "my_nsg" {
   name                = "nsg"
   location            = var.location
@@ -36,6 +35,9 @@ resource "azurerm_network_security_group" "my_nsg" {
   dynamic "security_rule" {
     for_each = var.nsg_rules
 
+
+    # here, add single rule, allow all 80 to and from... or maybe in .tfvars
+    # also allow inbound 22
     content {
       name                       = security_rule.value.name
       priority                   = security_rule.value.priority
