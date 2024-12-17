@@ -60,28 +60,16 @@ variable "vnet_route_table" {
     next_hop_type  = string
   })))
 }
-#Uncommented because removed vWAN to simplify topology
-/* variable "firewall_route_table" {
-  description = "object containing firewall route table"
-  type = object({
-    name = string
-    internet_traffic = object({
-      destinations_type = string
-      destinations      = list(string)
-      next_hop_type     = string
-      next_hop_id       = string
-    })
-    vnet_to_vnet = object({
-      destinations_type = string
-      destinations      = list(string)
-      next_hop_type     = string
-      next_hop_id       = string
-    })
-  })
-}
- */
 
-# variable "retention_in_days" {
-#   description = "log analytics workspace saved in days"
-#   type = number
-# }
+
+variable "workspace_retention_in_days" {
+  description = "log analytics workspace saved in days"
+  type = number
+  default = 30
+}
+
+
+variable "log_categories" {
+  description = "collection of categories to log"
+  type = list(string)
+}

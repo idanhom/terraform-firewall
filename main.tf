@@ -53,10 +53,27 @@ module "compute" {
 }
 
 
+
+ 
+module "monitoring" {
+  source = "./modules/azure_monitoring"
+  
+  resource_group_name = var.resource_group_name
+  location = var.location
+
+  target_resource_id = module.networking.firewall_id
+
+  workspace_retention_in_days = var.workspace_retention_in_days
+  log_categories = var.log_categories
+}
+
+
+
+
+
 output "firewall_private_ip_debug" {
   value = module.networking.firewall_ip
 }
-
 
 output "vnet_ids" {
   description = "Map of vnet names to their IDs"
@@ -73,17 +90,3 @@ output "vm_private_ip" {
   value = module.compute.vm_private_ip
   
 }
-
-
-
- 
-# module "monitoring" {
-#   source = "./modules/azure_monitoring"
-#   resource_group_name = 
-#   location = 
-
-
-#   firewall_id = module.networking.firewall_id
-
-
-# }

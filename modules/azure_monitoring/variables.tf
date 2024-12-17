@@ -8,13 +8,19 @@ variable "location" {
   type        = string
 }
 
-# variable "workspace_retention_in_days" {
-#   description = "log analytics workspace saved in days"
-#   type = number
-#   default = 30
-# }
-
-variable "firewall_id" {
-  description = "ID of azure firewall"
-  type        = string
+variable "workspace_retention_in_days" {
+  description = "log analytics workspace saved in days"
+  type = number
+  default = 30
 }
+
+variable "target_resource_id" {
+  description = "the ID of the resource to monitor"
+  type = string  
+}
+
+variable "log_categories" {
+  description = "collection of categories to log"
+  type = list(string)
+}
+

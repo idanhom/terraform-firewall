@@ -59,9 +59,11 @@ vnet_route_table = {
   }
 }
 
-
-
-
-
-
-
+log_categories = [ 
+  "AzureFirewallNetworkRule", # Monitor traffic based on IP addresses and ports.
+  "AzureFirewallApplicationRule", # Monitor traffic based on FQDN (domains) and protocols (HTTP/HTTPS).
+  "AZFWNatRule", # Track and verify inbound traffic using DNAT rules.
+  "AZFWThreatIntel", # Detect and log malicious traffic from threat feeds.
+  "AzureFirewallDnsProxy", # Monitor DNS resolutions and troubleshoot DNS issues.
+  "AZFWFqdnResolveFailure" # Troubleshoot DNS failures in domain-based application rules.
+]
