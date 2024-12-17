@@ -1,3 +1,11 @@
+resource "azurerm_public_ip" "my_pip" {
+  for_each = var.vnets
+  name                = "pip-${each.key}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  allocation_method   = "Static"
+}
+
 resource "azurerm_network_interface" "my_nics" {
   for_each            = var.vnets
   name                = each.value.nic_name
@@ -8,6 +16,7 @@ resource "azurerm_network_interface" "my_nics" {
     name                          = "internal"
     subnet_id                     = var.subnet_ids[each.key]
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.my_pip[each.key].id
   }
 }
 

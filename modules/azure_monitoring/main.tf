@@ -22,6 +22,13 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   }
 }
 
+resource "azurerm_log_analytics_saved_search" "saved_search" {
+  for_each = { for idx, search in var.log_analytics_saved_search : search.name => search }
 
-# To implement saved_search
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67614e92-8aa0-800b-8451-31f946fe9aad
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
+
+  name = each.value.name
+  category     = each.value.category
+  display_name = each.value.display_name
+  query        = each.value.query
+}

@@ -73,3 +73,14 @@ variable "log_categories" {
   description = "collection of categories to log"
   type = list(string)
 }
+
+
+variable "log_analytics_saved_search" {
+  description = "list of object for log analytics saved searches"
+  type = list(object({
+    name = string
+    category = string
+    display_name = string
+    query = string
+  }))
+}

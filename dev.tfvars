@@ -67,3 +67,98 @@ log_categories = [
   "AzureFirewallDnsProxy", # Monitor DNS resolutions and troubleshoot DNS issues.
   "AZFWFqdnResolveFailure" # Troubleshoot DNS failures in domain-based application rules.
 ]
+
+log_analytics_saved_search = [
+  {
+    name         = "Firewall_InterVNet_Traffic"
+    category     = "AzureFirewallNetworkRule"
+    display_name = "Inter-VNet Traffic Through Firewall"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| where SourceIP startswith "10." and DestinationIP startswith "10."
+| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_Inbound_Internet"
+    category     = "AzureFirewallNetworkRule"
+    display_name = "Inbound Internet Traffic to VMs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| where SourceIP !startswith "10." and DestinationIP startswith "10."
+| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_Outbound_Internet"
+    category     = "AzureFirewallNetworkRule"
+    display_name = "Outbound Internet Traffic from VMs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| where SourceIP startswith "10." and DestinationIP !startswith "10."
+| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_Denied_Traffic"
+    category     = "AzureFirewallNetworkRule"
+    display_name = "Denied Traffic Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| where Action == "Deny"
+| project TimeGenerated, SourceIP, DestinationIP, Protocol, RuleName, Action
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_ThreatIntel_Logs"
+    category     = "AZFWThreatIntel"
+    display_name = "Firewall Threat Intelligence Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWThreatIntel"
+| project TimeGenerated, SourceIP, DestinationIP, ThreatDescription, Action
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Failures"
+    category     = "AZFWFqdnResolveFailure"
+    display_name = "Firewall DNS Resolution Failures"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWFqdnResolveFailure"
+| project TimeGenerated, Fqdn, FailureReason, Action
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Proxy_Logs"
+    category     = "AzureFirewallDnsProxy"
+    display_name = "Firewall DNS Proxy Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallDnsProxy"
+| project TimeGenerated, SourceIP, DestinationIP, Fqdn, Action
+| sort by TimeGenerated desc
+QUERY
+  },
+  {
+    name         = "Firewall_NAT_Rule_Traffic"
+    category     = "AZFWNatRule"
+    display_name = "Firewall NAT Rule Traffic Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWNatRule"
+| project TimeGenerated, SourceIP, DestinationIP, TranslatedIP, Action
+| sort by TimeGenerated desc
+QUERY
+  }
+]

@@ -65,6 +65,10 @@ module "monitoring" {
 
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories = var.log_categories
+  
+  log_analytics_saved_search = var.log_analytics_saved_search
+
+
 }
 
 
@@ -86,7 +90,12 @@ output "subnet_ids" {
 }
 
 output "vm_private_ip" {
-  description = "map of private ip for vms"
+  description = "map of vms to private ip"
   value = module.compute.vm_private_ip
   
+}
+
+output "vm_public_ip" {
+  description = "map of vm to public ip"
+  value = module.compute.vm_public_ip
 }
