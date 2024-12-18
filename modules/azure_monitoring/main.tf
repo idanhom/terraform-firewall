@@ -8,7 +8,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   location            = var.location
   sku                 = "PerGB2018"
   retention_in_days   = var.workspace_retention_in_days
- } 
+}
 
 
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
@@ -31,7 +31,7 @@ resource "azurerm_log_analytics_saved_search" "saved_search" {
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
 
-  name = each.value.name
+  name         = each.value.name
   category     = each.value.category
   display_name = each.value.display_name
   query        = each.value.query

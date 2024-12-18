@@ -64,23 +64,23 @@ variable "vnet_route_table" {
 
 variable "workspace_retention_in_days" {
   description = "log analytics workspace saved in days"
-  type = number
-  default = 30
+  type        = number
+  default     = 30
 }
 
 
 variable "log_categories" {
   description = "collection of categories to log"
-  type = list(string)
+  type        = list(string)
 }
 
 
 variable "log_analytics_saved_search" {
   description = "list of object for log analytics saved searches"
   type = list(object({
-    name = string
-    category = string
+    name         = string
+    category     = string
     display_name = string
-    query = string
+    query        = string
   }))
 }

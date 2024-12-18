@@ -59,7 +59,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_asso
 
   subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
-} */
+} */ 
 
 #########################
 
@@ -95,6 +95,11 @@ resource "azurerm_public_ip" "firewall_ip" {
     create_before_destroy = true
   }
 }
+
+
+
+
+### obs: needed to add DNS allow here????
 
 resource "azurerm_firewall" "firewall" {
   name                = var.afw.firewall_name
@@ -144,7 +149,7 @@ resource "azurerm_subnet_route_table_association" "subnet_and_route_table_associ
 
 ################
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
-  for_each = var.vnets
+  for_each                  = var.vnets
   name                      = "peer-hub-to-${each.key}"
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.firewall_vnet.name
@@ -155,14 +160,76 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke" {
 }
 
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
-  for_each = var.vnets
+  for_each                  = var.vnets
   name                      = "peer-spoke-to-${each.key}"
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.my_vnet[each.key].name
   remote_virtual_network_id = azurerm_virtual_network.firewall_vnet.id
-  
+
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+}
+
+
+#################
+
+
+#firewall rule collections
+
+resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
+  name                = "inter_vm_traffic"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 100
+  action              = "Allow"
+
+  rule {
+    name = "allow-inter-vnet"
+    source_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_ports = ["*"]
+    protocols = ["TCP", "UDP"]
+  }
+}
+
+resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
+  name                = "internet-to-vms"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 200
+  action              = "Dnat"
+
+  dynamic "rule" {
+    for_each = var.vnets # Assumes `vnets` is a map of VMs, similar to your dev.tfvars
+
+    content {
+      name                  = "nat-internet-to-${rule.value.vnet_name}"  # Unique name for each rule
+      source_addresses      = ["*"]                                     # Allow from all external sources
+      destination_ports     = ["22"]                       # Ports to allow (e.g., SSH, HTTP, HTTPS)
+      destination_addresses = [azurerm_public_ip.firewall_ip.ip_address] # Firewall's public IP
+      translated_address    = var.vm_private_ip[rule.key] # Map to VM's private IP
+      translated_port       = 22                                        # Target VM port (22 in this case for SSH)
+      protocols             = ["TCP"]                                   # Protocol to allow
+    }
+  }
+}
+
+
+# Firewall Network Rule Collection for Outbound Internet Access
+resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
+  name                = "allow_outbound_internet"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 300
+  action              = "Allow"
+
+  rule {
+    name                 = "allow-vm-outbound-internet"
+    source_addresses     = ["10.0.0.0/16", "10.1.0.0/16"] # Replace with your VM subnet IP ranges
+    destination_addresses = ["*"]                         # Allow access to all internet destinations
+    destination_ports    = ["80", "443"]                  # Allow HTTP and HTTPS traffic
+    protocols            = ["TCP"]                       # Protocol to allow
+  }
 }
 
 
@@ -172,28 +239,4 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
 
 
 
-
-
-
-
-# Jimmys kommentar:
-
-
-/* hub and spoke -> brandvägg är hub och alla andra vnet är spokes.
-
-hub är connectitivty landing zone. allt som berör nätverksdelar (enterprise scale), ddos protection, dns, allt är i connectivity landing zone. för allt annat -> får vnet med route tables och allt pekar mot branväggen.
-
-peera vnet mot brandväggens nätverk.
-
-alltså för mig, ta bort Wvan, all traffik är next-hop -> brandvägg.
-
-hopp mellan vnet och 
-
-
-"hubben är där vnet för brandväggen ligger i"
--------------
-
-https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke?tabs=cli
-
-
- */
+# https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke?tabs=cli

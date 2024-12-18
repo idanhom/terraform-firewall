@@ -21,41 +21,41 @@ vnets = {
   }
 }
 
-# nsg_rules = [
-#   {
-#     name                       = "Allow_SSH"
-#     priority                   = 100
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "Tcp"
-#     source_port_range          = "*"
-#     destination_port_range     = "22"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   },
-#   {
-#     name                       = "Allow_HTTP"
-#     priority                   = 110
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "Tcp"
-#     source_port_range          = "*"
-#     destination_port_range     = "80"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   },
-#   {
-#     name                       = "Allow_Internet_Outbound"
-#     priority                   = 200
-#     direction                  = "Outbound"
-#     access                     = "Allow"
-#     protocol                   = "*"
-#     source_port_range          = "*"
-#     destination_port_range     = "*"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "0.0.0.0/0"
-#   }
-# ]
+nsg_rules = [
+  {
+    name                       = "Allow_SSH"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  },
+  {
+    name                       = "Allow_HTTP"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  },
+  {
+    name                       = "Allow_Internet_Outbound"
+    priority                   = 200
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "0.0.0.0/0"
+  }
+]
 
 
 afw = {
@@ -96,13 +96,13 @@ vnet_route_table = {
   }
 }
 
-log_categories = [ 
-  "AzureFirewallNetworkRule", # Monitor traffic based on IP addresses and ports.
+log_categories = [
+  "AzureFirewallNetworkRule",     # Monitor traffic based on IP addresses and ports.
   "AzureFirewallApplicationRule", # Monitor traffic based on FQDN (domains) and protocols (HTTP/HTTPS).
-  "AZFWNatRule", # Track and verify inbound traffic using DNAT rules.
-  "AZFWThreatIntel", # Detect and log malicious traffic from threat feeds.
-  "AzureFirewallDnsProxy", # Monitor DNS resolutions and troubleshoot DNS issues.
-  "AZFWFqdnResolveFailure" # Troubleshoot DNS failures in domain-based application rules.
+  "AZFWNatRule",                  # Track and verify inbound traffic using DNAT rules.
+  "AZFWThreatIntel",              # Detect and log malicious traffic from threat feeds.
+  "AzureFirewallDnsProxy",        # Monitor DNS resolutions and troubleshoot DNS issues.
+  "AZFWFqdnResolveFailure"        # Troubleshoot DNS failures in domain-based application rules.
 ]
 
 
