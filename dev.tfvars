@@ -105,6 +105,11 @@ log_categories = [
   "AZFWFqdnResolveFailure" # Troubleshoot DNS failures in domain-based application rules.
 ]
 
+
+
+
+
+# simplify searches
 log_analytics_saved_search = [
   {
     name         = "Firewall_InterVNet_Traffic"
