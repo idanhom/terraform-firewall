@@ -192,7 +192,8 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   }
 }
 
-resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
+# Unneccessary because am using Bastion for SSH. 
+/* resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
   name                = "internet-to-vms"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
@@ -212,7 +213,7 @@ resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
       protocols             = ["TCP"]                                   # Protocol to allow
     }
   }
-}
+} */
 
 
 # Firewall Network Rule Collection for Outbound Internet Access
@@ -225,10 +226,10 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
 
   rule {
     name                 = "allow-vm-outbound-internet"
-    source_addresses     = ["10.0.0.0/16", "10.1.0.0/16"] # Replace with your VM subnet IP ranges
-    destination_addresses = ["*"]                         # Allow access to all internet destinations
-    destination_ports    = ["80", "443"]                  # Allow HTTP and HTTPS traffic
-    protocols            = ["TCP"]                       # Protocol to allow
+    source_addresses     = ["10.0.0.0/16", "10.1.0.0/16"] 
+    destination_addresses = ["*"]                      
+    destination_ports    = ["80", "443"]                 
+    protocols            = ["TCP"]                      
   }
 }
 
