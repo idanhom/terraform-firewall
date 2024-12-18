@@ -108,99 +108,65 @@ log_categories = [
 
 
 
-
-# simplify searches
 log_analytics_saved_search = [
   {
-    name         = "Firewall_InterVNet_Traffic"
+    name         = "Firewall_Network_Rules_Take10"
     category     = "AzureFirewallNetworkRule"
-    display_name = "Inter-VNet Traffic Through Firewall"
+    display_name = "Sample Network Rule Logs"
     query        = <<QUERY
 AzureDiagnostics
 | where Category == "AzureFirewallNetworkRule"
-| where SourceIP startswith "10." and DestinationIP startswith "10."
-| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
-| sort by TimeGenerated desc
+| take 10
 QUERY
   },
   {
-    name         = "Firewall_Inbound_Internet"
-    category     = "AzureFirewallNetworkRule"
-    display_name = "Inbound Internet Traffic to VMs"
+    name         = "Firewall_Application_Rules_Take10"
+    category     = "AzureFirewallApplicationRule"
+    display_name = "Sample Application Rule Logs"
     query        = <<QUERY
 AzureDiagnostics
-| where Category == "AzureFirewallNetworkRule"
-| where SourceIP !startswith "10." and DestinationIP startswith "10."
-| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
-| sort by TimeGenerated desc
+| where Category == "AzureFirewallApplicationRule"
+| take 10
 QUERY
   },
   {
-    name         = "Firewall_Outbound_Internet"
-    category     = "AzureFirewallNetworkRule"
-    display_name = "Outbound Internet Traffic from VMs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallNetworkRule"
-| where SourceIP startswith "10." and DestinationIP !startswith "10."
-| project TimeGenerated, SourceIP, DestinationIP, Action, Protocol, RuleName
-| sort by TimeGenerated desc
-QUERY
-  },
-  {
-    name         = "Firewall_Denied_Traffic"
-    category     = "AzureFirewallNetworkRule"
-    display_name = "Denied Traffic Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallNetworkRule"
-| where Action == "Deny"
-| project TimeGenerated, SourceIP, DestinationIP, Protocol, RuleName, Action
-| sort by TimeGenerated desc
-QUERY
-  },
-  {
-    name         = "Firewall_ThreatIntel_Logs"
-    category     = "AZFWThreatIntel"
-    display_name = "Firewall Threat Intelligence Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AZFWThreatIntel"
-| project TimeGenerated, SourceIP, DestinationIP, ThreatDescription, Action
-| sort by TimeGenerated desc
-QUERY
-  },
-  {
-    name         = "Firewall_DNS_Failures"
-    category     = "AZFWFqdnResolveFailure"
-    display_name = "Firewall DNS Resolution Failures"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AZFWFqdnResolveFailure"
-| project TimeGenerated, Fqdn, FailureReason, Action
-| sort by TimeGenerated desc
-QUERY
-  },
-  {
-    name         = "Firewall_DNS_Proxy_Logs"
-    category     = "AzureFirewallDnsProxy"
-    display_name = "Firewall DNS Proxy Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallDnsProxy"
-| project TimeGenerated, SourceIP, DestinationIP, Fqdn, Action
-| sort by TimeGenerated desc
-QUERY
-  },
-  {
-    name         = "Firewall_NAT_Rule_Traffic"
+    name         = "Firewall_NAT_Rules_Take10"
     category     = "AZFWNatRule"
-    display_name = "Firewall NAT Rule Traffic Logs"
+    display_name = "Sample NAT Rule Logs"
     query        = <<QUERY
 AzureDiagnostics
 | where Category == "AZFWNatRule"
-| project TimeGenerated, SourceIP, DestinationIP, TranslatedIP, Action
-| sort by TimeGenerated desc
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_Threat_Intelligence_Take10"
+    category     = "AZFWThreatIntel"
+    display_name = "Sample Threat Intelligence Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWThreatIntel"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Proxy_Take10"
+    category     = "AzureFirewallDnsProxy"
+    display_name = "Sample DNS Proxy Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallDnsProxy"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Failures_Take10"
+    category     = "AZFWFqdnResolveFailure"
+    display_name = "Sample DNS Failure Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWFqdnResolveFailure"
+| take 10
 QUERY
   }
 ]
