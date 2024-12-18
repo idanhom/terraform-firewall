@@ -21,6 +21,43 @@ vnets = {
   }
 }
 
+# nsg_rules = [
+#   {
+#     name                       = "Allow_SSH"
+#     priority                   = 100
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "22"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   },
+#   {
+#     name                       = "Allow_HTTP"
+#     priority                   = 110
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "80"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   },
+#   {
+#     name                       = "Allow_Internet_Outbound"
+#     priority                   = 200
+#     direction                  = "Outbound"
+#     access                     = "Allow"
+#     protocol                   = "*"
+#     source_port_range          = "*"
+#     destination_port_range     = "*"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "0.0.0.0/0"
+#   }
+# ]
+
+
 afw = {
   firewall_vnet_name   = "FWVnet"
   firewall_vnet_prefix = ["10.2.0.0/16"]
@@ -59,9 +96,77 @@ vnet_route_table = {
   }
 }
 
+log_categories = [
+  "AzureFirewallNetworkRule",     # Monitor traffic based on IP addresses and ports.
+  "AzureFirewallApplicationRule", # Monitor traffic based on FQDN (domains) and protocols (HTTP/HTTPS).
+  "AZFWNatRule",                  # Track and verify inbound traffic using DNAT rules.
+  "AZFWThreatIntel",              # Detect and log malicious traffic from threat feeds.
+  "AzureFirewallDnsProxy",        # Monitor DNS resolutions and troubleshoot DNS issues.
+  "AZFWFqdnResolveFailure"        # Troubleshoot DNS failures in domain-based application rules.
+]
 
 
 
 
-
-
+log_analytics_saved_search = [
+  {
+    name         = "Firewall_Network_Rules_Take10"
+    category     = "AzureFirewallNetworkRule"
+    display_name = "Sample Network Rule Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_Application_Rules_Take10"
+    category     = "AzureFirewallApplicationRule"
+    display_name = "Sample Application Rule Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallApplicationRule"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_NAT_Rules_Take10"
+    category     = "AZFWNatRule"
+    display_name = "Sample NAT Rule Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWNatRule"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_Threat_Intelligence_Take10"
+    category     = "AZFWThreatIntel"
+    display_name = "Sample Threat Intelligence Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWThreatIntel"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Proxy_Take10"
+    category     = "AzureFirewallDnsProxy"
+    display_name = "Sample DNS Proxy Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallDnsProxy"
+| take 10
+QUERY
+  },
+  {
+    name         = "Firewall_DNS_Failures_Take10"
+    category     = "AZFWFqdnResolveFailure"
+    display_name = "Sample DNS Failure Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AZFWFqdnResolveFailure"
+| take 10
+QUERY
+  }
+]

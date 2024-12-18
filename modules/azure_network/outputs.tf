@@ -5,18 +5,18 @@ output "debug_vnets" {
 
 output "vnet_ids" {
   description = "map of vnet names to their id"
-  value = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id}
+  value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
 }
 
- 
+
 output "vnet_id" {
   description = "Map of vnet names to their ID"
   value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
 }
 
 output "subnet_id" {
-description = "map of subnet names to their id"
-value       = { for subnet_name, subnet in azurerm_subnet.my_subnet : subnet_name => subnet.id } //learn this better
+  description = "map of subnet names to their id"
+  value       = { for subnet_name, subnet in azurerm_subnet.my_subnet : subnet_name => subnet.id } //learn this better
 }
 
 # Firewall resources

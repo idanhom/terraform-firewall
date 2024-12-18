@@ -40,6 +40,7 @@ module "networking" {
   vnets               = var.vnets
   afw                 = var.afw
   vnet_route_table    = var.vnet_route_table
+  vm_private_ip = module.compute.vm_private_ip
   # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
@@ -53,10 +54,31 @@ module "compute" {
 }
 
 
+
+
+module "monitoring" {
+  source = "./modules/azure_monitoring"
+
+  resource_group_name = var.resource_group_name
+  location            = var.location
+
+  target_resource_id = module.networking.firewall_id
+
+  workspace_retention_in_days = var.workspace_retention_in_days
+  log_categories              = var.log_categories
+
+  log_analytics_saved_search = var.log_analytics_saved_search
+
+
+}
+
+
+
+
+
 output "firewall_private_ip_debug" {
   value = module.networking.firewall_ip
 }
-
 
 output "vnet_ids" {
   description = "Map of vnet names to their IDs"
@@ -65,25 +87,16 @@ output "vnet_ids" {
 
 output "subnet_ids" {
   description = "map of subnet names to their id"
-  value = module.networking.subnet_id
+  value       = module.networking.subnet_id
 }
 
 output "vm_private_ip" {
-  description = "map of private ip for vms"
-  value = module.compute.vm_private_ip
-  
+  description = "map of vms to private ip"
+  value       = module.compute.vm_private_ip
+
 }
 
-
-
- 
-# module "monitoring" {
-#   source = "./modules/azure_monitoring"
-#   resource_group_name = 
-#   location = 
-
-
-#   firewall_id = module.networking.firewall_id
-
-
-# }
+output "vm_public_ip" {
+  description = "map of vm to public ip"
+  value       = module.compute.vm_public_ip
+}
