@@ -7,7 +7,7 @@ https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67444a9f-2ae4-800b-919b-736a
 
 This project deploys an Azure Firewall with customizable rules using Terraform. The configuration is designed to be reusable, easily modifiable, and follows best practices in file structure, naming conventions, and state management. 
 
-
+test
 
 Todo: 
    efter detta är löst, sätta upp monitoring
