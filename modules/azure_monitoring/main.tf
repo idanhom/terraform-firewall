@@ -1,3 +1,7 @@
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67625f31-a9a0-800b-a321-f69b681e3bc3
+
+
+
 resource "azurerm_log_analytics_workspace" "firewall_logs" {
   name                = "firewalllaw"
   resource_group_name = var.resource_group_name

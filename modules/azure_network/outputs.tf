@@ -7,7 +7,7 @@ output "vnet_ids" {
   description = "map of vnet names to their id"
   value = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id}
 }
-
+ 
  
 output "vnet_id" {
   description = "Map of vnet names to their ID"
