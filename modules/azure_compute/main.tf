@@ -26,10 +26,16 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   resource_group_name   = var.resource_group_name
   location              = var.location
   size                  = "Standard_F2"
+  network_interface_ids = [azurerm_network_interface.my_nics[each.key].id]
+  
+
+  # adding data to install nginx. note: possibly won't work.
+  # since firewall has (potentially blocking rules)
+  custom_data = base64encode("./custom_data/nginx-install.base64")
+
   admin_username        = "adminuser"
   admin_password        = "Redeploy2024!!" # use key vault
-  network_interface_ids = [azurerm_network_interface.my_nics[each.key].id]
-
+// touch disable_password_auth for ssh key-implementation? how does it affect with key vault?
   disable_password_authentication = false
 
   os_disk {
