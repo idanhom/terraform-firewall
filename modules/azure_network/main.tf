@@ -188,7 +188,7 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
     source_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
     destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
     destination_ports = ["*"]
-    protocols = ["TCP", "UDP"]
+    protocols = ["TCP", "UDP", "ICMP"]
   }
 }
 

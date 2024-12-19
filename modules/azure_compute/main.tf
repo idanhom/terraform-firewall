@@ -20,10 +20,6 @@ resource "azurerm_network_interface" "my_nics" {
   }
 }
 
-
-
-# trouble shooting why I can't access vm through public ip but can through bastion
-# nsg is opened inbound 22
 resource "azurerm_linux_virtual_machine" "my_vms" {
   for_each              = var.vnets
   name                  = "vm-${each.key}"
