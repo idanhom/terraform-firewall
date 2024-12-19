@@ -47,7 +47,8 @@ module "networking" {
 
 module "compute" {
   source              = "./modules/azure_compute"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg_project.name
+# previously, it was var.resource_group_name
   location            = var.location
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
@@ -59,44 +60,20 @@ module "compute" {
 module "monitoring" {
   source = "./modules/azure_monitoring"
 
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg_project.name
+# previously, it was var.resource_group_name
   location            = var.location
 
-  target_resource_id = module.networking.firewall_id
+  firewall_id = module.networking.firewall_id
 
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
 
   log_analytics_saved_search = var.log_analytics_saved_search
 
+  depends_on = [ module.networking ]
 
 }
 
 
 
-
-
-output "firewall_private_ip_debug" {
-  value = module.networking.firewall_ip
-}
-
-output "vnet_ids" {
-  description = "Map of vnet names to their IDs"
-  value       = module.networking.vnet_ids
-}
-
-output "subnet_ids" {
-  description = "map of subnet names to their id"
-  value       = module.networking.subnet_id
-}
-
-output "vm_private_ip" {
-  description = "map of vms to private ip"
-  value       = module.compute.vm_private_ip
-
-}
-
-output "vm_public_ip" {
-  description = "map of vm to public ip"
-  value       = module.compute.vm_public_ip
-}

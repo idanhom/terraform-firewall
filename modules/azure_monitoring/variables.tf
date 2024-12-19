@@ -14,8 +14,8 @@ variable "workspace_retention_in_days" {
   default     = 30
 }
 
-variable "target_resource_id" {
-  description = "the ID of the resource to monitor"
+variable "firewall_id" {
+  description = "the ID of the resource to monitor (i.e., firewall)"
   type        = string
 }
 

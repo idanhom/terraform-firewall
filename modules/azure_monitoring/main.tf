@@ -4,12 +4,15 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   location            = var.location
   sku                 = "PerGB2018"
   retention_in_days   = var.workspace_retention_in_days
+  
+  # depends_on = [var.resource_group_name]
+
 }
 
 
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
-  target_resource_id         = var.target_resource_id
+  target_resource_id         = var.firewall_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
 
   # Logs for network rules
