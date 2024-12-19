@@ -31,6 +31,7 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
 
   # adding data to install nginx. note: possibly won't work.
   # since firewall has (potentially blocking rules)
+  # also, is file path correctly specified? missing azure_compute first
   custom_data = base64encode("./custom_data/nginx-install.base64")
 
   admin_username        = "adminuser"
