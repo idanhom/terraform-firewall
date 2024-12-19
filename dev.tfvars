@@ -96,77 +96,92 @@ vnet_route_table = {
   }
 }
 
+
 log_categories = [
-  "AzureFirewallNetworkRule",     # Monitor traffic based on IP addresses and ports.
-  "AzureFirewallApplicationRule", # Monitor traffic based on FQDN (domains) and protocols (HTTP/HTTPS).
-  "AZFWNatRule",                  # Track and verify inbound traffic using DNAT rules.
-  "AZFWThreatIntel",              # Detect and log malicious traffic from threat feeds.
-  "AzureFirewallDnsProxy",        # Monitor DNS resolutions and troubleshoot DNS issues.
-  "AZFWFqdnResolveFailure"        # Troubleshoot DNS failures in domain-based application rules.
+  "AzureFirewallApplicationRule",
+  "AzureFirewallNetworkRule",
+  "AzureFirewallDnsProxy",
+  "AZFWNetworkRule",
+  "AZFWApplicationRule",
+  "AZFWNatRule",
+  "AZFWThreatIntel",
+  "AZFWFqdnResolveFailure"
 ]
-
-
 
 
 log_analytics_saved_search = [
   {
-    name         = "Firewall_Network_Rules_Take10"
-    category     = "AzureFirewallNetworkRule"
+    name         = "firewall_network_rules_take10" # Matches the existing name in Azure
+    category     = "AzureFirewallNetworkRule"     # Valid category
     display_name = "Sample Network Rule Logs"
     query        = <<QUERY
 AzureDiagnostics
 | where Category == "AzureFirewallNetworkRule"
 | take 10
 QUERY
-  },
-  {
-    name         = "Firewall_Application_Rules_Take10"
-    category     = "AzureFirewallApplicationRule"
-    display_name = "Sample Application Rule Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallApplicationRule"
-| take 10
-QUERY
-  },
-  {
-    name         = "Firewall_NAT_Rules_Take10"
-    category     = "AZFWNatRule"
-    display_name = "Sample NAT Rule Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AZFWNatRule"
-| take 10
-QUERY
-  },
-  {
-    name         = "Firewall_Threat_Intelligence_Take10"
-    category     = "AZFWThreatIntel"
-    display_name = "Sample Threat Intelligence Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AZFWThreatIntel"
-| take 10
-QUERY
-  },
-  {
-    name         = "Firewall_DNS_Proxy_Take10"
-    category     = "AzureFirewallDnsProxy"
-    display_name = "Sample DNS Proxy Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallDnsProxy"
-| take 10
-QUERY
-  },
-  {
-    name         = "Firewall_DNS_Failures_Take10"
-    category     = "AZFWFqdnResolveFailure"
-    display_name = "Sample DNS Failure Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AZFWFqdnResolveFailure"
-| take 10
-QUERY
   }
 ]
+
+
+# log_analytics_saved_search = [
+#   {
+#     name         = "Firewall_Network_Rules_Take10"
+#     category     = "AzureFirewallNetworkRule"
+#     display_name = "Sample Network Rule Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AzureFirewallNetworkRule"
+# | take 10
+# QUERY
+#   },
+#   {
+#     name         = "Firewall_Application_Rules_Take10"
+#     category     = "AzureFirewallApplicationRule"
+#     display_name = "Sample Application Rule Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AzureFirewallApplicationRule"
+# | take 10
+# QUERY
+#   },
+#   {
+#     name         = "Firewall_NAT_Rules_Take10"
+#     category     = "AZFWNatRule"
+#     display_name = "Sample NAT Rule Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AZFWNatRule"
+# | take 10
+# QUERY
+#   },
+#   {
+#     name         = "Firewall_Threat_Intelligence_Take10"
+#     category     = "AZFWThreatIntel"
+#     display_name = "Sample Threat Intelligence Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AZFWThreatIntel"
+# | take 10
+# QUERY
+#   },
+#   {
+#     name         = "Firewall_DNS_Proxy_Take10"
+#     category     = "AzureFirewallDnsProxy"
+#     display_name = "Sample DNS Proxy Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AzureFirewallDnsProxy"
+# | take 10
+# QUERY
+#   },
+#   {
+#     name         = "Firewall_DNS_Failures_Take10"
+#     category     = "AZFWFqdnResolveFailure"
+#     display_name = "Sample DNS Failure Logs"
+#     query        = <<QUERY
+# AzureDiagnostics
+# | where Category == "AZFWFqdnResolveFailure"
+# | take 10
+# QUERY
+#   }
+# ]

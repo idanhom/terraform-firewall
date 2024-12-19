@@ -97,6 +97,10 @@ resource "azurerm_public_ip" "firewall_ip" {
 }
 
 
+
+
+### obs: needed to add DNS allow here????
+
 resource "azurerm_firewall" "firewall" {
   name                = var.afw.firewall_name
   location            = var.location

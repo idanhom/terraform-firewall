@@ -56,7 +56,6 @@ module "compute" {
 
 
 
-
 module "monitoring" {
   source = "./modules/azure_monitoring"
 
