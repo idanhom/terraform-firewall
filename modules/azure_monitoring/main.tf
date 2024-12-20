@@ -9,7 +9,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 }
 
 
-resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
+/* resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
   target_resource_id         = var.firewall_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
@@ -23,7 +23,38 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
     }
   }
   depends_on = [ azurerm_log_analytics_workspace.firewall_logs, var.firewall_id ]
+} */
+
+resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
+  name                       = "firewall-diagnostic-setting"
+  target_resource_id         = var.firewall_id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
+
+  # Dynamically enable logs
+  dynamic "enabled_log" {
+    for_each = var.log_categories
+
+    content {
+      category = enabled_log.value
+    }
+  }
+
+  # Metrics
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+
+  depends_on = [
+    azurerm_log_analytics_workspace.firewall_logs,
+    var.firewall_id
+  ]
 }
+
+
+
+
+
 
 resource "azurerm_log_analytics_saved_search" "saved_search" {
   for_each = { for idx, search in var.log_analytics_saved_search : search.name => search }
@@ -40,8 +71,3 @@ resource "azurerm_log_analytics_saved_search" "saved_search" {
 
 # https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs
 # https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview
-# az monitor log-analytics workspace saved-search list \
-#     --resource-group rg_project1 \
-#     --workspace-name firewalllaw \
-#     --query "[].{Name:name,Category:category,Query:query}" \
-#     -o table

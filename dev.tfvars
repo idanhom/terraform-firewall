@@ -99,28 +99,41 @@ vnet_route_table = {
 
 log_categories = [
   "AzureFirewallApplicationRule",
-  "AzureFirewallNetworkRule",
-  "AzureFirewallDnsProxy",
-  "AZFWNetworkRule",
-  "AZFWApplicationRule",
-  "AZFWNatRule",
-  "AZFWThreatIntel",
-  "AZFWFqdnResolveFailure"
+  "AzureFirewallNetworkRule"
 ]
+
 
 
 log_analytics_saved_search = [
   {
-    name         = "firewall_network_rules_take10" # Matches the existing name in Azure
-    category     = "AzureFirewallNetworkRule"     # Valid category
+    name         = "firewall_network_rules_take10"
+    category     = "AzureFirewallNetworkRule"
     display_name = "Sample Network Rule Logs"
     query        = <<QUERY
 AzureDiagnostics
 | where Category == "AzureFirewallNetworkRule"
 | take 10
 QUERY
+  },
+  {
+    name         = "firewall_application_rules_take10"
+    category     = "AzureFirewallApplicationRule"
+    display_name = "Sample Application Rule Logs"
+    query        = <<QUERY
+AzureDiagnostics
+| where Category == "AzureFirewallApplicationRule"
+| take 10
+QUERY
   }
 ]
+
+/* #access above search using az cli
+az monitor log-analytics workspace saved-search show \
+    --resource-group rg_project1 \
+    --workspace-name firewalllaw \
+    --name firewall_network_rules_take10
+ */
+
 
 
 # log_analytics_saved_search = [
