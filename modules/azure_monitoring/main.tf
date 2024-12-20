@@ -25,6 +25,10 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   depends_on = [ azurerm_log_analytics_workspace.firewall_logs, var.firewall_id ]
 } */
 
+
+# some comments for below
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67657ebe-5610-800b-92ef-326856ef194f
+
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
   target_resource_id         = var.firewall_id
