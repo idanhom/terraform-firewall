@@ -1,3 +1,7 @@
+# Read up on the following:
+# https://chatgpt.com/g/g-OJCk3Ji0a-azure-solutions-guide/c/676e888a-4114-800b-9a8a-5f03ca95e659
+# before i proceed with the saved_search problem, try the query in the portal, so i know it works.
+
 resource "azurerm_log_analytics_workspace" "firewall_logs" {
   name                = "firewalllaw"
   resource_group_name = var.resource_group_name
@@ -26,9 +30,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 } */
 
 
-# some comments for below
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67657ebe-5610-800b-92ef-326856ef194f
-
+# Note: IS THE DIAGNOSTICS SETTINGS EVEN CORRECT GIVEN MY USECASE?
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
   target_resource_id         = var.firewall_id
