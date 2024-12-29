@@ -185,8 +185,8 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
 
   rule {
     name = "allow-inter-vnet"
-    source_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
+  source_addresses = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
+    destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
     destination_ports = ["*"]
     protocols = ["TCP", "UDP", "ICMP"]
   }
