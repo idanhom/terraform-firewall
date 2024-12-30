@@ -3,8 +3,11 @@ name: Terraform CI/CD
 # todo: set up service principal
 # https://chatgpt.com/g/g-64TtL1keg-devops-mentor/c/676261ab-d384-800b-9161-f696e6371698
 
+# add tflint
+# https://github.com/terraform-linters/tflint?tab=readme-ov-file#github-actions
 
-
+# add terraform-docs?
+# https://github.com/terraform-docs/terraform-docs/
 
 on:
   push:
