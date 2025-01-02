@@ -39,7 +39,7 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+# no change, want to run pipe again.
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
