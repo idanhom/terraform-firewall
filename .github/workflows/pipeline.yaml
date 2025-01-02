@@ -21,6 +21,10 @@ on:
       - edited
       - closed
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   log-issues:
     if: github.event_name == 'issues'
