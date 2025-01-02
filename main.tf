@@ -23,6 +23,22 @@ provider "azurerm" {
   subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
 
+
+
+# For GitHub's CI/CD
+resource "azurerm_user_assigned_identity" "github_actions_identity" {
+  name                = "github-actions-identity"
+  resource_group_name = "terraformstate-rg"
+  location            = var.location
+}
+
+
+# here we also neeed a federated...
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/federated_identity_credential
+
+
+
 resource "azurerm_resource_group" "rg_project" {
   name     = var.resource_group_name
   location = var.location
