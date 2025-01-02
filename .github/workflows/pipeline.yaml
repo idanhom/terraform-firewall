@@ -8,7 +8,7 @@ name: Terraform CI/CD
 
 # add terraform-docs?
 # https://github.com/terraform-docs/terraform-docs/
-#
+
 on:
   push:
     branches: [main, 'fix-**', 'feature/**']
