@@ -20,13 +20,7 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  #subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
-  
-  subscription_id = env.ARM_SUBSCRIPTION_ID
-  client_id       = env.ARM_CLIENT_ID
-  tenant_id       = env.ARM_TENANT_ID
-
-
+  subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
 
 
