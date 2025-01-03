@@ -71,9 +71,10 @@ jobs:
       - name: Terraform Format
         run: terraform fmt -recursive
 
-      - name: Terraform Init
+      - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
         env:
+          TF_LOG: DEBUG
           ARM_CLIENT_ID: $ARM_CLIENT_ID
           ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET
           ARM_TENANT_ID: $ARM_TENANT_ID
