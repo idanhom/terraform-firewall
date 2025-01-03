@@ -1,7 +1,4 @@
 
-# todo: set up service principal
-# https://chatgpt.com/g/g-64TtL1keg-devops-mentor/c/676261ab-d384-800b-9161-f696e6371698
-
 # add tflint
 # https://github.com/terraform-linters/tflint?tab=readme-ov-file#github-actions
 
@@ -10,6 +7,9 @@
 
 # how to pass the .tfvars file for deployment? for all or one job?
 #
+
+# the problem i'm having with deployment using github actions
+# https://chatgpt.com/c/6777f24d-29c4-800b-bebc-3f420b9626ee
 
 
 name: Terraform CI/CD
