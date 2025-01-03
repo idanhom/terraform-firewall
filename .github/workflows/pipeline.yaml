@@ -1,4 +1,3 @@
-name: Terraform CI/CD
 
 # todo: set up service principal
 # https://chatgpt.com/g/g-64TtL1keg-devops-mentor/c/676261ab-d384-800b-9161-f696e6371698
@@ -11,6 +10,9 @@ name: Terraform CI/CD
 
 # how to pass the .tfvars file for deployment? for all or one job?
 #
+
+
+name: Terraform CI/CD
 
 
 on:
@@ -58,7 +60,11 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
-
+      - name: Debug Environment Variables
+        run: |
+          echo "ARM_CLIENT_ID=$ARM_CLIENT_ID"
+          echo "ARM_TENANT_ID=$ARM_TENANT_ID"
+          echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID"
 
 
       - name: Setup Terraform
@@ -71,6 +77,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env:
+          ARM_CLIENT_ID: $ARM_CLIENT_ID
+          ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET
+          ARM_TENANT_ID: $ARM_TENANT_ID
+          ARM_SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID
 
       - name: Terraform Validate
         run: terraform validate
