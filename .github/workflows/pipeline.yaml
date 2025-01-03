@@ -9,6 +9,10 @@ name: Terraform CI/CD
 # add terraform-docs?
 # https://github.com/terraform-docs/terraform-docs/
 
+# how to pass the .tfvars file for deployment? for all or one job?
+
+
+
 on:
   push:
     branches: [main, 'fix-**', 'feature/**']
@@ -48,12 +52,15 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+
       - name: Set Terraform Environment Variables
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          
+
+
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
