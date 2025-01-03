@@ -71,8 +71,6 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        env:
-          AZURE_CONFIG_DIR: $HOME/.azure
 
       - name: Terraform Validate
         run: terraform validate
