@@ -21,12 +21,8 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  #subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
-
-  # subscription_id = env.ARM_SUBSCRIPTION_ID
-  # tenant_id       = env.ARM_TENANT_ID
-  # client_id       = env.ARM_CLIENT_ID
-
+  # subscription env set locally and using CI/CD to troubleshoot code easier without going through github actions 
+  # subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
 
 
