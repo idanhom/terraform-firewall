@@ -99,15 +99,16 @@ vnet_route_table = {
 
 log_categories = [
   "AzureFirewallApplicationRule",
-  "AzureFirewallNetworkRule"
+  "AzureFirewallNetworkRule",
+  "AzureFirewallDnsProxy"
 ]
 
 
 
-log_analytics_saved_search = {
-  search1 = {
-    category = "AzureFirewallNetworkRule"
-    display_name = "Sample Network Rule Logs"
-    query = "search *"
-  }
-}
+# log_analytics_saved_search = {
+#   search1 = {
+#     category = "AzureFirewallNetworkRule"
+#     display_name = "Sample Network Rule Logs"
+#     query = "search *"
+#   }
+# }

@@ -13,22 +13,6 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 }
 
 
-/* resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
-  name                       = "firewall-diagnostic-setting"
-  target_resource_id         = var.firewall_id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
-
-  # Logs for network rules
-  dynamic "enabled_log" {
-    for_each = var.log_categories
-
-    content {
-      category = enabled_log.value
-    }
-  }
-  depends_on = [ azurerm_log_analytics_workspace.firewall_logs, var.firewall_id ]
-} */
-
 
 # Note: IS THE DIAGNOSTICS SETTINGS EVEN CORRECT GIVEN MY USECASE?
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
@@ -58,10 +42,29 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
 }
 
 
+resource "azurerm_log_analytics_query_pack" "firewall_pack" {
+  name                = "firewall-query-pack"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+}
+
+# Example of adding a single query
+resource "azurerm_log_analytics_query_pack_query" "fw_network_rule_query" {
+  query_pack_id = azurerm_log_analytics_query_pack.firewall_pack.id
+  display_name                = "Sample Network Rule Logs"
+  description                 = "Show the last 50 firewall network rule logs"
+  body                        = <<EOT
+AzureDiagnostics
+| where Category == "AzureFirewallNetworkRule"
+| order by TimeGenerated desc
+| limit 50
+EOT
+}
 
 
 
 
+/* 
 resource "azurerm_log_analytics_saved_search" "saved_search" {
   for_each = var.log_analytics_saved_search
 
@@ -72,8 +75,6 @@ resource "azurerm_log_analytics_saved_search" "saved_search" {
   display_name = each.value.display_name
   query        = each.value.query
 }
+ */
 
-# if issues with deployment, remove diagnostic settings in portal... until future solution
 
-# https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs
-# https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview
