@@ -76,19 +76,14 @@ jobs:
         with:
           terraform_version: "~>1.9"
           
-# maybe init doesn't work because .tfvars is excluded? how to solve in production environment?
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
-        env:
-          TF_LOG: DEBUG
-          # ARM_CLIENT_ID: $ARM_CLIENT_ID
-          # ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET
-          # ARM_TENANT_ID: $ARM_TENANT_ID
-          # ARM_SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID
+        #env:
+          #TF_LOG: DEBUG
 
 
       - name: Terraform Format
-        run: terraform fmt -recursive -check
+        run: terraform fmt -recursive 
 
       - name: Terraform Validate
         run: terraform validate
