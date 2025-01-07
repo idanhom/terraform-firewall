@@ -77,8 +77,7 @@ variable "log_categories" {
 
 variable "log_analytics_saved_search" {
   description = "list of object for log analytics saved searches"
-  type = list(object({
-    name         = string
+  type = map(object({
     category     = string
     display_name = string
     query        = string

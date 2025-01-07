@@ -104,97 +104,10 @@ log_categories = [
 
 
 
-log_analytics_saved_search = [
-  {
-    name         = "firewall_network_rules_take10"
-    category     = "AzureFirewallNetworkRule"
+log_analytics_saved_search = {
+  search1 = {
+    category = "AzureFirewallNetworkRule"
     display_name = "Sample Network Rule Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallNetworkRule"
-| take 10
-QUERY
-  },
-  {
-    name         = "firewall_application_rules_take10"
-    category     = "AzureFirewallApplicationRule"
-    display_name = "Sample Application Rule Logs"
-    query        = <<QUERY
-AzureDiagnostics
-| where Category == "AzureFirewallApplicationRule"
-| take 10
-QUERY
+    query = "search *"
   }
-]
-
-/* #access above search using az cli
-az monitor log-analytics workspace saved-search show \
-    --resource-group rg_project1 \
-    --workspace-name firewalllaw \
-    --name firewall_network_rules_take10
- */
-
-
-
-# log_analytics_saved_search = [
-#   {
-#     name         = "Firewall_Network_Rules_Take10"
-#     category     = "AzureFirewallNetworkRule"
-#     display_name = "Sample Network Rule Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AzureFirewallNetworkRule"
-# | take 10
-# QUERY
-#   },
-#   {
-#     name         = "Firewall_Application_Rules_Take10"
-#     category     = "AzureFirewallApplicationRule"
-#     display_name = "Sample Application Rule Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AzureFirewallApplicationRule"
-# | take 10
-# QUERY
-#   },
-#   {
-#     name         = "Firewall_NAT_Rules_Take10"
-#     category     = "AZFWNatRule"
-#     display_name = "Sample NAT Rule Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AZFWNatRule"
-# | take 10
-# QUERY
-#   },
-#   {
-#     name         = "Firewall_Threat_Intelligence_Take10"
-#     category     = "AZFWThreatIntel"
-#     display_name = "Sample Threat Intelligence Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AZFWThreatIntel"
-# | take 10
-# QUERY
-#   },
-#   {
-#     name         = "Firewall_DNS_Proxy_Take10"
-#     category     = "AzureFirewallDnsProxy"
-#     display_name = "Sample DNS Proxy Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AzureFirewallDnsProxy"
-# | take 10
-# QUERY
-#   },
-#   {
-#     name         = "Firewall_DNS_Failures_Take10"
-#     category     = "AZFWFqdnResolveFailure"
-#     display_name = "Sample DNS Failure Logs"
-#     query        = <<QUERY
-# AzureDiagnostics
-# | where Category == "AZFWFqdnResolveFailure"
-# | take 10
-# QUERY
-#   }
-# ]
+}
