@@ -97,8 +97,7 @@ jobs:
 
 
 
-      # if runs, check what to grab from here? some linting? something with artefact?
-      #
+      # integrate linting as next workflow-step. check out the upload/artefacts..      #
       # - name: Upload Terraform Plan
       #   uses: actions/upload-artifact@v3
       #   with:
