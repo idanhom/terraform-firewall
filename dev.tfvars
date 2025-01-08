@@ -103,7 +103,8 @@ log_categories = [
   "AzureFirewallDnsProxy"
 ]
 
-
+admin_username        = "adminuser"
+admin_password        = "Redeploy2025!!"
 
 # log_analytics_saved_search = {
 #   search1 = {

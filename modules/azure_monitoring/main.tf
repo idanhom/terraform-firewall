@@ -14,6 +14,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 
 
 
+# Error: A resource with the ID "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall|firewall-diagnostic-setting" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_monitor_diagnostic_setting" for more information.
 # Note: IS THE DIAGNOSTICS SETTINGS EVEN CORRECT GIVEN MY USECASE?
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
@@ -40,7 +41,6 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
     var.firewall_id
   ]
 }
-
 
 resource "azurerm_log_analytics_query_pack" "firewall_pack" {
   name                = "firewall-query-pack"

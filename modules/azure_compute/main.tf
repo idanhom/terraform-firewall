@@ -1,3 +1,6 @@
+
+
+
 resource "azurerm_public_ip" "my_pip" {
   for_each            = var.vnets
   name                = "pip-${each.key}"
@@ -20,6 +23,17 @@ resource "azurerm_network_interface" "my_nics" {
   }
 }
 
+
+data "azurerm_key_vault_secret" "admin_username" {
+  name         = var.admin_username_secret_name
+  key_vault_id = var.key_vault_id
+}
+
+data "azurerm_key_vault_secret" "admin_password" {
+  name         = var.admin_password_secret_name
+  key_vault_id = var.key_vault_id
+}
+
 resource "azurerm_linux_virtual_machine" "my_vms" {
   for_each              = var.vnets
   name                  = "vm-${each.key}"
@@ -34,8 +48,12 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   # also, is file path correctly specified? missing azure_compute first
   custom_data = base64encode("./custom_data/nginx-install.base64")
 
-  admin_username        = "adminuser"
-  admin_password        = "Redeploy2024!!" # use key vault
+  admin_username = data.azurerm_key_vault_secret.admin_username.value
+  admin_password = data.azurerm_key_vault_secret.admin_password.value
+
+
+  # admin_username        = "adminuser"
+  # admin_password        = "Redeploy2025!!" # use key vault
 // touch disable_password_auth for ssh key-implementation? how does it affect with key vault?
   disable_password_authentication = false
 

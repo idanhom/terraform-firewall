@@ -15,7 +15,6 @@ terraform {
     storage_account_name = "statecontainer001"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
-    
   }
 }
 
@@ -28,6 +27,9 @@ provider "azurerm" {
   # subscription env set locally and using CI/CD to troubleshoot code easier without going through github actions 
   # subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
+
+
+data "azurerm_client_config" "current" {}
 
 
 
@@ -60,6 +62,9 @@ module "compute" {
   location            = var.location
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
+  key_vault_id                = module.key_vault.key_vault_id
+  admin_username_secret_name  = module.key_vault.admin_username_secret_name
+  admin_password_secret_name  = module.key_vault.admin_password_secret_name
 }
 
 
@@ -76,11 +81,17 @@ module "monitoring" {
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
 
-  log_analytics_saved_search = var.log_analytics_saved_search
+  #log_analytics_saved_search = var.log_analytics_saved_search // shouldn't this change given i do query pack now instead of saved search?
 
   depends_on = [ module.networking ]
-
 }
 
+module "key_vault" {
+  source = "./azure_key_vault"
+  resource_group_name = var.resource_group_name
+  location = var.location
 
 
+  admin_username = var.admin_username
+  admin_password = var.admin_password
+}

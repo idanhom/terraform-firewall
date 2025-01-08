@@ -75,11 +75,25 @@ variable "log_categories" {
 }
 
 
-variable "log_analytics_saved_search" {
-  description = "list of object for log analytics saved searches"
-  type = map(object({
-    category     = string
-    display_name = string
-    query        = string
-  }))
+
+
+variable "admin_username" {
+  description = "Admin username for the virtual machine"
+  type        = string
+  sensitive   = true
 }
+
+variable "admin_password" {
+  description = "Admin password for the virtual machine"
+  type        = string
+  sensitive = true
+}
+
+# variable "log_analytics_saved_search" {
+#   description = "list of object for log analytics saved searches"
+#   type = map(object({
+#     category     = string
+#     display_name = string
+#     query        = string
+#   }))
+# }
