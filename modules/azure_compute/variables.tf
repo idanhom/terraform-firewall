@@ -25,18 +25,3 @@ variable "subnet_ids" {
   description = "map of subnet names to their IDs"
   type        = map(string)
 }
-
-variable "key_vault_id" {
-  description = "ID of the Key Vault to retrieve secrets from"
-  type        = string
-}
-
-variable "admin_username_secret_name" {
-  description = "Name of the admin username secret in the Key Vault"
-  type        = string
-}
-
-variable "admin_password_secret_name" {
-  description = "Name of the admin password secret in the Key Vault"
-  type        = string
-}
