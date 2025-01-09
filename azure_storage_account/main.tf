@@ -1,0 +1,98 @@
+# here is want to make sure the private endpoints are using a for_each code loop.
+# also, what other changes do i need to do to make this happen?
+# here is the chatgpt conversation i have to read up on:
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/677fbdab-9568-800b-b998-865efb115ab8
+
+
+resource "azurerm_storage_account" "example" {
+  name                     = "examplestoraccount5421"
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "RAGRS"
+  account_kind             = "StorageV2"
+  access_tier              = "Cool"
+
+  allow_nested_items_to_be_public   = false
+  https_traffic_only_enabled        = true
+  large_file_share_enabled          = true
+  min_tls_version                   = "TLS1_2"
+  shared_access_key_enabled         = true
+
+  blob_properties {
+    versioning_enabled            = false
+    change_feed_enabled           = false
+    last_access_time_enabled      = false
+
+    container_delete_retention_policy {
+      days = 7
+    }
+
+    delete_retention_policy {
+      days                     = 7
+      permanent_delete_enabled = false
+    }
+  }
+
+  network_rules {
+    default_action = "Deny"
+    bypass = [
+      "AzureServices",
+    ]
+  }
+
+  share_properties {
+    retention_policy {
+      days = 7
+    }
+  }
+}
+
+
+resource "azurerm_storage_container" "example" {
+  name                    = "script"
+  storage_account_id   = azurerm_storage_account.example.id
+  container_access_type   = "private"
+}
+
+
+resource "azurerm_storage_blob" "script" {
+  name                   = "script.sh" # The name of the blob in the container
+  storage_account_name   = azurerm_storage_account.example.name
+  storage_container_name = azurerm_storage_container.example.name
+  type                   = "Block" # Blob type: Block Blob
+  source                 = "${path.module}/modules/azure_compute/custom_data/script.sh" # Path to your local file
+}
+
+
+
+
+resource "azurerm_private_endpoint" "example1" {
+  name                = "vnet1_access"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet1/subnets/subnet1"
+
+  private_service_connection {
+    name                              = "vnet1_access_connection"
+    is_manual_connection = false
+    private_connection_resource_id    = azurerm_storage_account.example.id
+    subresource_names                 = ["blob"]
+  }
+}
+
+
+resource "azurerm_private_endpoint" "example2" {
+  name                = "vnet2_access"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet2/subnets/subnet2"
+
+  private_service_connection {
+    name                              = "vnet2_access_connection"
+    is_manual_connection = false
+    private_connection_resource_id    = azurerm_storage_account.example.id
+    subresource_names                 = ["blob"]
+  }
+}
+
