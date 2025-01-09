@@ -55,14 +55,6 @@ module "networking" {
 }
 
 
-
-module "azure_key_vault" {
-  source              = "./modules/azure_key_vault"
-  key_vault           = var.key_vault
-  resource_group_name = var.resource_group_name
-  location            = var.location
-}
-
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
