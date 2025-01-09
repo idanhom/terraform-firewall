@@ -66,6 +66,23 @@ resource "azurerm_storage_blob" "script" {
 
 
 
+resource "azurerm_private_endpoint" "example" {
+  for_each = var.vnets
+
+  name = "${each.key}_access"
+  location = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id = module.networking.subnet_id[each.value.subnet_name] 
+
+  private_service_connection {
+    name                           = "${each.key}_connection"
+    private_connection_resource_id = azurerm_storage_account.example.id
+    is_manual_connection           = false
+    subresource_names              = ["blob"]
+  }
+}
+
+/* 
 
 resource "azurerm_private_endpoint" "example1" {
   name                = "vnet1_access"
@@ -96,3 +113,4 @@ resource "azurerm_private_endpoint" "example2" {
   }
 }
 
+ */

@@ -30,12 +30,39 @@ echo "Installing Docker..."
 sudo apt-get update -y
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Step 6: Verify Docker installation
-echo "Verifying Docker installation by running hello-world container..."
-sudo docker run hello-world
+# Step 6: Pull and Run the Nginx Container
+echo "Pulling and running the Nginx container..."
+sudo docker pull nginx:latest
+sudo docker run --name nginx-container -d -p 80:80 nginx
 
-# Step 7: Post-installation steps (optional)
-echo "If you want non-root users to run Docker commands, execute the following manually:"
-echo "  sudo groupadd docker"
-echo "  sudo usermod -aG docker \$USER"
-echo "Then log out and back in to apply the group changes."
+# Step 7: Add a Custom HTML Template
+echo "Creating and adding a custom HTML template..."
+mkdir -p /tmp/mywebsite
+cat <<EOF > /tmp/mywebsite/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Custom Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Custom Website!</h1>
+    <p>This is a custom HTML page served by Nginx running in a Docker container.</p>
+</body>
+</html>
+EOF
+
+# Copy the custom HTML into the Nginx container
+echo "Copying the custom HTML into the Nginx container..."
+sudo docker cp /tmp/mywebsite/index.html nginx-container:/usr/share/nginx/html/index.html
+
+# Step 8: Verify Nginx is Running and Serving the Custom Page
+echo "Verifying Nginx is running and serving the custom HTML page..."
+if sudo docker ps | grep nginx; then
+    echo "Nginx is running on port 80. Visit http://localhost to view the custom page."
+else
+    echo "Failed to start Nginx container."
+fi
