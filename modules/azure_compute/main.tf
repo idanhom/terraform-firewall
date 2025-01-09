@@ -24,7 +24,7 @@ resource "azurerm_network_interface" "my_nics" {
 }
 
 
-
+#
 
 
 resource "azurerm_linux_virtual_machine" "my_vms" {
