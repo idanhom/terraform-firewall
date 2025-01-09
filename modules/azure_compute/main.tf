@@ -45,8 +45,8 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
 
 
 
-   admin_username        = var.admin_username
-   admin_password        = var.admin_password
+   admin_username        = var.admin_username //admin
+   admin_password        = var.admin_password //Redeploy2025!!
 // touch disable_password_auth for ssh key-implementation? how does it affect with key vault?
   disable_password_authentication = false
 
