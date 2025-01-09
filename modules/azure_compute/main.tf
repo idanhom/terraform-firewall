@@ -34,13 +34,10 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   location              = var.location
   size                  = "Standard_F2"
   network_interface_ids = [azurerm_network_interface.my_nics[each.key].id]
-  
 
-  # adding data to install nginx. note: possibly won't work.
-  # since firewall has (potentially blocking rules)
-  # also, is file path correctly specified? missing azure_compute first
-  # actually here, simply install docker instead
-  custom_data = base64encode("./custom_data/nginx-install.base64")
+
+
+  custom_data = file("./custom_data/nginx-install.base64")
 
 
 
