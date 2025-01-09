@@ -17,20 +17,5 @@ resource "azurerm_key_vault" "key_vault" {
     network_acls {
         bypass                     = "AzureServices"
         default_action             = "Allow"
-        ip_rules                   = []
-        virtual_network_subnet_ids = []
     }
-}
-
-
-resource "azurerm_key_vault_secret" "admin_username" {
-  name         = "admin-username"
-  value        = var.admin_username
-  key_vault_id = azurerm_key_vault.key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "admin_password" {
-  name         = "admin-password"
-  value        = var.admin_password
-  key_vault_id = azurerm_key_vault.key_vault.id
 }
