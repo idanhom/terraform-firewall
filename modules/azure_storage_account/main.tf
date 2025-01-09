@@ -3,6 +3,10 @@
 # here is the chatgpt conversation i have to read up on:
 # https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/677fbdab-9568-800b-b998-865efb115ab8
 
+# also, when deploying this text, is it to this resource group or not?
+# perhaps i need to import these resources to this state file? (since they're created outside of it)
+
+# also, i need to expose... the url of the blob so the vm can take it and deploy?
 
 resource "azurerm_storage_account" "example" {
   name                     = "examplestoraccount5421"
