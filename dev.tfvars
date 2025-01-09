@@ -103,6 +103,9 @@ log_categories = [
   "AzureFirewallDnsProxy"
 ]
 
+
+key_vault = "admin-password-vm1-2"
+
 # log_analytics_saved_search = {
 #   search1 = {
 #     category = "AzureFirewallNetworkRule"

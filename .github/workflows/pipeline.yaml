@@ -90,14 +90,14 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
-          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
+          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
+          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform plan -input=false -out=plan.out -var-file='dev.tfvars'
 
       - name: Terraform Apply
         env:
-          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
-          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
+          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
+          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform apply -auto-approve -input=false -var-file='dev.tfvars'
         
 

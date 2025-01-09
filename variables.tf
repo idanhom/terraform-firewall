@@ -75,8 +75,16 @@ variable "log_categories" {
 }
 
 
+variable "admin_username" {
+  description = "Admin username for the Linux VM"
+  type        = string
+}
 
-
+variable "admin_password" {
+  description = "Admin password for the Linux VM"
+  type        = string
+  sensitive   = true
+}
 
 # variable "log_analytics_saved_search" {
 #   description = "list of object for log analytics saved searches"

@@ -55,6 +55,14 @@ module "networking" {
 }
 
 
+
+module "azure_key_vault" {
+  source              = "./modules/azure_key_vault"
+  key_vault           = var.key_vault
+  resource_group_name = var.resource_group_name
+  location            = var.location
+}
+
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
@@ -62,6 +70,10 @@ module "compute" {
   location            = var.location
   vnets               = var.vnets
   subnet_ids          = module.networking.subnet_id
+  
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
+
 }
 
 

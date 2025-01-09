@@ -1,8 +1,8 @@
-data "azurerm_client_config" "current" {}
+/* data "azurerm_client_config" "current" {}
 
 
 resource "azurerm_key_vault" "key_vault" {
-  name                = "admin-password-vm1-2"
+  name                = var.key_vault
   resource_group_name = var.resource_group_name
   location            = var.location
   tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -19,3 +19,4 @@ resource "azurerm_key_vault" "key_vault" {
         default_action             = "Allow"
     }
 }
+ */

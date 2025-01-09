@@ -25,3 +25,14 @@ variable "subnet_ids" {
   description = "map of subnet names to their IDs"
   type        = map(string)
 }
+
+variable "admin_username" {
+  description = "Admin username for the Linux VM"
+  type        = string
+}
+
+variable "admin_password" {
+  description = "Admin password for the Linux VM"
+  type        = string
+  sensitive   = true
+}
