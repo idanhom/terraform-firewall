@@ -57,11 +57,11 @@ resource "azurerm_storage_container" "example" {
 
 
 resource "azurerm_storage_blob" "script" {
-  name                   = "script.sh" # The name of the blob in the container
+  name                   = "script.sh"
   storage_account_name   = azurerm_storage_account.example.name
   storage_container_name = azurerm_storage_container.example.name
-  type                   = "Block" # Blob type: Block Blob
-  source                 = "${path.module}/modules/azure_compute/custom_data/script.sh" # Path to your local file
+  type                   = "Block" 
+  source                 = "${path.module}/modules/azure_storage_account/custom_data/script.sh" # Path to your local file
 }
 
 
