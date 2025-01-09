@@ -33,7 +33,7 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
 
 
 
-  custom_data = file()#add from the blob account
+  #custom_data = file()#add from the blob account
 
 
 
