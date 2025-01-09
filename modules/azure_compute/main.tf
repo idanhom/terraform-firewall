@@ -25,18 +25,6 @@ resource "azurerm_network_interface" "my_nics" {
 
 
 
-# Fetch Admin Username from Key Vault
-data "azurerm_key_vault_secret" "admin_username" {
-  name         = "admin-username"
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-}
-
-# Fetch Admin Password from Key Vault
-data "azurerm_key_vault_secret" "admin_password" {
-  name         = "admin-password"
-  key_vault_id = data.azurerm_key_vault.key_vault.id
-}
-
 
 
 resource "azurerm_linux_virtual_machine" "my_vms" {
