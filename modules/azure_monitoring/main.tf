@@ -9,7 +9,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   sku                 = "PerGB2018"
   retention_in_days   = var.workspace_retention_in_days
 
-  depends_on = [ var.firewall_id ]
+  depends_on = [var.firewall_id]
 }
 
 
@@ -51,9 +51,9 @@ resource "azurerm_log_analytics_query_pack" "firewall_pack" {
 # Example of adding a single query
 resource "azurerm_log_analytics_query_pack_query" "fw_network_rule_query" {
   query_pack_id = azurerm_log_analytics_query_pack.firewall_pack.id
-  display_name                = "Sample Network Rule Logs"
-  description                 = "Show the last 50 firewall network rule logs"
-  body                        = <<EOT
+  display_name  = "Sample Network Rule Logs"
+  description   = "Show the last 50 firewall network rule logs"
+  body          = <<EOT
 AzureDiagnostics
 | where Category == "AzureFirewallNetworkRule"
 | order by TimeGenerated desc

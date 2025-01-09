@@ -59,7 +59,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_asso
 
   subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
-} */ 
+} */
 
 #########################
 
@@ -184,11 +184,11 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   action              = "Allow"
 
   rule {
-    name = "allow-inter-vnet"
-  source_addresses = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
+    name                  = "allow-inter-vnet"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
     destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
-    destination_ports = ["*"]
-    protocols = ["TCP", "UDP", "ICMP"]
+    destination_ports     = ["*"]
+    protocols             = ["TCP", "UDP", "ICMP"]
   }
 }
 
@@ -225,11 +225,11 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   action              = "Allow"
 
   rule {
-    name                 = "allow-vm-outbound-internet"
-    source_addresses     = ["10.0.0.0/16", "10.1.0.0/16"] 
-    destination_addresses = ["*"]                      
-    destination_ports    = ["80", "443"]                 
-    protocols            = ["TCP"]                      
+    name                  = "allow-vm-outbound-internet"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["*"]
+    destination_ports     = ["80", "443"]
+    protocols             = ["TCP"]
   }
 }
 

@@ -50,7 +50,7 @@ module "networking" {
   vnets               = var.vnets
   afw                 = var.afw
   vnet_route_table    = var.vnet_route_table
-  vm_private_ip = module.compute.vm_private_ip
+  vm_private_ip       = module.compute.vm_private_ip
   # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
@@ -58,13 +58,13 @@ module "networking" {
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
-# previously, it was var.resource_group_name
-  location            = var.location
-  vnets               = var.vnets
-  subnet_ids          = module.networking.subnet_id
-  
-  admin_username      = var.admin_username
-  admin_password      = var.admin_password
+  # previously, it was var.resource_group_name
+  location   = var.location
+  vnets      = var.vnets
+  subnet_ids = module.networking.subnet_id
+
+  admin_username = var.admin_username
+  admin_password = var.admin_password
 
 }
 
@@ -74,8 +74,8 @@ module "monitoring" {
   source = "./modules/azure_monitoring"
 
   resource_group_name = azurerm_resource_group.rg_project.name
-# previously, it was var.resource_group_name
-  location            = var.location
+  # previously, it was var.resource_group_name
+  location = var.location
 
   firewall_id = module.networking.firewall_id
 
@@ -84,6 +84,6 @@ module "monitoring" {
 
   #log_analytics_saved_search = var.log_analytics_saved_search // shouldn't this change given i do query pack now instead of saved search?
 
-  depends_on = [ module.networking ]
+  depends_on = [module.networking]
 }
 
