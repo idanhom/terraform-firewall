@@ -48,7 +48,7 @@ resource "azurerm_storage_account" "example" {
   }
 }
 
-#
+
 resource "azurerm_storage_container" "example" {
   name                    = "script"
   storage_account_id   = azurerm_storage_account.example.id
