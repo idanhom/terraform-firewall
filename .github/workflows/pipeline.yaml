@@ -78,6 +78,8 @@ jobs:
           
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
+        # i riktig miljö kommer det vara separerade repos för dev, test och prod
+        # innebär att det undivker "problemet" med att .tfvars är hårdkodad i github pipen.
         #env:
           #TF_LOG: DEBUG
 
@@ -90,12 +92,16 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
-          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
+          # inte bra. impelmentera terraform som använder keyvaults och secrets med random module.
+          # vid utskapande av vm, peka lösenord på secret id.
+          TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
+          TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
         run: terraform plan -input=false -out=plan.out -var-file='dev.tfvars'
 
       - name: Terraform Apply
         env:
+          # inte bra. impelmentera terraform som använder keyvaults och secrets med random module.
+          # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform apply -auto-approve -input=false -var-file='dev.tfvars'
@@ -110,3 +116,5 @@ jobs:
       #     name: tf-plan
       #     path: plan.out
       #
+      # samt... logik "om pull request inte är typ "fix-" kommer den faila och outputta "ditt namn är fel".
+      # 
