@@ -67,7 +67,7 @@ module "compute" {
   admin_password = var.admin_password
 
 }
-
+# 
 
 
 module "monitoring" {
