@@ -1,15 +1,5 @@
-# here is want to make sure the private endpoints are using a for_each code loop.
-# also, what other changes do i need to do to make this happen?
-# here is the chatgpt conversation i have to read up on:
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/677fbdab-9568-800b-b998-865efb115ab8
-
-# also, when deploying this text, is it to this resource group or not?
-# perhaps i need to import these resources to this state file? (since they're created outside of it)
-
-# also, i need to expose... the url of the blob so the vm can take it and deploy?
-# start deploy  
-data "azurerm_client_config" "current" {}
-
+# check this link so I understand what it does
+# https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
 resource "azurerm_private_dns_zone" "private_dns" {
   name                = "privatelink.blob.core.windows.net"
