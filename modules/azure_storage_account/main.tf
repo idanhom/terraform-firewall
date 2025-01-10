@@ -8,6 +8,25 @@
 
 # also, i need to expose... the url of the blob so the vm can take it and deploy?
 # start deploy  
+data "azurerm_client_config" "current" {}
+
+
+resource "azurerm_private_dns_zone" "example" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
+  for_each = module.networking.vnet_ids
+
+  name                  = "${each.value}-dns-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.example.name
+  virtual_network_id    = each.value
+}
+
+
+
 resource "azurerm_storage_account" "example" {
   name                     = "examplestoraccount5421"
   resource_group_name      = var.resource_group_name
@@ -16,6 +35,8 @@ resource "azurerm_storage_account" "example" {
   account_replication_type = "RAGRS"
   account_kind             = "StorageV2"
   access_tier              = "Cool"
+  public_network_access_enabled = false
+  default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public   = false
   https_traffic_only_enabled        = true
@@ -39,6 +60,10 @@ resource "azurerm_storage_account" "example" {
     bypass = [
       "AzureServices",
     ]
+    private_link_access {
+      endpoint_resource_id = azurerm_private_endpoint.example.id
+      endpoint_tenant_id = data.azurerm_client_config.current.id
+    }
   }
 
   share_properties {

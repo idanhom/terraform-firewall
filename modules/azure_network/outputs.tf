@@ -3,6 +3,9 @@ output "debug_vnets" {
   value = var.vnets
 }
 
+
+#------note:
+# have both vnet_ids and vnet_id. what goes to where? make sure i modify and use the "vnet_ids"
 output "vnet_ids" {
   description = "map of vnet names to their id"
   value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
