@@ -24,10 +24,6 @@ resource "azurerm_storage_account" "example" {
   shared_access_key_enabled         = true
 
   blob_properties {
-    versioning_enabled            = false
-    change_feed_enabled           = false
-    last_access_time_enabled      = false
-
     container_delete_retention_policy {
       days = 7
     }
@@ -67,7 +63,6 @@ resource "azurerm_storage_blob" "script" {
   type                   = "Block" 
   source                 = "${path.module}/modules/azure_storage_account/custom_data/script.sh" # Path to your local file
 }
-
 
 
 resource "azurerm_private_endpoint" "example" {
