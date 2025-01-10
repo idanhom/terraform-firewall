@@ -11,7 +11,7 @@
 data "azurerm_client_config" "current" {}
 
 
-resource "azurerm_private_dns_zone" "example" {
+resource "azurerm_private_dns_zone" "private_dns" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
 }
@@ -25,6 +25,21 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   virtual_network_id    = each.value
 }
 
+resource "azurerm_private_endpoint" "example" {
+  for_each = var.subnet_ids
+
+  name = "${each.key}_access"
+  location = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id = each.value
+
+  private_service_connection {
+    name                           = "${each.key}_connection"
+    private_connection_resource_id = azurerm_storage_account.example.id
+    is_manual_connection           = false
+    subresource_names              = ["blob"]
+  }
+}
 
 
 resource "azurerm_storage_account" "example" {
@@ -32,7 +47,7 @@ resource "azurerm_storage_account" "example" {
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
-  account_replication_type = "RAGRS"
+  account_replication_type = "LRS"
   account_kind             = "StorageV2"
   access_tier              = "Cool"
   public_network_access_enabled = false
@@ -41,7 +56,6 @@ resource "azurerm_storage_account" "example" {
   allow_nested_items_to_be_public   = false
   https_traffic_only_enabled        = true
   large_file_share_enabled          = true
-  min_tls_version                   = "TLS1_2"
   shared_access_key_enabled         = true
 
   blob_properties {
@@ -62,7 +76,6 @@ resource "azurerm_storage_account" "example" {
     ]
     private_link_access {
       endpoint_resource_id = azurerm_private_endpoint.example.id
-      endpoint_tenant_id = data.azurerm_client_config.current.id
     }
   }
 
@@ -90,21 +103,7 @@ resource "azurerm_storage_blob" "script" {
 }
 
 
-resource "azurerm_private_endpoint" "example" {
-  for_each = var.subnet_ids
 
-  name = "${each.key}_access"
-  location = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id = each.value
-
-  private_service_connection {
-    name                           = "${each.key}_connection"
-    private_connection_resource_id = azurerm_storage_account.example.id
-    is_manual_connection           = false
-    subresource_names              = ["blob"]
-  }
-}
 
 /* 
 
