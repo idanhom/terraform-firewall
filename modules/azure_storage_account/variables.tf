@@ -21,3 +21,8 @@ variable "vnets" {
     nic_name = string
   }))
 }
+
+variable "subnet_ids" {
+  description = "Map of subnet names to their IDs from the networking module"
+  type        = map(string)
+}

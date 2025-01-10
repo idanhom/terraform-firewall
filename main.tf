@@ -92,5 +92,6 @@ module "storage_account" {
   resource_group_name = var.resource_group_name 
   location = var.location
   vnets = var.vnets
+  subnet_ids = module.networking.subnet_id
 }
 
