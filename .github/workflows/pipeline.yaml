@@ -1,10 +1,7 @@
 name: Terraform CI/CD
 
-# todo: set up service principal
-# https://chatgpt.com/g/g-64TtL1keg-devops-mentor/c/676261ab-d384-800b-9161-f696e6371698
-
-
-
+# add dependency caching
+# see guide 73-75 \OneDrive - Redeploy AB\Documents\Knowledge Nexus\01 Project\Learnings\GitHub Actions\Udemy\V1\Section 5. Job Artifacts and Outputs
 
 on:
   push:
