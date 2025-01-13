@@ -1,6 +1,3 @@
-# check this link so I understand what it does
-# https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
-#
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
