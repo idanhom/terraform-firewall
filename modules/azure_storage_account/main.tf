@@ -91,7 +91,7 @@ resource "azurerm_storage_blob" "script_blob" {
   storage_account_name   = azurerm_storage_account.blob_storage_account.name
   storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block" 
-  source                 = "${path.module}/modules/azure_storage_account/custom_data/docker.sh" # Path to your local file
+  source                 = "${path.module}/custom_data/docker.sh" # Path to your local file
 }
 
 
