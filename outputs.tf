@@ -9,7 +9,7 @@ output "vnet_ids" {
 
 output "subnet_ids" {
   description = "map of subnet names to their id"
-  value       = module.networking.subnet_id
+  value       = module.networking.subnet_ids
 }
 
 output "vm_private_ip" {
