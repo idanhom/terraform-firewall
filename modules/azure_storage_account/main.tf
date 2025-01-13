@@ -1,7 +1,7 @@
 # check this link so I understand what it does
 # https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 #
-resource "azurerm_private_dns_zone" "private_dns" {
+resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
 }
@@ -9,31 +9,31 @@ resource "azurerm_private_dns_zone" "private_dns" {
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   for_each = var.vnet_ids
 
-  name                  = "${each.value}-dns-link"
+  name                  = "${each.key}-blob-dns-link" //or each.value??
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns.name
   virtual_network_id    = each.value
 }
 
-resource "azurerm_private_endpoint" "example" {
+resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
 
-  name = "${each.key}_access"
+  name = "${each.key}-blob-endpoint"
   location = var.location
   resource_group_name = var.resource_group_name
   subnet_id = each.value
 
   private_service_connection {
-    name                           = "${each.key}_connection"
-    private_connection_resource_id = azurerm_storage_account.example.id
+    name                           = "${each.key}-blob-endpoint"
+    private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
-  depends_on = [azurerm_storage_account.example]
+  depends_on = [azurerm_storage_account.blob_storage_account]
 }
 
 
-resource "azurerm_storage_account" "example" {
+resource "azurerm_storage_account" "blob_storage_account" {
   name                     = "examplestoraccount5421"
   resource_group_name      = var.resource_group_name
   location                 = var.location
@@ -78,17 +78,17 @@ resource "azurerm_storage_account" "example" {
 }
 
 
-resource "azurerm_storage_container" "example" {
-  name                    = "script"
-  storage_account_id   = azurerm_storage_account.example.id
+resource "azurerm_storage_container" "script_container" {
+  name                    = "scripts"
+  storage_account_id   = azurerm_storage_account.blob_storage_account.id
   container_access_type   = "private"
 }
 
 
-resource "azurerm_storage_blob" "script" {
+resource "azurerm_storage_blob" "script_blob" {
   name                   = "script.sh"
-  storage_account_name   = azurerm_storage_account.example.name
-  storage_container_name = azurerm_storage_container.example.name
+  storage_account_name   = azurerm_storage_account.blob_storage_account.name
+  storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block" 
   source                 = "${path.module}/modules/azure_storage_account/custom_data/script.sh" # Path to your local file
 }
