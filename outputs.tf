@@ -25,5 +25,5 @@ output "vm_public_ip" {
 
 output "blob_url" {
   description = "url of SAS token to container"
-  value = azurerm_storage_blob.script_blob.url
+  value = module.storage_account.blob_url
 }
