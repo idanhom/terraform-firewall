@@ -233,7 +233,35 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   }
 }
 
+resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
+  name                = "nginx_inbound_dnat"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 200
+  action              = "Dnat"
 
+  rule {
+    name                  = "vm1_http"
+    description           = "Route HTTP traffic for VM1"
+    source_addresses      = ["*"]
+    destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
+    destination_ports     = ["8080"]
+    protocols             = ["TCP"]
+    translated_address    = azurerm_network_interface.my_nics["vnet1"].private_ip_address
+    translated_port       = "80"
+  }
+
+  rule {
+    name                  = "vm2_http"
+    description           = "Route HTTP traffic for VM2"
+    source_addresses      = ["*"]
+    destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
+    destination_ports     = ["8081"]
+    protocols             = ["TCP"]
+    translated_address    = azurerm_network_interface.my_nics["vnet2"].private_ip_address
+    translated_port       = "80"
+  }
+}
 
 
 
