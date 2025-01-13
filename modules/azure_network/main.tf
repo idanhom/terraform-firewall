@@ -232,7 +232,7 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
     protocols             = ["TCP"]
   }
 }
-
+#
 resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
