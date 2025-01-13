@@ -12,11 +12,11 @@ output "vnet_ids" {
 }
 
 
-output "vnet_id" {
+/* output "vnet_id" {
   description = "Map of vnet names to their ID"
   value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
 }
-
+ */
 output "subnet_id" { //should this be "subnet_ids" instead? what does this change in the rest of the code, if at all? for consistency...
   description = "map of subnet names to their id"
   value       = { for subnet_name, subnet in azurerm_subnet.my_subnet : subnet_name => subnet.id } //learn this better
