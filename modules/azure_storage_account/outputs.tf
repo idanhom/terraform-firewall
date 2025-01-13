@@ -9,3 +9,11 @@ output "container_name" {
 output "blob_name" {
   value = azurerm_storage_blob.script_blob.name
 }
+
+output "read_only_sas_token" {
+  value = azurerm_storage_account_sas.blob_read_sas.sas
+}
+
+output "read_only_blob_url_with_sas" {
+  value = "${azurerm_storage_blob.script_blob.url}${azurerm_storage_account_sas.blob_read_sas.sas}"
+}

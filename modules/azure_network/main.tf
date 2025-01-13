@@ -240,27 +240,27 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   priority            = 200
   action              = "Dnat"
 
-    rule {
+  rule {
     name                  = "vm1_http"
     description           = "Route HTTP traffic for VM1"
     source_addresses      = ["*"]
     destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
     destination_ports     = ["8080"]
     protocols             = ["TCP"]
-    translated_address    = var.vm_private_ip["vnet1"] 
+    translated_address    = var.vm_private_ip["vnet1"]
     translated_port       = "80"
-    }
+  }
 
-    rule {
+  rule {
     name                  = "vm2_http"
     description           = "Route HTTP traffic for VM2"
     source_addresses      = ["*"]
     destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
     destination_ports     = ["8081"]
     protocols             = ["TCP"]
-    translated_address    = var.vm_private_ip["vnet2"] 
+    translated_address    = var.vm_private_ip["vnet2"]
     translated_port       = "80"
-    }
+  }
 }
 
 

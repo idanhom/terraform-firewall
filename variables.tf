@@ -88,7 +88,7 @@ variable "admin_password" {
 variable "runner_public_ip" {
   type        = string
   description = "Public IP of the GitHub Actions runner"
-} 
+}
 
 
 

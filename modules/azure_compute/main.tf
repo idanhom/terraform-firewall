@@ -35,8 +35,8 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
 
   custom_data = base64encode(<<EOT
 #!/bin/bash
-# Download the script from blob storage
-curl -o /tmp/script.sh "https://${var.storage_account_name}.blob.core.windows.net/${var.container_name}/${var.blob_name}"
+# Download the script from blob storage using SAS token
+curl -o /tmp/script.sh "${azurerm_storage_blob.script_blob.url}${azurerm_storage_account_sas.blob_read_sas.sas}"
 # Make the script executable
 chmod +x /tmp/script.sh
 # Execute the script

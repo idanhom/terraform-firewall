@@ -1,3 +1,7 @@
+# Note, have currently opened up the networking too wide. See arg like public_network_access_enabled and block network_rules (default_action)
+# see this gpt (note that it's o1)
+# https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
+
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
@@ -6,7 +10,7 @@ resource "azurerm_private_dns_zone" "blob_dns_zone" {
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   for_each = var.vnet_ids
 
-  name                  = "${each.key}-blob-dns-link" //or each.value??
+  name                  = "${each.key}-blob-dns-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
   virtual_network_id    = each.value
@@ -15,10 +19,10 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
 
-  name = "${each.key}-blob-endpoint"
-  location = var.location
+  name                = "${each.key}-blob-endpoint"
+  location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id = each.value
+  subnet_id           = each.value
 
   private_service_connection {
     name                           = "${each.key}-blob-endpoint"
@@ -31,20 +35,20 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
 
 
 resource "azurerm_storage_account" "blob_storage_account" {
-  name                     = "examplestoraccount5421"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  account_kind             = "StorageV2"
-  access_tier              = "Cool"
-  public_network_access_enabled = true 
+  name                            = "examplestoraccount5421"
+  resource_group_name             = var.resource_group_name
+  location                        = var.location
+  account_tier                    = "Standard"
+  account_replication_type        = "LRS"
+  account_kind                    = "StorageV2"
+  access_tier                     = "Cool"
+  public_network_access_enabled   = true //Note: this should be "false" to disable public access?
   default_to_oauth_authentication = true
 
-  allow_nested_items_to_be_public   = false
-  https_traffic_only_enabled        = true
-  large_file_share_enabled          = true
-  shared_access_key_enabled         = true
+  allow_nested_items_to_be_public = false
+  https_traffic_only_enabled      = true
+  large_file_share_enabled        = true
+  shared_access_key_enabled       = true
 
   blob_properties {
     container_delete_retention_policy {
@@ -58,10 +62,10 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow"
+    default_action = "Allow" //note, this should be "Deny" to block public access?
     #ip_rules = [var.runner_public_ip]
     bypass = ["AzureServices"]
-/*     private_link_access {
+    /*     private_link_access {
       endpoint_resource_id = azurerm_private_endpoint.example.id
     } */
   }
@@ -75,9 +79,9 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
 
 resource "azurerm_storage_container" "script_container" {
-  name                    = "scripts"
-  storage_account_id   = azurerm_storage_account.blob_storage_account.id
-  container_access_type   = "private"
+  name                  = "scripts"
+  storage_account_id    = azurerm_storage_account.blob_storage_account.id
+  container_access_type = "private"
 }
 
 
@@ -85,14 +89,27 @@ resource "azurerm_storage_blob" "script_blob" {
   name                   = "script.sh"
   storage_account_name   = azurerm_storage_account.blob_storage_account.name
   storage_container_name = azurerm_storage_container.script_container.name
-  type                   = "Block" 
+  type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh" # Path to your local file
-  
-  depends_on = [ azurerm_storage_container.script_container ]
+
+  depends_on = [azurerm_storage_container.script_container]
 }
 
 
+resource "azurerm_storage_account_sas" "blob_read_sas" {
+  storage_account_name = azurerm_storage_account.blob_storage_account.name
+  container_name       = azurerm_storage_container.script_container.name
+  blob_name            = azurerm_storage_blob.script_blob.name
+  start                = "2025-01-13T00:00:00Z" # SAS start time
+  expiry               = "2025-01-20T00:00:00Z" # SAS expiry time
+  permissions          = "r"                    # Read-only permissions
+  services             = "b"                    # Service: Blob
+  resource_types       = "o"                    # Resource type: Object (blob)
 
+  depends_on = [
+    azurerm_storage_blob.script_blob,
+  ]
+}
 
 /* 
 

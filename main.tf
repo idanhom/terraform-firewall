@@ -58,20 +58,20 @@ module "networking" {
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
-  location   = var.location
-  vnets      = var.vnets
+  location            = var.location
+  vnets               = var.vnets
   #subnet_ids = module.networking.subnet_id //commented out because replaced with _ids instead.
 
-  vnet_ids     = module.networking.vnet_ids
-  subnet_ids   = module.networking.subnet_ids
+  vnet_ids   = module.networking.vnet_ids
+  subnet_ids = module.networking.subnet_ids
 
 
   admin_username = var.admin_username
   admin_password = var.admin_password
-  
-  storage_account_name  = module.storage_account.storage_account_name
-  container_name        = module.storage_account.container_name
-  blob_name             = module.storage_account.blob_name
+
+  storage_account_name = module.storage_account.storage_account_name
+  container_name       = module.storage_account.container_name
+  blob_name            = module.storage_account.blob_name
 }
 
 
@@ -79,7 +79,7 @@ module "monitoring" {
   source = "./modules/azure_monitoring"
 
   resource_group_name = azurerm_resource_group.rg_project.name
-  location = var.location
+  location            = var.location
 
   firewall_id = module.networking.firewall_id
 
@@ -90,11 +90,11 @@ module "monitoring" {
 }
 
 module "storage_account" {
-  source = "./modules/azure_storage_account"
-  resource_group_name = var.resource_group_name 
-  location = var.location
-  subnet_ids = module.networking.subnet_ids
-  vnet_ids = module.networking.vnet_ids
+  source              = "./modules/azure_storage_account"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  subnet_ids          = module.networking.subnet_ids
+  vnet_ids            = module.networking.vnet_ids
   runner_public_ip    = var.runner_public_ip
 }
 
