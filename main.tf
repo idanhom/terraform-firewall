@@ -58,10 +58,13 @@ module "networking" {
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
-  # previously, it was var.resource_group_name
   location   = var.location
   vnets      = var.vnets
-  subnet_ids = module.networking.subnet_id
+  #subnet_ids = module.networking.subnet_id //commented out because replaced with _ids instead.
+
+  vnet_ids     = module.networking.vnet_ids
+  subnet_ids   = module.networking.subnet_ids
+
 
   admin_username = var.admin_username
   admin_password = var.admin_password
@@ -76,15 +79,12 @@ module "monitoring" {
   source = "./modules/azure_monitoring"
 
   resource_group_name = azurerm_resource_group.rg_project.name
-  # previously, it was var.resource_group_name
   location = var.location
 
   firewall_id = module.networking.firewall_id
 
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
-
-  #log_analytics_saved_search = var.log_analytics_saved_search // shouldn't this change given i do query pack now instead of saved search?
 
   depends_on = [module.networking]
 }

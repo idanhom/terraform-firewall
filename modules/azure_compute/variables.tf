@@ -26,6 +26,11 @@ variable "subnet_ids" {
   type        = map(string)
 }
 
+variable "vnet_ids" {
+  description = "Map of VNet names to their IDs"
+  type        = map(string)
+}
+
 variable "admin_username" {
   description = "Admin username for the Linux VM"
   type        = string

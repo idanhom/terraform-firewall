@@ -91,6 +91,15 @@ variable "runner_public_ip" {
   description = "Public IP of the GitHub Actions runner"
 } 
 
+variable "vnet_ids" {
+  description = "Map of VNet names to their IDs"
+  type        = map(string)
+}
+
+variable "subnet_ids" {
+  description = "Map of Subnet names to their IDs"
+  type        = map(string)
+}
 
 variable "storage_account_name" {
   description = "The name of the storage account where the script is stored."
