@@ -93,7 +93,7 @@ module "storage_account" {
   source = "./modules/azure_storage_account"
   resource_group_name = var.resource_group_name 
   location = var.location
-  subnet_ids = module.networking.subnet_id
+  subnet_ids = module.networking.subnet_ids
   vnet_ids = module.networking.vnet_ids
   runner_public_ip    = var.runner_public_ip
 }
