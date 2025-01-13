@@ -18,3 +18,6 @@ output "blob_url_with_sas" {
   value = "${azurerm_storage_blob.script_blob.url}${data.azurerm_storage_account_sas.blob_read_sas.sas}"
 }
 
+output "blob_url" {
+  value = azurerm_storage_blob.script_blob.url
+}

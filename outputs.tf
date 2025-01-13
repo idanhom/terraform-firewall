@@ -22,3 +22,8 @@ output "vm_public_ip" {
   description = "map of vm to public ip"
   value       = module.compute.vm_public_ip
 }
+
+output "blob_url" {
+  description = "url of SAS token to container"
+  value = azurerm_storage_blob.script_blob.url
+}
