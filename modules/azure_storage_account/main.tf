@@ -7,7 +7,7 @@ resource "azurerm_private_dns_zone" "private_dns" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
-  for_each = module.networking.vnet_ids
+  for_each = var.vnet_ids
 
   name                  = "${each.value}-dns-link"
   resource_group_name   = var.resource_group_name
