@@ -65,9 +65,9 @@ resource "azurerm_storage_account" "example" {
     bypass = [
       "AzureServices",
     ]
-    private_link_access {
+/*     private_link_access {
       endpoint_resource_id = azurerm_private_endpoint.example.id
-    }
+    } */
   }
 
   share_properties {
@@ -75,7 +75,6 @@ resource "azurerm_storage_account" "example" {
       days = 7
     }
   }
-  depends_on = [azurerm_private_endpoint.example]
 }
 
 
