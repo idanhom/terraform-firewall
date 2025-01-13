@@ -65,6 +65,10 @@ module "compute" {
 
   admin_username = var.admin_username
   admin_password = var.admin_password
+  
+  storage_account_name  = module.storage.storage_account_name
+  container_name        = module.storage.container_name
+  blob_name             = module.storage.blob_nam
 
 }
 # 

@@ -36,3 +36,18 @@ variable "admin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "storage_account_name" {
+  description = "The name of the storage account where the script is stored."
+  type        = string
+}
+
+variable "container_name" {
+  description = "The name of the container in the storage account where the script is stored."
+  type        = string
+}
+
+variable "blob_name" {
+  description = "The name of the blob (script) to be downloaded."
+  type        = string
+}
