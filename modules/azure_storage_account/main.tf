@@ -14,7 +14,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   private_dns_zone_name = azurerm_private_dns_zone.private_dns.name
   virtual_network_id    = each.value
 }
-
+#
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
 
