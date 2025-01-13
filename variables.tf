@@ -17,7 +17,6 @@ variable "vnets" {
     subnet_prefix = list(string)
 
     nic_name = string
-    # note, add vm-attributes here, which works from having broken out fw subnet to its own
   }))
 }
 
