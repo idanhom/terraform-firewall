@@ -90,10 +90,7 @@ variable "runner_public_ip" {
   description = "Public IP of the GitHub Actions runner"
 }
 
-variable "blob_url_with_sas" {
-  description = "The full URL of the blob including the SAS token"
-  type        = string
-}
+
 
 
 # variable "log_analytics_saved_search" {
