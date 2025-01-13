@@ -247,7 +247,7 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
     destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
     destination_ports     = ["8080"]
     protocols             = ["TCP"]
-    translated_address    = var.vm_private_ips["vnet1"] # Replace direct reference
+    translated_address    = var.vm_private_ip["vnet1"] 
     translated_port       = "80"
     }
 
@@ -258,7 +258,7 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
     destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
     destination_ports     = ["8081"]
     protocols             = ["TCP"]
-    translated_address    = var.vm_private_ips["vnet2"] # Replace direct reference
+    translated_address    = var.vm_private_ip["vnet2"] 
     translated_port       = "80"
     }
 }
