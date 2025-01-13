@@ -11,10 +11,10 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
 
   name                  = "${each.key}-blob-dns-link" //or each.value??
   resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.private_dns.name
+  private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
   virtual_network_id    = each.value
 }
-#
+
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
 
