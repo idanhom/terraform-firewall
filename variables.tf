@@ -86,6 +86,12 @@ variable "admin_password" {
   sensitive   = true
 }
 
+variable "runner_public_ip" {
+  type        = string
+  description = "Public IP of the GitHub Actions runner"
+} 
+
+
 # variable "log_analytics_saved_search" {
 #   description = "list of object for log analytics saved searches"
 #   type = map(object({

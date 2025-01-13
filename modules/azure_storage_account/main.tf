@@ -41,7 +41,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
   access_tier              = "Cool"
-  public_network_access_enabled = false
+  public_network_access_enabled = true //should be false to truly allow for private endpoints? or does it work with the "default_action = deny" below?
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public   = false
@@ -62,6 +62,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
   network_rules {
     default_action = "Deny"
+    ip_rules = [var.runner_public_ip]
     bypass = [
       "AzureServices",
     ]

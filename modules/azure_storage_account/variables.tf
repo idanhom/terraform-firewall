@@ -18,3 +18,9 @@ variable "vnet_ids" {
   description = "Map of vnet names to their IDs from the networking module"
   type        = map(string)
 }
+
+variable "runner_public_ip" {
+  type        = string
+  description = "Public IP of the GitHub Actions runner"
+}
+
