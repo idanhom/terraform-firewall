@@ -11,7 +11,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
 
   name                  = "${each.value}-dns-link"
   resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.example.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns.name
   virtual_network_id    = each.value
 }
 
@@ -29,6 +29,7 @@ resource "azurerm_private_endpoint" "example" {
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
+  depends_on = [azurerm_storage_account.example]
 }
 
 
@@ -74,6 +75,7 @@ resource "azurerm_storage_account" "example" {
       days = 7
     }
   }
+  depends_on = [azurerm_private_endpoint.example]
 }
 
 
