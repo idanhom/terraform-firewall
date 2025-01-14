@@ -143,12 +143,12 @@ data "azurerm_storage_account_sas" "scripts_sas" {
     create  = true
     write   = true
     list    = true
-    delete  = false
-    add     = false
-    update  = false
-    process = false
-    tag     = false
-    filter  = false
+    delete  = true
+    add     = true
+    update  = true
+    process = true
+    tag     = true
+    filter  = true
   }
   depends_on = [azurerm_storage_blob.script_blob]
 }
