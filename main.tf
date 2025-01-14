@@ -89,7 +89,7 @@ module "monitoring" {
 
   depends_on = [module.networking]
 }
-#
+
 module "storage_account" {
   source              = "./modules/azure_storage_account"
   resource_group_name = azurerm_resource_group.rg_project.name
