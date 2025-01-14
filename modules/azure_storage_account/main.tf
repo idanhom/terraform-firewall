@@ -93,7 +93,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_container" "script_container" {
   name                  = "scripts"
   storage_account_id    = azurerm_storage_account.blob_storage_account.id
-  container_access_type = "private"
+  container_access_type = "blob"
 }
 
 
@@ -142,13 +142,13 @@ data "azurerm_storage_account_sas" "scripts_sas" {
     read    = true
     create  = true
     write   = true
-    list    = true
-    delete  = true
-    add     = true
-    update  = true
-    process = true
-    tag     = true
-    filter  = true
+    list    = false
+    delete  = false
+    add     = false
+    update  = false
+    process = false
+    tag     = false
+    filter  = false
   }
   depends_on = [azurerm_storage_blob.script_blob]
 }
