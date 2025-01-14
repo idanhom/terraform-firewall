@@ -113,7 +113,7 @@ resource "azurerm_storage_blob" "script_blob" {
 
 
 
-data "azurerm_storage_account_sas" "blob_read_sas" {
+data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
   https_only        = true
   signed_version    = "2022-11-02"
