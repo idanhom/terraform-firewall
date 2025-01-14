@@ -42,7 +42,7 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
-  depends_on = [azurerm_storage_account.blob_storage_account]
+  depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
 
@@ -87,6 +87,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
       days = 7
     }
   }
+  depends_on = [ azurerm_resource_group ]
 }
 
 
