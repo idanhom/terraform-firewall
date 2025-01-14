@@ -10,9 +10,19 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 
 
 
-# Error: A resource with the ID "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall|firewall-diagnostic-setting" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_monitor_diagnostic_setting" for more information.
-# Note: IS THE DIAGNOSTICS SETTINGS EVEN CORRECT GIVEN MY USECASE?
+
+# │ Error: A resource with the ID "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall|firewall-diagnostic-setting" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_monitor_diagnostic_setting" for more information.
+# │ 
+# │   with module.monitoring.azurerm_monitor_diagnostic_setting.firewall_diagnostics,
+# │   on modules/azure_monitoring/main.tf line 16, in resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics":
+# │   16: resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
+# │ 
+# ╵
 # https://chatgpt.com/c/6784deb7-28d0-800b-b2ce-b173ce333f30
+
+
+
+
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "firewall-diagnostic-setting"
   target_resource_id         = var.firewall_id
