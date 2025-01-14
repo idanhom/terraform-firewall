@@ -23,7 +23,7 @@ output "vm_public_ip" {
   value       = module.compute.vm_public_ip
 }
 
-output "blob_url" {
+/* output "blob_url" {
   description = "url of SAS token to container"
   value = module.storage_account.blob_url
-}
+} */
