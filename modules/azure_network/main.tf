@@ -221,7 +221,7 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 100
+  priority            = 200 
   action              = "Allow"
 
   rule {
@@ -239,7 +239,7 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 200
+  priority            = 300
   action              = "Allow"
 
   rule {
@@ -258,7 +258,7 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 300
+  priority            = 400
   action              = "Dnat"
 
   rule {
