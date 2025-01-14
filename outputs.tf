@@ -24,7 +24,7 @@ output "vm_private_ip" {
 # }
 
 output "scripts_sas_token" {
-  value = module.azure_storage_account.scripts_sas_token
+  value = module.storage_account.scripts_sas_token
 }
 
 
