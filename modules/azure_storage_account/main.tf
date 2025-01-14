@@ -97,44 +97,44 @@ resource "azurerm_storage_blob" "script_blob" {
 }
 
 
-data "azurerm_storage_account_sas" "blob_read_sas" {
-  connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
-  https_only        = true
-  signed_version    = "2022-11-02"
+# data "azurerm_storage_account_sas" "blob_read_sas" {
+#   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
+#   https_only        = true
+#   signed_version    = "2022-11-02"
 
-  # Define the resource types
-  resource_types {
-    service   = false
-    container = false
-    object    = true
-  }
+#   # Define the resource types
+#   resource_types {
+#     service   = false
+#     container = false
+#     object    = true
+#   }
 
-  # Define the storage account services
-  services {
-    blob  = true
-    queue = false
-    table = false
-    file  = false
-  }
+#   # Define the storage account services
+#   services {
+#     blob  = true
+#     queue = false
+#     table = false
+#     file  = false
+#   }
 
-  # Use dynamic time for start and expiry
-  start  = timestamp()                       # Current time in ISO-8601 format
-  expiry = timeadd(timestamp(), "24h")       # Add 24 hours to the current time
+#   # Use dynamic time for start and expiry
+#   start  = timestamp()                       # Current time in ISO-8601 format
+#   expiry = timeadd(timestamp(), "24h")       # Add 24 hours to the current time
 
-  # Define the permissions
-  permissions {
-    read    = true
-    write   = false
-    delete  = false
-    list    = false
-    add     = false
-    create  = false
-    update  = false
-    process = false
-    tag     = false
-    filter  = false
-  }
-}
+#   # Define the permissions
+#   permissions {
+#     read    = true
+#     write   = false
+#     delete  = false
+#     list    = false
+#     add     = false
+#     create  = false
+#     update  = false
+#     process = false
+#     tag     = false
+#     filter  = false
+#   }
+# }
 
 
 /* 
