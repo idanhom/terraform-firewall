@@ -57,6 +57,13 @@ variable "blob_name" {
   description = "The name of the blob in the container where the script is stored."
   type        = string
 }
+
+variable "custom_data_sas_url" {
+  description = "The SAS URL for the custom script blob"
+  type        = string
+}
+
+
 /* variable "blob_name" {
   description = "The name of the blob (script) to be downloaded."
   type        = string

@@ -2,6 +2,18 @@
 # see this gpt (note that it's o1)
 # https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
+
+locals {
+  scripts_sas_url = format(
+    "https://%s.blob.core.windows.net/%s/%s?%s",
+    azurerm_storage_account.blob_storage_account.name,
+    azurerm_storage_container.script_container.name,
+    azurerm_storage_blob.script_blob.name,
+    azurerm_storage_account_sas.scripts_sas.sas
+  )
+}
+
+
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
@@ -14,7 +26,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
   virtual_network_id    = each.value
-  #registration_enabled = true //does this make a difference regarding accessing storage account?
 }
 
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
@@ -43,7 +54,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = true //Note: this should be "false" to disable public access?
+  public_network_access_enabled   = false //Note: this should be "false" to disable public access?
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -63,7 +74,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow" //note, this should be "Deny" to block public access?
+    default_action = "Deny" //note, this should be "Deny" to block public access?
     #ip_rules = [var.runner_public_ip]
     bypass = ["AzureServices"]
     /*     private_link_access {
@@ -95,6 +106,24 @@ resource "azurerm_storage_blob" "script_blob" {
 
   depends_on = [azurerm_storage_container.script_container]
 }
+
+resource "azurerm_storage_account_sas" "scripts_sas" {
+  storage_account_name   = azurerm_storage_account.blob_storage_account.name
+  resource_types         = "object"
+  services               = "b"
+  starts_on              = "2025-01-01"
+  expiry                 = "2025-12-31"
+  permissions            = "rl"  # read + list
+  https_only             = true
+  signed_version         = "2020-02-10"
+
+  depends_on = [azurerm_storage_blob.script_blob]
+}
+
+
+
+
+
 
 
 # data "azurerm_storage_account_sas" "blob_read_sas" {

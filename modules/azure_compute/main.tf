@@ -1,13 +1,13 @@
 
 
 //to be disabled because using the firewall ip?
-resource "azurerm_public_ip" "my_pip" {
+/* resource "azurerm_public_ip" "my_pip" {
   for_each            = var.vnets
   name                = "pip-${each.key}"
   resource_group_name = var.resource_group_name
   location            = var.location
   allocation_method   = "Static"
-}
+} */
 
 resource "azurerm_network_interface" "my_nics" {
   for_each            = var.vnets
@@ -19,7 +19,7 @@ resource "azurerm_network_interface" "my_nics" {
     name                          = "internal"
     subnet_id                     = var.subnet_ids[each.key]
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_pip[each.key].id # remove because afw is external ip?
+    #public_ip_address_id          = azurerm_public_ip.my_pip[each.key].id # remove because afw is external ip? how to add another nic then?
   }
 }
 
@@ -34,11 +34,9 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
 
   custom_data = base64encode(<<EOT
 #!/bin/bash
-# Download the script from blob storage
-curl -o /tmp/script.sh "https://${var.storage_account_name}.blob.core.windows.net/${var.container_name}/${var.blob_name}"
-# Make the script executable
+# Download the script from blob storage with SAS token
+curl -f -o /tmp/script.sh "${var.custom_data_sas_url}"
 chmod +x /tmp/script.sh
-# Execute the script
 /tmp/script.sh
 EOT
   )

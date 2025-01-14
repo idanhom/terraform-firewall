@@ -10,6 +10,14 @@ output "blob_name" {
   value = azurerm_storage_blob.script_blob.name
 }
 
+output "scripts_sas_token" {
+  value = azurerm_storage_account_sas.scripts_sas.sas
+}
+
+output "scripts_sas_url" {
+  value = local.scripts_sas_url
+}
+
 /* output "sas_token" {
   value = data.azurerm_storage_account_sas.blob_read_sas.sas
 }
