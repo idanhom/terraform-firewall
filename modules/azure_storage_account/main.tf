@@ -120,8 +120,8 @@ data "azurerm_storage_account_sas" "scripts_sas" {
 
   # Define the resource types
   resource_types {
-    service   = false
-    container = false
+    service   = true
+    container = true
     object    = true
   }
 
