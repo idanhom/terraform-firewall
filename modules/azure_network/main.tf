@@ -216,6 +216,24 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
 } */
 
 
+
+resource "azurerm_firewall_network_rule_collection" "dns_allow" {
+  name                = "allow_dns"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 50
+  action              = "Allow"
+
+  rule {
+    name                  = "allow-dns"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["168.63.129.16"]
+    destination_ports     = ["53"]
+    protocols             = ["UDP", "TCP"]
+  }
+}
+
+
 # Firewall Network Rule Collection for Outbound Internet Access
 resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
@@ -232,7 +250,10 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
     protocols             = ["TCP"]
   }
 }
-#
+
+
+
+
 resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
