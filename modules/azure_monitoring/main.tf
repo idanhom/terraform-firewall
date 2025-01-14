@@ -1,7 +1,3 @@
-# Read up on the following:
-# https://chatgpt.com/g/g-OJCk3Ji0a-azure-solutions-guide/c/676e888a-4114-800b-9a8a-5f03ca95e659
-# before i proceed with the saved_search problem, try the query in the portal, so i know it works.
-
 resource "azurerm_log_analytics_workspace" "firewall_logs" {
   name                = "firewalllaw"
   resource_group_name = var.resource_group_name
