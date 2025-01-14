@@ -233,13 +233,28 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   }
 }
 
+resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
+  name                = "allow_azure_storage"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 300
+  action              = "Allow"
+
+  rule {
+    name                  = "allow-blob-storage"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["AzureStorage"] // or you can specify storage account FQDN/IP
+    destination_ports     = ["443"]
+    protocols             = ["TCP"]
+  }
+}
 
 # Firewall Network Rule Collection for Outbound Internet Access
 resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 300
+  priority            = 400
   action              = "Allow"
 
   rule {
@@ -258,7 +273,7 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 400
+  priority            = 500
   action              = "Dnat"
 
   rule {

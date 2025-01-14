@@ -19,7 +19,7 @@ resource "azurerm_network_interface" "my_nics" {
     name                          = "internal"
     subnet_id                     = var.subnet_ids[each.key]
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_pip[each.key].id
+    public_ip_address_id          = azurerm_public_ip.my_pip[each.key].id # remove because afw is external ip?
   }
 }
 
