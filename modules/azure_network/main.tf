@@ -192,30 +192,6 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   }
 }
 
-# Unneccessary because am using Bastion for SSH. 
-/* resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
-  name                = "internet-to-vms"
-  azure_firewall_name = azurerm_firewall.firewall.name
-  resource_group_name = var.resource_group_name
-  priority            = 200
-  action              = "Dnat"
-
-  dynamic "rule" {
-    for_each = var.vnets # Assumes `vnets` is a map of VMs, similar to your dev.tfvars
-
-    content {
-      name                  = "nat-internet-to-${rule.value.vnet_name}"  # Unique name for each rule
-      source_addresses      = ["*"]                                     # Allow from all external sources
-      destination_ports     = ["22"]                       # Ports to allow (e.g., SSH, HTTP, HTTPS)
-      destination_addresses = [azurerm_public_ip.firewall_ip.ip_address] # Firewall's public IP
-      translated_address    = var.vm_private_ip[rule.key] # Map to VM's private IP
-      translated_port       = 22                                        # Target VM port (22 in this case for SSH)
-      protocols             = ["TCP"]                                   # Protocol to allow
-    }
-  }
-} */
-
-
 
 resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
@@ -300,6 +276,30 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
 }
 
 
+
+
+# Unneccessary because am using Bastion for SSH. 
+/* resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
+  name                = "internet-to-vms"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 200
+  action              = "Dnat"
+
+  dynamic "rule" {
+    for_each = var.vnets # Assumes `vnets` is a map of VMs, similar to your dev.tfvars
+
+    content {
+      name                  = "nat-internet-to-${rule.value.vnet_name}"  # Unique name for each rule
+      source_addresses      = ["*"]                                     # Allow from all external sources
+      destination_ports     = ["22"]                       # Ports to allow (e.g., SSH, HTTP, HTTPS)
+      destination_addresses = [azurerm_public_ip.firewall_ip.ip_address] # Firewall's public IP
+      translated_address    = var.vm_private_ip[rule.key] # Map to VM's private IP
+      translated_port       = 22                                        # Target VM port (22 in this case for SSH)
+      protocols             = ["TCP"]                                   # Protocol to allow
+    }
+  }
+} */
 
 
 
