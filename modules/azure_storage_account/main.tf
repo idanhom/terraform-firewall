@@ -54,7 +54,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = false //Note: this should be "false" to disable public access?
+  public_network_access_enabled   = true //Note: this should be "false" to disable public access?
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -93,7 +93,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_container" "script_container" {
   name                  = "scripts"
   storage_account_id    = azurerm_storage_account.blob_storage_account.id
-  container_access_type = "blob"
+  container_access_type = "private"
 }
 
 
