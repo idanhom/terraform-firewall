@@ -11,7 +11,7 @@ output "blob_name" {
 }
 
 output "scripts_sas_token" {
-  value = azurerm_storage_account_sas.scripts_sas.sas
+  value = data.azurerm_storage_account_sas.scripts_sas.sas
 }
 
 output "scripts_sas_url" {

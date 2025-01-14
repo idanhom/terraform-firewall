@@ -9,7 +9,7 @@ locals {
     azurerm_storage_account.blob_storage_account.name,
     azurerm_storage_container.script_container.name,
     azurerm_storage_blob.script_blob.name,
-    azurerm_storage_account_sas.scripts_sas.sas
+    data.azurerm_storage_account_sas.scripts_sas.sas
   )
 }
 
