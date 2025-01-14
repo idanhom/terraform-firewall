@@ -107,63 +107,67 @@ resource "azurerm_storage_blob" "script_blob" {
   depends_on = [azurerm_storage_container.script_container]
 }
 
-resource "azurerm_storage_account_sas" "scripts_sas" {
-  storage_account_name   = azurerm_storage_account.blob_storage_account.name
-  resource_types         = "object"
-  services               = "b"
-  starts_on              = "2025-01-01"
-  expiry                 = "2025-12-31"
-  permissions            = "rl"  # read + list
-  https_only             = true
-  signed_version         = "2020-02-10"
+# 
 
+
+
+
+
+data "azurerm_storage_account_sas" "blob_read_sas" {
+  connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
+  https_only        = true
+  signed_version    = "2022-11-02"
+
+  # Define the resource types
+  resource_types {
+    service   = false
+    container = false
+    object    = true
+  }
+
+  # Define the storage account services
+  services {
+    blob  = true
+    queue = false
+    table = false
+    file  = false
+  }
+
+  # Use dynamic time for start and expiry
+  start  = timestamp()                       # Current time in ISO-8601 format
+  expiry = timeadd(timestamp(), "24h")       # Add 24 hours to the current time
+
+  # Define the permissions
+  permissions {
+    read    = true
+    write   = false
+    delete  = false
+    list    = false
+    add     = false
+    create  = false
+    update  = false
+    process = false
+    tag     = false
+    filter  = false
+  }
   depends_on = [azurerm_storage_blob.script_blob]
 }
 
 
+# data "azurerm_storage_account_sas" "scripts_sas" {
+#   storage_account_name   = azurerm_storage_account.blob_storage_account.name
+#   resource_types         = "object"
+#   services               = "b"
+#   starts_on              = "2025-01-01"
+#   expiry                 = "2025-12-31"
+#   permissions            = "rl"  # read + list
+#   https_only             = true
+#   signed_version         = "2020-02-10"
 
-
-
-
-
-# data "azurerm_storage_account_sas" "blob_read_sas" {
-#   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
-#   https_only        = true
-#   signed_version    = "2022-11-02"
-
-#   # Define the resource types
-#   resource_types {
-#     service   = false
-#     container = false
-#     object    = true
-#   }
-
-#   # Define the storage account services
-#   services {
-#     blob  = true
-#     queue = false
-#     table = false
-#     file  = false
-#   }
-
-#   # Use dynamic time for start and expiry
-#   start  = timestamp()                       # Current time in ISO-8601 format
-#   expiry = timeadd(timestamp(), "24h")       # Add 24 hours to the current time
-
-#   # Define the permissions
-#   permissions {
-#     read    = true
-#     write   = false
-#     delete  = false
-#     list    = false
-#     add     = false
-#     create  = false
-#     update  = false
-#     process = false
-#     tag     = false
-#     filter  = false
-#   }
+#   depends_on = [azurerm_storage_blob.script_blob]
 # }
+
+
 
 
 /* 
