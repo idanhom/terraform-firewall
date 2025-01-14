@@ -52,7 +52,7 @@ variable "container_name" {
   type        = string
 }
 
-variable "blob_name" {
+/* variable "blob_name" {
   description = "The name of the blob (script) to be downloaded."
   type        = string
 }
@@ -60,4 +60,4 @@ variable "blob_name" {
 variable "blob_url_with_sas" {
   description = "The full URL of the blob including the SAS token"
   type        = string
-}
+} */
