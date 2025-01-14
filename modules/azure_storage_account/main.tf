@@ -6,7 +6,7 @@ resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
 }
-
+#
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   for_each = var.vnet_ids
 
