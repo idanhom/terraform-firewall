@@ -1,5 +1,9 @@
 # Note, have currently opened up the networking too wide. See arg like public_network_access_enabled and block network_rules (default_action)
-# see this gpt (note that it's o1)
+# see this gpt, and note that it's o1....
+#https://chatgpt.com/c/67866ed2-4940-800b-9f52-e8e347d55182
+# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67866ea3-e628-800b-947a-4ce87035ddd1
+
+
 # https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
 

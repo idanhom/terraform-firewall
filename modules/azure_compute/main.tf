@@ -43,6 +43,7 @@ EOT
 
 
 
+
   admin_username = var.admin_username //theadmintothevm
   admin_password = var.admin_password //Redeploy2025!!
   // touch disable_password_auth for ssh key-implementation? how does it affect with key vault?
