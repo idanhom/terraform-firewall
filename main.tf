@@ -92,7 +92,7 @@ module "monitoring" {
 
 module "storage_account" {
   source              = "./modules/azure_storage_account"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
   subnet_ids          = module.networking.subnet_ids
   vnet_ids            = module.networking.vnet_ids

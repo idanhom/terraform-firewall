@@ -88,7 +88,6 @@ resource "azurerm_storage_account" "blob_storage_account" {
       days = 7
     }
   }
-  depends_on = [ azurerm_resource_group.rg_project1 ]
 }
 
 
