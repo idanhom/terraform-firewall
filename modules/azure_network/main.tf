@@ -209,7 +209,7 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   }
 }
 
-resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
+/* resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   name                = "allow_azure_storage"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
@@ -219,11 +219,40 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage"
     source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["examplestoraccount5421.blob.core.windows.net"] # trouble shooting purposes. replaced "Storage" with FQDN to storage. // or you can specify storage account FQDN/IP
+    destination_addresses = ["10.0.1.5", "10.1.1.5"] #examplestoraccount5421.blob.core.windows.net] # trouble shooting purposes. replaced "Storage" with FQDN to storage. // or you can specify storage account FQDN/IP
+    destination_ports     = ["443"]
+    protocols             = ["TCP"]
+  }
+} */
+
+resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
+  name                = "allow_azure_storage"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 300
+  action              = "Allow"
+
+  # Rule for VM1 in vnet1 to access its storage private endpoint
+  rule {
+    name                  = "allow-blob-storage-vnet1"
+    source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
+    destination_addresses = ["10.0.1.5"]    # Private endpoint IP for vnet1
+    destination_ports     = ["443"]
+    protocols             = ["TCP"]
+  }
+
+  # Rule for VM2 in vnet2 to access its storage private endpoint
+  rule {
+    name                  = "allow-blob-storage-vnet2"
+    source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
+    destination_addresses = ["10.1.1.5"]    # Private endpoint IP for vnet2
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
 }
+
+
+
 
 # Firewall Network Rule Collection for Outbound Internet Access
 resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
