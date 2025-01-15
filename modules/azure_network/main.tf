@@ -219,7 +219,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage"
     source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["Storage"] // or you can specify storage account FQDN/IP
+    destination_addresses = ["examplestoraccount5421.blob.core.windows.net"] # trouble shooting purposes. replaced "Storage" with FQDN to storage. // or you can specify storage account FQDN/IP
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }

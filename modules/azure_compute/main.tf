@@ -9,6 +9,10 @@
   allocation_method   = "Static"
 } */
 
+
+#give the vm's? storage blob data contributor?
+
+
 resource "azurerm_network_interface" "my_nics" {
   for_each            = var.vnets
   name                = each.value.nic_name
