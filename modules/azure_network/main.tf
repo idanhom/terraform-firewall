@@ -236,7 +236,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet1"
     source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
-    destination_addresses = ["AzureStorage"]  
+    destination_addresses = ["Storage"]  
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
@@ -245,7 +245,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet2"
     source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
-    destination_addresses = ["AzureStorage"] 
+    destination_addresses = ["Storage"] 
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
