@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = false 
+  public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner.
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -46,7 +46,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
   network_rules {
     default_action = "Deny" 
-    #ip_rules = [var.runner_public_ip] # does this serve a purpose? try removing (and also in pipe)
+    #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
     bypass = ["AzureServices"]
   }
 
@@ -74,6 +74,45 @@ resource "azurerm_storage_blob" "script_blob" {
 
   depends_on = [azurerm_storage_container.script_container]
 }
+
+
+
+data "azurerm_storage_account_sas" "scripts_sas" {
+  connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
+  https_only        = true
+  signed_version    = "2022-11-02"
+
+  resource_types {
+    service   = true
+    container = true
+    object    = true
+  }
+
+  services {
+    blob  = true
+    queue = false
+    table = false
+    file  = false
+  }
+
+  start  = timestamp()                     
+  expiry = timeadd(timestamp(), "24h")
+
+  permissions {
+    read    = true
+    create  = true
+    write   = true
+    list    = false
+    delete  = false
+    add     = false
+    update  = false
+    process = false
+    tag     = false
+    filter  = false
+  }
+  depends_on = [azurerm_storage_blob.script_blob]
+}
+
 
 
 
@@ -137,45 +176,6 @@ resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
 
 
 
-data "azurerm_storage_account_sas" "scripts_sas" {
-  connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
-  https_only        = true
-  signed_version    = "2022-11-02"
-
-  # Define the resource types
-  resource_types {
-    service   = true
-    container = true
-    object    = true
-  }
-
-  # Define the storage account services
-  services {
-    blob  = true
-    queue = false
-    table = false
-    file  = false
-  }
-
-  # Use dynamic time for start and expiry
-  start  = timestamp()                       # Current time in ISO-8601 format
-  expiry = timeadd(timestamp(), "24h")       # Add 24 hours to the current time
-
-  # Define the permissions
-  permissions {
-    read    = true
-    create  = true
-    write   = true
-    list    = false
-    delete  = false
-    add     = false
-    update  = false
-    process = false
-    tag     = false
-    filter  = false
-  }
-  depends_on = [azurerm_storage_blob.script_blob]
-}
 
 
 
