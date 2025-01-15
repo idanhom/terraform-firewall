@@ -46,7 +46,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
   network_rules {
     default_action = "Allow" //note, this should be "Deny" to block public access?
-    ip_rules = [var.runner_public_ip]
+    ip_rules = [var.runner_public_ip] # does this serve a purpose?
     bypass = ["AzureServices"]
     /*     private_link_access {
       endpoint_resource_id = azurerm_private_endpoint.example.id
