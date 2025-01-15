@@ -84,5 +84,5 @@ variable "vnet_route_table" {
 
 variable "vm_private_ip" {
   description = "map of vm names to their private ip addresses"
-  type = map(string)
+  type        = map(string)
 }

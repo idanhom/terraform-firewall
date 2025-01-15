@@ -29,3 +29,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+
+# Added .env to gitignore
+.env

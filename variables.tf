@@ -17,7 +17,6 @@ variable "vnets" {
     subnet_prefix = list(string)
 
     nic_name = string
-    # note, add vm-attributes here, which works from having broken out fw subnet to its own
   }))
 }
 
@@ -75,12 +74,30 @@ variable "log_categories" {
 }
 
 
-variable "log_analytics_saved_search" {
-  description = "list of object for log analytics saved searches"
-  type = list(object({
-    name         = string
-    category     = string
-    display_name = string
-    query        = string
-  }))
+variable "admin_username" {
+  description = "Admin username for the Linux VM"
+  type        = string
 }
+
+variable "admin_password" {
+  description = "Admin password for the Linux VM"
+  type        = string
+  sensitive   = true
+}
+#
+variable "runner_public_ip" {
+  type        = string
+  description = "Public IP of the GitHub Actions runner"
+}
+
+
+
+
+# variable "log_analytics_saved_search" {
+#   description = "list of object for log analytics saved searches"
+#   type = map(object({
+#     category     = string
+#     display_name = string
+#     query        = string
+#   }))
+# }

@@ -26,3 +26,50 @@ variable "subnet_ids" {
   type        = map(string)
 }
 
+variable "vnet_ids" {
+  description = "Map of VNet names to their IDs"
+  type        = map(string)
+}
+
+variable "admin_username" {
+  description = "Admin username for the Linux VM"
+  type        = string
+}
+
+variable "admin_password" {
+  description = "Admin password for the Linux VM"
+  type        = string
+  sensitive   = true
+}
+
+variable "storage_account_name" {
+  description = "The name of the storage account where the script is stored."
+  type        = string
+}
+
+variable "container_name" {
+  description = "The name of the container in the storage account where the script is stored."
+  type        = string
+}
+
+
+variable "blob_name" {
+  description = "The name of the blob in the container where the script is stored."
+  type        = string
+}
+
+variable "custom_data_sas_url" {
+  description = "The SAS URL for the custom script blob"
+  type        = string
+}
+
+
+/* variable "blob_name" {
+  description = "The name of the blob (script) to be downloaded."
+  type        = string
+}
+
+variable "blob_url_with_sas" {
+  description = "The full URL of the blob including the SAS token"
+  type        = string
+} */

@@ -3,18 +3,15 @@ output "debug_vnets" {
   value = var.vnets
 }
 
+
+#------note:
+
 output "vnet_ids" {
   description = "map of vnet names to their id"
   value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
 }
 
-
-output "vnet_id" {
-  description = "Map of vnet names to their ID"
-  value       = { for vnet_name, vnet in azurerm_virtual_network.my_vnet : vnet_name => vnet.id }
-}
-
-output "subnet_id" {
+output "subnet_ids" { #changed from _id to _ids to conform with code. creates problems?
   description = "map of subnet names to their id"
   value       = { for subnet_name, subnet in azurerm_subnet.my_subnet : subnet_name => subnet.id } //learn this better
 }

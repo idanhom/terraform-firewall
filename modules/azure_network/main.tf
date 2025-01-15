@@ -59,7 +59,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_asso
 
   subnet_id                 = each.value.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
-} */ 
+} */
 
 #########################
 
@@ -184,36 +184,59 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   action              = "Allow"
 
   rule {
-    name = "allow-inter-vnet"
-    source_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_ports = ["*"]
-    protocols = ["TCP", "UDP", "ICMP"]
+    name                  = "allow-inter-vnet"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
+    destination_addresses = ["10.0.0.0/16", "10.1.0.0/16"] # this can be made nicer and dynamic? take the subnet address prefix[0] for vnet1 and vnet2?
+    destination_ports     = ["*"]
+    protocols             = ["TCP", "UDP", "ICMP"]
   }
 }
 
-# Unneccessary because am using Bastion for SSH. 
-/* resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
-  name                = "internet-to-vms"
+
+resource "azurerm_firewall_network_rule_collection" "dns_allow" {
+  name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 200
-  action              = "Dnat"
+  priority            = 200 
+  action              = "Allow"
 
-  dynamic "rule" {
-    for_each = var.vnets # Assumes `vnets` is a map of VMs, similar to your dev.tfvars
-
-    content {
-      name                  = "nat-internet-to-${rule.value.vnet_name}"  # Unique name for each rule
-      source_addresses      = ["*"]                                     # Allow from all external sources
-      destination_ports     = ["22"]                       # Ports to allow (e.g., SSH, HTTP, HTTPS)
-      destination_addresses = [azurerm_public_ip.firewall_ip.ip_address] # Firewall's public IP
-      translated_address    = var.vm_private_ip[rule.key] # Map to VM's private IP
-      translated_port       = 22                                        # Target VM port (22 in this case for SSH)
-      protocols             = ["TCP"]                                   # Protocol to allow
-    }
+  rule {
+    name                  = "allow-dns"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["168.63.129.16"]
+    destination_ports     = ["53"]
+    protocols             = ["UDP", "TCP"]
   }
-} */
+}
+
+
+resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
+  name                = "allow_azure_storage"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 300
+  action              = "Allow"
+
+  # Rule for VM1 in vnet1 to access the storage account
+  rule {
+    name                  = "allow-blob-storage-vnet1"
+    source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
+    destination_addresses = ["Storage"]  
+    destination_ports     = ["443"]
+    protocols             = ["TCP"]
+  }
+
+  # Rule for VM2 in vnet2 to access the storage account
+  rule {
+    name                  = "allow-blob-storage-vnet2"
+    source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
+    destination_addresses = ["Storage"] 
+    destination_ports     = ["443"]
+    protocols             = ["TCP"]
+  }
+}
+
+
 
 
 # Firewall Network Rule Collection for Outbound Internet Access
@@ -221,23 +244,51 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 300
+  priority            = 400
   action              = "Allow"
 
   rule {
-    name                 = "allow-vm-outbound-internet"
-    source_addresses     = ["10.0.0.0/16", "10.1.0.0/16"] 
-    destination_addresses = ["*"]                      
-    destination_ports    = ["80", "443"]                 
-    protocols            = ["TCP"]                      
+    name                  = "allow-vm-outbound-internet"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["*"]
+    destination_ports     = ["80", "443"]
+    protocols             = ["TCP"]
   }
 }
 
 
+#
+
+resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
+  name                = "nginx_inbound_dnat"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 500
+  action              = "Dnat"
+
+  rule {
+    name                  = "vm1_http"
+    description           = "Route HTTP traffic for VM1"
+    source_addresses      = ["*"]
+    destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
+    destination_ports     = ["8080"]
+    protocols             = ["TCP"]
+    translated_address    = var.vm_private_ip["vnet1"]
+    translated_port       = "80"
+  }
+
+  rule {
+    name                  = "vm2_http"
+    description           = "Route HTTP traffic for VM2"
+    source_addresses      = ["*"]
+    destination_addresses = [azurerm_public_ip.firewall_ip.ip_address]
+    destination_ports     = ["8081"]
+    protocols             = ["TCP"]
+    translated_address    = var.vm_private_ip["vnet2"]
+    translated_port       = "80"
+  }
+}
+
+//also create outbound nginx rule to servers?
 
 
-
-
-
-
-# https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke?tabs=cli

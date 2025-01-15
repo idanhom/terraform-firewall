@@ -1,3 +1,7 @@
+# note, for simplicity, i have disabled github actions while i work on this.
+# active it here: https://github.com/idanhom/terraform-firewall/settings/actions
+
+
 terraform {
   required_providers {
     azurerm = {
@@ -20,8 +24,14 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
+  # subscription env set locally and using CI/CD to troubleshoot code easier without going through github actions 
+  # subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
+
+
+data "azurerm_client_config" "current" {}
+
+
 
 resource "azurerm_resource_group" "rg_project" {
   name     = var.resource_group_name
@@ -40,27 +50,36 @@ module "networking" {
   vnets               = var.vnets
   afw                 = var.afw
   vnet_route_table    = var.vnet_route_table
-  vm_private_ip = module.compute.vm_private_ip
+  vm_private_ip       = module.compute.vm_private_ip
   # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
-
+#
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
-# previously, it was var.resource_group_name
   location            = var.location
   vnets               = var.vnets
-  subnet_ids          = module.networking.subnet_id
-}
+  #subnet_ids = module.networking.subnet_id //commented out because replaced with _ids instead.
 
+  vnet_ids   = module.networking.vnet_ids
+  subnet_ids = module.networking.subnet_ids
+
+
+  admin_username = var.admin_username
+  admin_password = var.admin_password
+
+  storage_account_name = module.storage_account.storage_account_name
+  container_name       = module.storage_account.container_name
+  blob_name = module.storage_account.blob_name
+  custom_data_sas_url = module.storage_account.scripts_sas_url
+}
 
 
 module "monitoring" {
   source = "./modules/azure_monitoring"
 
   resource_group_name = azurerm_resource_group.rg_project.name
-# previously, it was var.resource_group_name
   location            = var.location
 
   firewall_id = module.networking.firewall_id
@@ -68,11 +87,15 @@ module "monitoring" {
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
 
-  log_analytics_saved_search = var.log_analytics_saved_search
-
-  depends_on = [ module.networking ]
-
+  depends_on = [module.networking]
 }
 
-
+module "storage_account" {
+  source              = "./modules/azure_storage_account"
+  resource_group_name = azurerm_resource_group.rg_project.name
+  location            = var.location
+  subnet_ids          = module.networking.subnet_ids
+  vnet_ids            = module.networking.vnet_ids
+  runner_public_ip    = var.runner_public_ip
+}
 
