@@ -232,7 +232,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   priority            = 300
   action              = "Allow"
 
-  # Rule for VM1 in vnet1 to access its storage private endpoint
+  # Rule for VM1 in vnet1 to access the storage account
   rule {
     name                  = "allow-blob-storage-vnet1"
     source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
@@ -241,7 +241,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
     protocols             = ["TCP"]
   }
 
-  # Rule for VM2 in vnet2 to access its storage private endpoint
+  # Rule for VM2 in vnet2 to access the storage account
   rule {
     name                  = "allow-blob-storage-vnet2"
     source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2

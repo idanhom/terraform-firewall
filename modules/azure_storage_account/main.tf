@@ -81,7 +81,7 @@ resource "azurerm_storage_blob" "script_blob" {
 
 
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
-  name                = "privatelink.blob.core.windows.net"
+  name                = "*.blob.core.windows.net"
   resource_group_name = var.resource_group_name
 }
 
