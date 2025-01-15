@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = true //Note: this should be "false" to disable public access?
+  public_network_access_enabled   = false 
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -45,7 +45,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow" //note, this should be "Deny" to block public access?
+    default_action = "Deny" //note, this should be "Deny" to block public access?
     ip_rules = [var.runner_public_ip] # does this serve a purpose?
     bypass = ["AzureServices"]
     /*     private_link_access {
@@ -81,7 +81,7 @@ resource "azurerm_storage_blob" "script_blob" {
 
 
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
-  name                = "*.blob.core.windows.net"
+  name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
 }
 
@@ -111,6 +111,19 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
   depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
+resource "azurerm_private_dns_zone_group" "blob_private_dns_zone_group" {
+  for_each = var.subnet_ids
+  name                 = "${each.key}-dns-zone-group"
+  resource_group_name  = var.resource_group_name
+  private_endpoint_id  = azurerm_private_endpoint.blob_private_endpoint[each.key].id
+
+  # Typically only one zone config if you only have the one zone
+  private_dns_zone_config {
+    name                  = "${each.key}-blob-dns-config"
+    private_dns_zone_id   = azurerm_private_dns_zone.blob_dns_zone.id
+    record_name           = azurerm_storage_account.blob_storage_account.name
+  }
+}
 
 
 data "azurerm_storage_account_sas" "scripts_sas" {
