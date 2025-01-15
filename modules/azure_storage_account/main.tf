@@ -94,6 +94,9 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   virtual_network_id    = each.value
 }
 
+
+
+
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
 
@@ -104,26 +107,37 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
 
   private_service_connection {
     name                           = "${each.key}-blob-endpoint"
-    private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     is_manual_connection           = false
+    private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     subresource_names              = ["blob"]
   }
   depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
-resource "azurerm_private_dns_zone_group" "blob_private_dns_zone_group" {
-  for_each = var.subnet_ids
-  name                 = "${each.key}-dns-zone-group"
-  resource_group_name  = var.resource_group_name
-  private_endpoint_id  = azurerm_private_endpoint.blob_private_endpoint[each.key].id
 
-  # Typically only one zone config if you only have the one zone
-  private_dns_zone_config {
-    name                  = "${each.key}-blob-dns-config"
-    private_dns_zone_id   = azurerm_private_dns_zone.blob_dns_zone.id
-    record_name           = azurerm_storage_account.blob_storage_account.name
-  }
+
+resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
+  # We also do for_each on var.subnet_ids to match the multiple endpoints above.
+  for_each           = var.subnet_ids
+
+  name                = azurerm_storage_account.blob_storage_account.name
+  zone_name           = azurerm_private_dns_zone.blob_dns_zone.name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+
+  records = [
+    # Link each A-record to the correct private endpoint’s IP address
+    azurerm_private_endpoint.blob_private_endpoint[each.key].private_service_connection[0].private_ip_address
+  ]
 }
+
+
+
+
+
+
+
+
 
 
 data "azurerm_storage_account_sas" "scripts_sas" {
