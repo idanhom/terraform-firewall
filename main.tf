@@ -54,7 +54,7 @@ module "networking" {
   # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
-
+#
 module "compute" {
   source              = "./modules/azure_compute"
   resource_group_name = azurerm_resource_group.rg_project.name
