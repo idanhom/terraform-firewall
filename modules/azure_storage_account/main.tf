@@ -17,40 +17,6 @@ locals {
   )
 }
 
-
-
-resource "azurerm_private_dns_zone" "blob_dns_zone" {
-  name                = "privatelink.blob.core.windows.net"
-  resource_group_name = var.resource_group_name
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
-  for_each = var.vnet_ids
-
-  name                  = "${each.key}-blob-dns-link"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
-  virtual_network_id    = each.value
-}
-
-resource "azurerm_private_endpoint" "blob_private_endpoint" {
-  for_each = var.subnet_ids
-
-  name                = "${each.key}-blob-endpoint"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = each.value
-
-  private_service_connection {
-    name                           = "${each.key}-blob-endpoint"
-    private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
-    is_manual_connection           = false
-    subresource_names              = ["blob"]
-  }
-  depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
-}
-
-
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
@@ -112,9 +78,38 @@ resource "azurerm_storage_blob" "script_blob" {
   depends_on = [azurerm_storage_container.script_container]
 }
 
-# 
 
 
+resource "azurerm_private_dns_zone" "blob_dns_zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
+  for_each = var.vnet_ids
+
+  name                  = "${each.key}-blob-dns-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
+  virtual_network_id    = each.value
+}
+
+resource "azurerm_private_endpoint" "blob_private_endpoint" {
+  for_each = var.subnet_ids
+
+  name                = "${each.key}-blob-endpoint"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = each.value
+
+  private_service_connection {
+    name                           = "${each.key}-blob-endpoint"
+    private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
+    is_manual_connection           = false
+    subresource_names              = ["blob"]
+  }
+  depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
+}
 
 
 
