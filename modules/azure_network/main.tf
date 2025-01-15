@@ -209,21 +209,6 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   }
 }
 
-/* resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
-  name                = "allow_azure_storage"
-  azure_firewall_name = azurerm_firewall.firewall.name
-  resource_group_name = var.resource_group_name
-  priority            = 300
-  action              = "Allow"
-
-  rule {
-    name                  = "allow-blob-storage"
-    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["10.0.1.5", "10.1.1.5"] #examplestoraccount5421.blob.core.windows.net] # trouble shooting purposes. replaced "Storage" with FQDN to storage. // or you can specify storage account FQDN/IP
-    destination_ports     = ["443"]
-    protocols             = ["TCP"]
-  }
-} */
 
 resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   name                = "allow_azure_storage"
@@ -304,33 +289,6 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   }
 }
 
+//also create outbound nginx rule to servers?
 
 
-
-# Unneccessary because am using Bastion for SSH. 
-/* resource "azurerm_firewall_nat_rule_collection" "internet_to_vms" {
-  name                = "internet-to-vms"
-  azure_firewall_name = azurerm_firewall.firewall.name
-  resource_group_name = var.resource_group_name
-  priority            = 200
-  action              = "Dnat"
-
-  dynamic "rule" {
-    for_each = var.vnets # Assumes `vnets` is a map of VMs, similar to your dev.tfvars
-
-    content {
-      name                  = "nat-internet-to-${rule.value.vnet_name}"  # Unique name for each rule
-      source_addresses      = ["*"]                                     # Allow from all external sources
-      destination_ports     = ["22"]                       # Ports to allow (e.g., SSH, HTTP, HTTPS)
-      destination_addresses = [azurerm_public_ip.firewall_ip.ip_address] # Firewall's public IP
-      translated_address    = var.vm_private_ip[rule.key] # Map to VM's private IP
-      translated_port       = 22                                        # Target VM port (22 in this case for SSH)
-      protocols             = ["TCP"]                                   # Protocol to allow
-    }
-  }
-} */
-
-
-
-
-# https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke?tabs=cli
