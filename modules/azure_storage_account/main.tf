@@ -16,8 +16,26 @@ locals {
     data.azurerm_storage_account_sas.scripts_sas.sas
   )
 }
+#------------------------------------------------
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  principal_id        = var.terraform_sp_object_id # Directly use SP's Object ID
+  role_definition_name = "Storage Blob Data Contributor"
+  scope               = azurerm_storage_account.blob_storage_account.id
+}
 
 
+
+
+
+resource "null_resource" "delay" {
+  depends_on = [azurerm_role_assignment.storage_blob_data_contributor]
+  provisioner "local-exec" {
+    command = "sleep 15" # Wait for 15 seconds
+  }
+}
+
+#------------------------------------------------
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
@@ -28,7 +46,6 @@ resource "azurerm_storage_account" "blob_storage_account" {
   access_tier                     = "Cool"
   public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
-
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
   large_file_share_enabled        = true //false?
@@ -46,7 +63,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow" # Preferred 'Deny' but SP doesn't have right RBAC to deploy script to storage
+    default_action = "Deny" # Preferred 'Deny' but SP doesn't have right RBAC to deploy script to storage
     bypass = ["AzureServices"]
   /*   private_link_access {
       endpoint_resource_id = [

@@ -1,3 +1,7 @@
+terraform_sp_object_id = "43ae005a-35b4-43de-8b12-8adcea9811c4"
+
+
+
 resource_group_name = "rg_project1"
 location            = "North Europe"
 
@@ -67,7 +71,6 @@ log_categories = [
   "AzureFirewallNetworkRule",
   "AzureFirewallDnsProxy"
 ]
-
 
 
 # log_analytics_saved_search = {
