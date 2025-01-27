@@ -72,7 +72,7 @@ resource "azurerm_storage_blob" "script_blob" {
   type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh" 
 
-  depends_on = [azurerm_storage_container.script_container]
+  #depends_on = [azurerm_storage_container.script_container]
 }
 
 
@@ -147,7 +147,7 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
     private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     subresource_names              = ["blob"]
   }
-  depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
+  #depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
 
@@ -168,59 +168,3 @@ resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-
-resource "azurerm_private_endpoint" "example1" {
-  name                = "vnet1_access"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet1/subnets/subnet1"
-
-  private_service_connection {
-    name                              = "vnet1_access_connection"
-    is_manual_connection = false
-    private_connection_resource_id    = azurerm_storage_account.example.id
-    subresource_names                 = ["blob"]
-  }
-}
-
-
-resource "azurerm_private_endpoint" "example2" {
-  name                = "vnet2_access"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet2/subnets/subnet2"
-
-  private_service_connection {
-    name                              = "vnet2_access_connection"
-    is_manual_connection = false
-    private_connection_resource_id    = azurerm_storage_account.example.id
-    subresource_names                 = ["blob"]
-  }
-}
-
- */

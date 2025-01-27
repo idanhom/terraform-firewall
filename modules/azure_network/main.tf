@@ -150,7 +150,7 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   }
 }
 
-## Allows compute to resolve domain names via Azure DNS
+## Allows compute to resolve domain names via Azure DNS (important for resolving the *storage-account*.privatelink... url)
 resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
