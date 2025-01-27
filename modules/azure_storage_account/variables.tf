@@ -19,8 +19,9 @@ variable "vnet_ids" {
   type        = map(string)
 }
 
-variable "runner_public_ip" {
+/* variable "runner_public_ip" {
   type        = string
   description = "Public IP of the GitHub Actions runner"
 }
 
+ */

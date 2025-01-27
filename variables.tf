@@ -85,10 +85,10 @@ variable "admin_password" {
   sensitive   = true
 }
 #
-variable "runner_public_ip" {
+/* variable "runner_public_ip" {
   type        = string
   description = "Public IP of the GitHub Actions runner"
-}
+} */
 
 
 
