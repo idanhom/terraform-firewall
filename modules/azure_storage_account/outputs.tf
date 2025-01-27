@@ -18,7 +18,7 @@ output "scripts_sas_url" {
   value = local.scripts_sas_url
 }
 
-output "scripts_sas_url" {
+output "scripts_sas_url_main" {
   value       = local.scripts_sas_url
   description = "The SAS URL for the script blob, used for deployment"
   #sensitive   = false

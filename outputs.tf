@@ -31,7 +31,7 @@ output "scripts_sas_token" {
   sensitive = true
 }
 
-output "scripts_sas_url" {
+output "scripts_sas_url_main" {
   value       = module.storage_account.scripts_sas_url
   description = "The SAS URL for the script blob, used for deployment"
   sensitive   = true
