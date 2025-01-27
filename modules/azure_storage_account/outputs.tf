@@ -18,6 +18,13 @@ output "scripts_sas_url" {
   value = local.scripts_sas_url
 }
 
+output "scripts_sas_url" {
+  value       = local.scripts_sas_url
+  description = "The SAS URL for the script blob, used for deployment"
+  #sensitive   = false
+}
+
+
 /* output "sas_token" {
   value = data.azurerm_storage_account_sas.blob_read_sas.sas
 }

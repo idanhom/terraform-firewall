@@ -31,6 +31,11 @@ output "scripts_sas_token" {
   sensitive = true
 }
 
+output "scripts_sas_url" {
+  value       = module.storage_account.scripts_sas_url
+  description = "The SAS URL for the script blob, used for deployment"
+  sensitive   = true
+}
 
 /* output "blob_url" {
   description = "url of SAS token to container"

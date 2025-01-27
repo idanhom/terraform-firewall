@@ -1,18 +1,3 @@
-
-
-//to be disabled because using the firewall ip?
-/* resource "azurerm_public_ip" "my_pip" {
-  for_each            = var.vnets
-  name                = "pip-${each.key}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  allocation_method   = "Static"
-} */
-
-
-#give the vm's? storage blob data contributor?
-
-
 resource "azurerm_network_interface" "my_nics" {
   for_each            = var.vnets
   name                = each.value.nic_name
@@ -23,7 +8,6 @@ resource "azurerm_network_interface" "my_nics" {
     name                          = "internal"
     subnet_id                     = var.subnet_ids[each.key]
     private_ip_address_allocation = "Dynamic"
-    #public_ip_address_id          = azurerm_public_ip.my_pip[each.key].id # remove because afw is external ip? how to add another nic then?
   }
 }
 
@@ -39,14 +23,11 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   custom_data = base64encode(<<EOT
 #!/bin/bash
 # Download the script from blob storage with SAS token
-curl -f -o /tmp/script.sh "${var.custom_data_sas_url}"
-chmod +x /tmp/script.sh
-/tmp/script.sh
-EOT
+  curl -f -o /tmp/script.sh "${var.custom_data_sas_url}"
+  chmod +x /tmp/script.sh
+  /tmp/script.sh
+  EOT
   )
-
-
-
 
   admin_username = var.admin_username //theadmintothevm
   admin_password = var.admin_password //Redeploy2025!!

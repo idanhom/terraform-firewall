@@ -28,10 +28,7 @@ output "firewall_id" {
   value       = azurerm_firewall.firewall.id
 }
 
-# output "firewall_ip_backuo" {
-#   description = "Public IP of firewall"
-#   value       = azurerm_firewall.firewall.ip_configuration[0].public_ip_address_id
-# }
+
 
 output "firewall_ip" {
   value = azurerm_public_ip.firewall_ip.ip_address
