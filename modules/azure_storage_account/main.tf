@@ -18,22 +18,22 @@ locals {
 }
 #------------------------------------------------
 
-resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-  principal_id        = var.terraform_sp_object_id # Directly use SP's Object ID
-  role_definition_name = "Storage Blob Data Contributor"
-  scope               = azurerm_storage_account.blob_storage_account.id
-}
+# resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+#   principal_id        = var.terraform_sp_object_id # Directly use SP's Object ID
+#   role_definition_name = "Storage Blob Data Contributor"
+#   scope               = azurerm_storage_account.blob_storage_account.id
+# }
 
 
 
 
 
-resource "null_resource" "delay" {
-  depends_on = [azurerm_role_assignment.storage_blob_data_contributor]
-  provisioner "local-exec" {
-    command = "sleep 15" # Wait for 15 seconds
-  }
-}
+# resource "null_resource" "delay" {
+#   depends_on = [azurerm_role_assignment.storage_blob_data_contributor]
+#   provisioner "local-exec" {
+#     command = "sleep 15" # Wait for 15 seconds
+#   }
+# }
 
 #------------------------------------------------
 resource "azurerm_storage_account" "blob_storage_account" {
