@@ -47,12 +47,12 @@ resource "azurerm_storage_account" "blob_storage_account" {
   network_rules {
     default_action = "Deny" #or do deny?
     bypass = ["AzureServices"]
-    private_link_access {
+/*     private_link_access {
       endpoint_resource_id = [
         var.subnet_ids["vnet1"],
         var.subnet_ids["vnet2"],
       ]
-    }
+    } */
     #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
   }
 
