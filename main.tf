@@ -96,6 +96,6 @@ module "storage_account" {
   location            = var.location
   subnet_ids          = module.networking.subnet_ids
   vnet_ids            = module.networking.vnet_ids
-  runner_public_ip    = var.runner_public_ip
+  #runner_public_ip    = var.runner_public_ip
 }
 
