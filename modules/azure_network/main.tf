@@ -1,4 +1,6 @@
-#Networking for VM's
+# Networking 
+# What happens: two vnets and subnets are created,
+#               based on map of objects 'vnets' in .tfvars  
 resource "azurerm_virtual_network" "my_vnet" {
   for_each = var.vnets
 
@@ -12,8 +14,6 @@ resource "azurerm_virtual_network" "my_vnet" {
 # │ Virtual Network Name: "vnet1"): performing Delete: unexpected status 400 (400 Bad Request) with error: InUseSubnetCannotBeDeleted: Subnet subnet1 is in use by /subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/RG_PROJECT1/providers/Microsoft.Network/networkInterfaces/NIC1/ipConfigurations/INTERNAL and cannot be deleted. In order to delete the subnet, delete all the resources within the subnet. See aka.ms/deletesubnet.
 
 
-
-
 resource "azurerm_subnet" "my_subnet" {
   for_each = var.vnets
 
@@ -25,58 +25,18 @@ resource "azurerm_subnet" "my_subnet" {
   depends_on = [azurerm_virtual_network.my_vnet]
 }
 
+#---------------------------------
 
-# Commented out NSG to troubleshoot connectivity to VMs. Also, AFW serves same purpose?
-
-/* resource "azurerm_network_security_group" "my_nsg" {
-  name                = "nsg"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  depends_on          = [azurerm_virtual_network.my_vnet]
-
-  dynamic "security_rule" {
-    for_each = var.nsg_rules
-
-
-    # here, add single rule, allow all 80 to and from... or maybe in .tfvars
-    # also allow inbound 22
-    content {
-      name                       = security_rule.value.name
-      priority                   = security_rule.value.priority
-      direction                  = security_rule.value.direction
-      access                     = security_rule.value.access
-      protocol                   = security_rule.value.protocol
-      source_port_range          = security_rule.value.source_port_range
-      destination_port_range     = security_rule.value.destination_port_range
-      source_address_prefix      = security_rule.value.source_port_range
-      destination_address_prefix = security_rule.value.destination_port_range
-    }
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_to_subnet_association" {
-  for_each = azurerm_subnet.my_subnet
-
-  subnet_id                 = each.value.id
-  network_security_group_id = azurerm_network_security_group.my_nsg.id
-} */
-
-#########################
-
-# Firewall resources
+# AFW (vnet, subnet, ip, afw)
 resource "azurerm_virtual_network" "firewall_vnet" {
-
   resource_group_name = var.resource_group_name
   location            = var.location
-
   name          = var.afw.firewall_vnet_name
   address_space = var.afw.firewall_vnet_prefix
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
-
   resource_group_name = var.resource_group_name
-
   name                 = var.afw.firewall_subnet_name
   virtual_network_name = var.afw.firewall_vnet_name
   address_prefixes     = var.afw.firewall_subnet_prefix
@@ -85,7 +45,6 @@ resource "azurerm_subnet" "firewall_subnet" {
 }
 
 resource "azurerm_public_ip" "firewall_ip" {
-
   name                = var.afw.firewall_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -95,11 +54,6 @@ resource "azurerm_public_ip" "firewall_ip" {
     create_before_destroy = true
   }
 }
-
-
-
-
-### obs: needed to add DNS allow here????
 
 resource "azurerm_firewall" "firewall" {
   name                = var.afw.firewall_name
@@ -115,15 +69,16 @@ resource "azurerm_firewall" "firewall" {
   }
 }
 
-resource "azurerm_route_table" "firewall_route_table" {
-  depends_on = [azurerm_firewall.firewall]
+# -------------------------
 
+
+# AFW route table for vnet1 and vnet2 to AFW
+resource "azurerm_route_table" "firewall_route_table" {
   name                = "firewall_route_table"
   location            = var.location
   resource_group_name = var.resource_group_name
 
-
-  # Routing vnet1 to firewall
+  ## Routing vnet1 to firewall
   route {
     name                   = var.vnet_route_table.vnet1.internet_traffic.name
     address_prefix         = var.vnet_route_table.vnet1.internet_traffic.address_prefix
@@ -131,12 +86,15 @@ resource "azurerm_route_table" "firewall_route_table" {
     next_hop_in_ip_address = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
   }
 
+  ## Routing vnet2 to firewall
   route {
     name                   = var.vnet_route_table.vnet2.internet_traffic.name
     address_prefix         = var.vnet_route_table.vnet2.internet_traffic.address_prefix
     next_hop_type          = var.vnet_route_table.vnet2.internet_traffic.next_hop_type
     next_hop_in_ip_address = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
   }
+
+  depends_on = [azurerm_firewall.firewall]
 }
 
 
@@ -145,9 +103,10 @@ resource "azurerm_subnet_route_table_association" "subnet_and_route_table_associ
   subnet_id      = each.value.id
   route_table_id = azurerm_route_table.firewall_route_table.id
 }
+# -------------------------------
 
 
-################
+# Bydirectional peering between VNets and AFW
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
   for_each                  = var.vnets
   name                      = "peer-hub-to-${each.key}"
@@ -170,12 +129,11 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
   allow_forwarded_traffic      = true
 }
 
+# ----------------------------------
 
-#################
+# Firewall rule collections
 
-
-#firewall rule collections
-
+## Enables compute in vnet1 and vnet2 to communicate directly
 resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   name                = "inter_vm_traffic"
   azure_firewall_name = azurerm_firewall.firewall.name
@@ -192,7 +150,7 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   }
 }
 
-
+## Allows compute to resolve domain names via Azure DNS
 resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
@@ -209,7 +167,7 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   }
 }
 
-
+## Restricts access to Azure Storage based on vnet IP ranges
 resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   name                = "allow_azure_storage"
   azure_firewall_name = azurerm_firewall.firewall.name
@@ -217,7 +175,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   priority            = 300
   action              = "Allow"
 
-  # Rule for VM1 in vnet1 to access the storage account
+  ### Rule for VM1 in vnet1 to access the storage account
   rule {
     name                  = "allow-blob-storage-vnet1"
     source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
@@ -226,7 +184,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
     protocols             = ["TCP"]
   }
 
-  # Rule for VM2 in vnet2 to access the storage account
+  ### Rule for VM2 in vnet2 to access the storage account
   rule {
     name                  = "allow-blob-storage-vnet2"
     source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
@@ -237,33 +195,12 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
 }
 
 
-
-
-# Firewall Network Rule Collection for Outbound Internet Access
-resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
-  name                = "allow_outbound_internet"
-  azure_firewall_name = azurerm_firewall.firewall.name
-  resource_group_name = var.resource_group_name
-  priority            = 400
-  action              = "Allow"
-
-  rule {
-    name                  = "allow-vm-outbound-internet"
-    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["*"]
-    destination_ports     = ["80", "443"]
-    protocols             = ["TCP"]
-  }
-}
-
-
-#
-
+## Allows inbound traffic from external users to VMs via the firewall
 resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 500
+  priority            = 400
   action              = "Dnat"
 
   rule {
@@ -288,6 +225,28 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
     translated_port       = "80"
   }
 }
+
+
+## Allows secure outbound internet access for VMs in vnet1 and vnet2
+resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
+  name                = "allow_outbound_internet"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 500
+  action              = "Allow"
+
+  rule {
+    name                  = "allow-vm-outbound-internet"
+    source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
+    destination_addresses = ["*"]
+    destination_ports     = ["80", "443"]
+    protocols             = ["TCP"]
+  }
+}
+
+
+#
+
 
 //also create outbound nginx rule to servers?
 

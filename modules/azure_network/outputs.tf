@@ -30,7 +30,7 @@ output "firewall_id" {
 
 output "firewall_ip" {
   description = "Public IP of firewall"
-  value       = azurerm_firewall.firewall.ip_configuration
+  value       = azurerm_firewall.firewall.ip_configuration[0].public_ip_address_id
 }
 
 output "firewall_private_ip" {

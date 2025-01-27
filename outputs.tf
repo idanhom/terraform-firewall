@@ -1,4 +1,5 @@
-output "firewall_private_ip_debug" {
+output "firewall_ip" {
+  description = "public ip of afw" 
   value = module.networking.firewall_ip
 }
 
@@ -15,8 +16,10 @@ output "subnet_ids" {
 output "vm_private_ip" {
   description = "map of vms to private ip"
   value       = module.compute.vm_private_ip
-
 }
+
+
+
 #
 # output "vm_public_ip" {
 #   description = "map of vm to public ip"

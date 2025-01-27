@@ -21,41 +21,6 @@ vnets = {
   }
 }
 
-# nsg_rules = [
-#   {
-#     name                       = "Allow_SSH"
-#     priority                   = 100
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "Tcp"
-#     source_port_range          = "*"
-#     destination_port_range     = "22"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   },
-#   {
-#     name                       = "Allow_HTTP"
-#     priority                   = 110
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "Tcp"
-#     source_port_range          = "*"
-#     destination_port_range     = "80"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   },
-#   {
-#     name                       = "Allow_Internet_Outbound"
-#     priority                   = 200
-#     direction                  = "Outbound"
-#     access                     = "Allow"
-#     protocol                   = "*"
-#     source_port_range          = "*"
-#     destination_port_range     = "*"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "0.0.0.0/0"
-#   }
-# ]
 
 
 afw = {
