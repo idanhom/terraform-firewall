@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = false // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
+  public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -45,14 +45,14 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow" #or do deny?
+    default_action = "Deny" #or do deny?
     bypass = ["AzureServices"]
-    # private_link_access {
-    #   endpoint_resource_id = [
-    #     var.subnet_ids["vnet1"],
-    #     var.subnet_ids["vnet2"],
-    #   ]
-    # }
+    private_link_access {
+      endpoint_resource_id = [
+        var.subnet_ids["vnet1"],
+        var.subnet_ids["vnet2"],
+      ]
+    }
     #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
   }
 
