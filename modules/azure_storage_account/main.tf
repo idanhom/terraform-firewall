@@ -17,6 +17,7 @@ locals {
   )
 }
 
+
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
@@ -30,7 +31,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
-  large_file_share_enabled        = true
+  large_file_share_enabled        = true //false?
   shared_access_key_enabled       = true
 
   blob_properties {
