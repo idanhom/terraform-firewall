@@ -195,7 +195,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
 }
 
 
-## Allows inbound traffic from external users to VMs via the firewall
+## Allows inbound traffic to VMs via the firewall for web server
 resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   name                = "nginx_inbound_dnat"
   azure_firewall_name = azurerm_firewall.firewall.name
