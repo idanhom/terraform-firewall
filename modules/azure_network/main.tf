@@ -226,7 +226,6 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   }
 }
 
-
 ## Allows secure outbound internet access for VMs in vnet1 and vnet2
 resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
@@ -243,11 +242,3 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
     protocols             = ["TCP"]
   }
 }
-
-
-#
-
-
-//also create outbound nginx rule to servers?
-
-
