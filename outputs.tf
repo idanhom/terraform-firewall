@@ -28,13 +28,13 @@ output "vm_private_ip" {
 
 output "scripts_sas_token" {
   value = module.storage_account.scripts_sas_token
-  sensitive = true
+  sensitive = false
 }
 
 output "scripts_sas_url_main" {
   value       = module.storage_account.scripts_sas_url
   description = "The SAS URL for the script blob, used for deployment"
-  sensitive   = true
+  sensitive   = false
 }
 
 /* output "blob_url" {
