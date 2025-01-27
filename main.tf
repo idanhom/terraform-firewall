@@ -71,8 +71,8 @@ module "compute" {
 
   storage_account_name = module.storage_account.storage_account_name
   container_name       = module.storage_account.container_name
-  blob_name = module.storage_account.blob_name
-  custom_data_sas_url = module.storage_account.scripts_sas_url
+  blob_name            = module.storage_account.blob_name
+  custom_data_sas_url  = module.storage_account.scripts_sas_url
 }
 
 

@@ -31,12 +31,12 @@ resource "azurerm_subnet" "my_subnet" {
 resource "azurerm_virtual_network" "firewall_vnet" {
   resource_group_name = var.resource_group_name
   location            = var.location
-  name          = var.afw.firewall_vnet_name
-  address_space = var.afw.firewall_vnet_prefix
+  name                = var.afw.firewall_vnet_name
+  address_space       = var.afw.firewall_vnet_prefix
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
-  resource_group_name = var.resource_group_name
+  resource_group_name  = var.resource_group_name
   name                 = var.afw.firewall_subnet_name
   virtual_network_name = var.afw.firewall_vnet_name
   address_prefixes     = var.afw.firewall_subnet_prefix
@@ -155,7 +155,7 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 200 
+  priority            = 200
   action              = "Allow"
 
   rule {
@@ -179,7 +179,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet1"
     source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
-    destination_addresses = ["Storage"]  
+    destination_addresses = ["Storage"]
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
@@ -188,7 +188,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet2"
     source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
-    destination_addresses = ["Storage"] 
+    destination_addresses = ["Storage"]
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }

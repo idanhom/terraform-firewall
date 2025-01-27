@@ -32,7 +32,7 @@ output "firewall_id" {
 
 output "firewall_ip" {
   value = azurerm_public_ip.firewall_ip.ip_address
-  
+
 }
 
 # output "firewall_private_ip" {

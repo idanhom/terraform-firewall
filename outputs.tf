@@ -1,6 +1,6 @@
 output "firewall_ip" {
-  description = "public ip of afw" 
-  value = module.networking.firewall_ip
+  description = "public ip of afw"
+  value       = module.networking.firewall_ip
 }
 
 output "vnet_ids" {
@@ -27,7 +27,7 @@ output "vm_private_ip" {
 # }
 
 output "scripts_sas_token" {
-  value = module.storage_account.scripts_sas_token
+  value     = module.storage_account.scripts_sas_token
   sensitive = true
 }
 

@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
+  public_network_access_enabled   = false // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
 
   allow_nested_items_to_be_public = false
@@ -45,7 +45,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Allow" 
+    default_action = "Allow"
     #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
     bypass = ["AzureServices"]
   }
@@ -70,8 +70,7 @@ resource "azurerm_storage_blob" "script_blob" {
   storage_account_name   = azurerm_storage_account.blob_storage_account.name
   storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block"
-  source                 = "${path.module}/custom_data/docker.sh" 
-
+  source                 = "${path.module}/custom_data/docker.sh"
   #depends_on = [azurerm_storage_container.script_container]
 }
 
@@ -80,7 +79,7 @@ resource "azurerm_storage_blob" "script_blob" {
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
   https_only        = true
-  signed_version    = "2022-11-02"
+  #signed_version    = "2022-11-02"
 
   resource_types {
     service   = true
@@ -95,8 +94,8 @@ data "azurerm_storage_account_sas" "scripts_sas" {
     file  = false
   }
 
-  start  = timestamp()                     
-  expiry = timeadd(timestamp(), "24h")
+  start  = timestamp()
+  expiry = timeadd(timestamp(), "3h")
 
   permissions {
     read    = true
@@ -154,7 +153,7 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
 
 resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
   # We also do for_each on var.subnet_ids to match the multiple endpoints above.
-  for_each           = var.subnet_ids
+  for_each = var.subnet_ids
 
   name                = azurerm_storage_account.blob_storage_account.name
   zone_name           = azurerm_private_dns_zone.blob_dns_zone.name
