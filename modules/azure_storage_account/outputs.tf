@@ -21,13 +21,11 @@ output "scripts_sas_url" {
 # Note: difference between below? _main is in outputs main to see if script url works
 output "scripts_sas_token" {
   value = data.azurerm_storage_account_sas.scripts_sas.sas
-  sensitive = false
 }
 
 output "scripts_sas_url_main" {
   value       = local.scripts_sas_url
   description = "The SAS URL for the script blob, used for deployment"
-  sensitive   = false
 }
 
 
