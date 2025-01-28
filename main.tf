@@ -97,6 +97,6 @@ module "storage_account" {
   subnet_ids          = module.networking.subnet_ids
   vnet_ids            = module.networking.vnet_ids
   terraform_sp_object_id = var.terraform_sp_object_id
-  #runner_public_ip    = var.runner_public_ip
+  runner_public_ip    = var.runner_public_ip
 }
 
