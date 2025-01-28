@@ -51,18 +51,18 @@ resource "azurerm_storage_account" "blob_storage_account" {
   large_file_share_enabled        = true //false?
   shared_access_key_enabled       = true
 
-  blob_properties {
-    container_delete_retention_policy {
-      days = 7
-    }
+  # blob_properties {
+  #   container_delete_retention_policy {
+  #     days = 7
+  #   }
 
-    delete_retention_policy {
-      days                     = 7
-      permanent_delete_enabled = false
-    }
-  }
+  #   delete_retention_policy {
+  #     days                     = 7
+  #     permanent_delete_enabled = false
+  #   }
+  # }
 
-  network_rules {
+/*   network_rules {
     default_action = "Deny"
     bypass = ["AzureServices"]
 
@@ -75,7 +75,8 @@ resource "azurerm_storage_account" "blob_storage_account" {
         for k, subnet_id in var.subnet_ids : subnet_id
       ]
     }
-  }
+    }
+   */
 
   
   
@@ -90,12 +91,37 @@ resource "azurerm_storage_account" "blob_storage_account" {
   #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
   # }
 
-  share_properties {
-    retention_policy {
-      days = 7
-    }
+  # share_properties {
+  #   retention_policy {
+  #     days = 7
+  #   }
+  # }
+}
+
+resource "azurerm_storage_account_network_rules" "storage_rules" {
+  storage_account_id = azurerm_storage_account.blob_storage_account.id
+
+  default_action = "Deny"  # Blocks everything except explicitly allowed traffic
+  bypass         = ["AzureServices"]
+
+  virtual_network_subnet_ids = values(module.network.subnet_ids) # Converts map to list
+}
+
+# 🔹 Assign Private Link Access for Each Subnet 🔹
+resource "azurerm_storage_account_network_rules" "private_link_access" {
+  for_each = module.network.subnet_ids
+
+  storage_account_id = azurerm_storage_account.blob_storage_account.id
+
+  default_action = "Deny"  # Ensures unlisted traffic is blocked
+  bypass         = ["AzureServices"]
+
+  private_link_access {
+    endpoint_resource_id = each.value
   }
 }
+
+
 
 
 resource "azurerm_storage_container" "script_container" {
