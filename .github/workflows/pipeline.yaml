@@ -75,7 +75,7 @@ jobs:
         run: |
           az role assignment create \
             --assignee ${{ secrets.AZURE_CLIENT_ID }} \
-            --role "User Access Administrator" \
+            --role "Storage Blob Data Contributor" \
             --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
         continue-on-error: false
 
