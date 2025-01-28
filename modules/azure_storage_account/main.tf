@@ -63,15 +63,32 @@ resource "azurerm_storage_account" "blob_storage_account" {
   }
 
   network_rules {
-    default_action = "Deny" # Preferred 'Deny' but SP doesn't have right RBAC to deploy script to storage
+    default_action = "Deny"
     bypass = ["AzureServices"]
-  /*   private_link_access {
+
+    virtual_network_subnet_ids = [
+      for k, subnet_id in var.subnet_ids : subnet_id
+    ]
+
+    private_link_access {
       endpoint_resource_id = [
         for k, subnet_id in var.subnet_ids : subnet_id
       ]
-    } */
-    #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
+    }
   }
+
+  
+  
+  # network_rules {
+  #   default_action = "Deny" # Preferred 'Deny' but SP doesn't have right RBAC to deploy script to storage
+  #   bypass = ["AzureServices"]
+  #   private_link_access {
+  #     endpoint_resource_id = [
+  #       for k, subnet_id in var.subnet_ids : subnet_id
+  #     ]
+  #   }
+  #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
+  # }
 
   share_properties {
     retention_policy {
