@@ -118,20 +118,20 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
 }
 ###################
 # version 2...? fix
-resource "azurerm_storage_account_network_rules" "this" {
-  storage_account_id = azurerm_storage_account.blob_storage_account.id
-  default_action     = "Deny"
-  bypass            = ["AzureServices"]
+# resource "azurerm_storage_account_network_rules" "this" {
+#   storage_account_id = azurerm_storage_account.blob_storage_account.id
+#   default_action     = "Deny"
+#   bypass            = ["AzureServices"]
 
-  virtual_network_subnet_ids = values(var.subnet_ids)
+#   virtual_network_subnet_ids = values(var.subnet_ids)
 
-  dynamic "private_link_access" {
-    for_each = var.subnet_ids
-    content {
-      endpoint_resource_id = ...
-    }
-  }
-}
+#   dynamic "private_link_access" {
+#     for_each = var.subnet_ids
+#     content {
+#       endpoint_resource_id = ...
+#     }
+#   }
+# }
 
 
 
@@ -176,8 +176,8 @@ data "azurerm_storage_account_sas" "scripts_sas" {
 
   permissions {
     read    = true
-    create  = true
-    write   = true
+    create  = false
+    write   = false
     list    = false
     delete  = false
     add     = false
@@ -223,6 +223,16 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
     private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     subresource_names              = ["blob"]
   }
+
+  private_dns_zone_group {
+    name = "default"
+    private_dns_zone_ids = [
+      azurerm_private_dns_zone.blob_dns_zone.id
+    ]
+  }
+
+
+
   #depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
