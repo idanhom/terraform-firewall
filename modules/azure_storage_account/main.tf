@@ -42,7 +42,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   bypass         = ["AzureServices"]
 
   virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
-  ip_rules = [var.runner_public_ip] //whitelist IP of runner to allow hosting script
+  ip_rules = [var.runner_public_ip] //whitelist IP of github runner to allow hosting script
 }
 
 
