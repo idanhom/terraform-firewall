@@ -44,7 +44,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
+  public_network_access_enabled   = false // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
@@ -101,10 +101,9 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Deny"  # Security best practice: Block everything except explicitly allowed traffic
+  default_action = "Deny" # when i allow, it works. but this is bad practice. 
   bypass         = ["AzureServices"]
 
-  # 🔹 Allow access from all subnets where Terraform SP is deployed
   virtual_network_subnet_ids = values(var.subnet_ids)
 }
 
