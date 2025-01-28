@@ -16,26 +16,8 @@ locals {
     data.azurerm_storage_account_sas.scripts_sas.sas
   )
 }
-#------------------------------------------------
-
-# resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-#   principal_id        = var.terraform_sp_object_id # Directly use SP's Object ID
-#   role_definition_name = "Storage Blob Data Contributor"
-#   scope               = azurerm_storage_account.blob_storage_account.id
-# }
 
 
-
-
-
-# resource "null_resource" "delay" {
-#   depends_on = [azurerm_role_assignment.storage_blob_data_contributor]
-#   provisioner "local-exec" {
-#     command = "sleep 15" # Wait for 15 seconds
-#   }
-# }
-
-#------------------------------------------------
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
@@ -50,64 +32,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   https_traffic_only_enabled      = true
   large_file_share_enabled        = true //false?
   shared_access_key_enabled       = true
-
-  # blob_properties {
-  #   container_delete_retention_policy {
-  #     days = 7
-  #   }
-
-  #   delete_retention_policy {
-  #     days                     = 7
-  #     permanent_delete_enabled = false
-  #   }
-  # }
-
-/*   network_rules {
-    default_action = "Deny"
-    bypass = ["AzureServices"]
-
-]
 }
-    }
-   */
-
-  
-  
-  # network_rules {
-  #   default_action = "Deny" # Preferred 'Deny' but SP doesn't have right RBAC to deploy script to storage
-  #   bypass = ["AzureServices"]
-  #   private_link_access {
-  #     endpoint_resource_id = [
-  #       for k, subnet_id in var.subnet_ids : subnet_id
-  #     ]
-  #   }
-  #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
-  # }
-
-  # share_properties {
-  #   retention_policy {
-  #     days = 7
-  #   }
-  # }
-}
-
-/* resource "azurerm_storage_account_network_rules" "storage_rules" {
-  storage_account_id = azurerm_storage_account.blob_storage_account.id
-
-  default_action = "Deny" # when i allow, it works. but this is bad practice. 
-  bypass         = ["AzureServices"]
-
-  virtual_network_subnet_ids = values(var.subnet_ids)
-}
-
-resource "azurerm_storage_account_network_rules" "private_link_access" {
-  for_each = var.subnet_ids 
-
-  storage_account_id = azurerm_storage_account.blob_storage_account.id
-
-  default_action = "Deny"
-  bypass = ["AzureServices"]
-} */
 
 
 resource "azurerm_storage_account_network_rules" "storage_rules" {
@@ -116,11 +41,8 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   default_action = "Deny" # deny?
   bypass         = ["AzureServices"]
 
-  # Combine all subnet IDs into one list
-  virtual_network_subnet_ids = values(var.subnet_ids)
-  ip_rules = [var.runner_public_ip]
- 
-  #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
+  virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
+  ip_rules = [var.runner_public_ip] //whitelist IP of runner to allow hosting script
 }
 
 
