@@ -98,7 +98,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   # }
 }
 
-resource "azurerm_storage_account_network_rules" "storage_rules" {
+/* resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
   default_action = "Deny" # when i allow, it works. but this is bad practice. 
@@ -114,8 +114,22 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
 
   default_action = "Deny"
   bypass = ["AzureServices"]
+} */
 
+
+resource "azurerm_storage_account_network_rules" "this" {
+  storage_account_id = azurerm_storage_account.blob_storage_account.id
+
+  default_action = "Deny"  # Deny all traffic by default
+  bypass         = ["AzureServices"]  # Allow essential Azure services like monitoring
+
+  # Combine all subnet IDs into one list
+  virtual_network_subnet_ids = values(var.subnet_ids)
 }
+
+
+
+
 ###################
 # version 2...? fix
 # resource "azurerm_storage_account_network_rules" "this" {
@@ -230,15 +244,10 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
       azurerm_private_dns_zone.blob_dns_zone.id
     ]
   }
-
-
-
-  #depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
 }
 
 
-
-resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
+/* resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
   # We also do for_each on var.subnet_ids to match the multiple endpoints above.
   for_each = var.subnet_ids
 
@@ -251,6 +260,14 @@ resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
     # Link each A-record to the correct private endpoint’s IP address
     azurerm_private_endpoint.blob_private_endpoint[each.key].private_service_connection[0].private_ip_address
   ]
-}
+} */
+
+# commented out because of having it here isntead:
+  # private_dns_zone_group {
+  #   name = "default"
+  #   private_dns_zone_ids = [
+  #     azurerm_private_dns_zone.blob_dns_zone.id
+
+
 
 
