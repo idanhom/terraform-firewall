@@ -24,7 +24,6 @@ resource "azurerm_subnet" "my_subnet" {
   virtual_network_name = azurerm_virtual_network.my_vnet[each.key].name
   address_prefixes     = each.value.subnet_prefix
 
-  # Enable Microsoft.Storage service endpoint
   service_endpoints = ["Microsoft.Storage"]
 
   depends_on = [azurerm_virtual_network.my_vnet]

@@ -17,6 +17,20 @@ locals {
   )
 }
 
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_role_assignment" "storage_account_contributor" {
+  principal_id   = service_principal_object_id
+  role_definition_name = "Storage Account Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  principal_id   = service_principal_object_id
+  role_definition_name = "Storage Blob Data Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
+
 
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
@@ -27,7 +41,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
   public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
-  default_to_oauth_authentication = false
+  default_to_oauth_authentication = true
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
   large_file_share_enabled        = true //false?
@@ -109,7 +123,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   permissions {
     read    = true 
     write   = true # can be disabled?
-    create  = false # can be disabled?
+    create  = true # can be disabled?
     list    = false
     delete  = false
     add     = false
