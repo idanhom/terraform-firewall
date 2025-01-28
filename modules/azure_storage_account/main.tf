@@ -113,7 +113,7 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Allow" # deny?
+  default_action = "Deny" # deny?
   bypass         = ["AzureServices"]
 
   # Combine all subnet IDs into one list
