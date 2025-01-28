@@ -161,8 +161,8 @@ data "azurerm_storage_account_sas" "scripts_sas" {
 
   permissions {
     read    = true
-    create  = false
-    write   = false
+    create  = true
+    write   = true
     list    = false
     delete  = false
     add     = false
