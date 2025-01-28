@@ -90,8 +90,8 @@ jobs:
 
 
         
-      - name: Wait for Role Assignment Propagation
-        run: sleep 30
+      # - name: Wait for Role Assignment Propagation
+      #   run: sleep 30
 
 
       - name: Export Azure env vars for Terraform
