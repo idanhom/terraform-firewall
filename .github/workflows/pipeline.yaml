@@ -88,12 +88,12 @@ jobs:
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "ARM_USE_OIDC=true" >> $GITHUB_ENV
 
-      # - name: Discover runner's IP
-      #   id: discover_ip
-      #   run: echo "public_ip=$(curl -s ifconfig.me)" >> $GITHUB_OUTPUT
+      - name: Discover runner's IP
+        id: discover_ip
+        run: echo "public_ip=$(curl -s ifconfig.me)" >> $GITHUB_OUTPUT
           
-      # - name: Print IP (for debugging)
-      #   run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
+      - name: Print IP (for debugging)
+        run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
         
 
 

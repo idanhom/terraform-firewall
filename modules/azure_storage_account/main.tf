@@ -125,6 +125,8 @@ resource "azurerm_storage_account_network_rules" "this" {
 
   # Combine all subnet IDs into one list
   virtual_network_subnet_ids = values(var.subnet_ids)
+  ip_rules = [var.runner_public_ip]
+  #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
 }
 
 
