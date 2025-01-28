@@ -66,15 +66,8 @@ resource "azurerm_storage_account" "blob_storage_account" {
     default_action = "Deny"
     bypass = ["AzureServices"]
 
-    virtual_network_subnet_ids = [
-      for k, subnet_id in var.subnet_ids : subnet_id
-    ]
-
-    private_link_access {
-      endpoint_resource_id = [
-        for k, subnet_id in var.subnet_ids : subnet_id
-      ]
-    }
+]
+}
     }
    */
 
@@ -120,16 +113,13 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Allow"
+  default_action = "Allow" # deny?
   bypass         = ["AzureServices"]
 
   # Combine all subnet IDs into one list
   virtual_network_subnet_ids = values(var.subnet_ids)
   ip_rules = [var.runner_public_ip]
-  
-
-
-
+ 
   #   #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
 }
 
@@ -185,7 +175,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   services {
     blob  = true
     queue = false
-    table = true
+    table = true #can be disabled?
     file  = false
   }
 
@@ -193,9 +183,9 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   expiry = timeadd(timestamp(), "3h")
 
   permissions {
-    read    = true
-    create  = true
-    write   = true
+    read    = true 
+    create  = true # can be disabled?
+    write   = true # can be disabled?
     list    = false
     delete  = false
     add     = false

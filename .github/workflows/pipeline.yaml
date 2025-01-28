@@ -70,7 +70,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-          # necessary? remove if can solve storage account access
       - name: Assign Storage Blob Data Contributor to Service Principal
         run: |
           az role assignment create \
