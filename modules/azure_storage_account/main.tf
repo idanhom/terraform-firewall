@@ -80,6 +80,8 @@ resource "azurerm_storage_blob" "script_blob" {
   storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh"
+  depends_on             = [azurerm_storage_container.script_container]
+
 }
 
 
@@ -106,8 +108,8 @@ data "azurerm_storage_account_sas" "scripts_sas" {
 
   permissions {
     read    = true 
-    create  = true # can be disabled?
     write   = true # can be disabled?
+    create  = false # can be disabled?
     list    = false
     delete  = false
     add     = false

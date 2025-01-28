@@ -86,6 +86,11 @@ jobs:
             --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
         continue-on-error: false
 
+        
+      - name: Wait for Role Assignment Propagation
+        run: sleep 30
+
+
       - name: Export Azure env vars for Terraform
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
