@@ -38,7 +38,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Deny" # deny?
+  default_action = "Allow" # deny?
   bypass         = ["AzureServices"]
 
   virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
