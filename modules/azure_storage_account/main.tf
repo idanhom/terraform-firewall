@@ -101,20 +101,19 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Deny"  # Blocks everything except explicitly allowed traffic
-  bypass         = ["AzureServices"]
+  default_action = "Deny"
+  bypass = ["AzureServices"]
 
-  virtual_network_subnet_ids = values(module.network.subnet_ids) # Converts map to list
+  virtual_network_subnet_ids = values(var.subnet_ids) 
 }
 
-# 🔹 Assign Private Link Access for Each Subnet 🔹
 resource "azurerm_storage_account_network_rules" "private_link_access" {
-  for_each = module.network.subnet_ids
+  for_each = var.subnet_ids 
 
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Deny"  # Ensures unlisted traffic is blocked
-  bypass         = ["AzureServices"]
+  default_action = "Deny"
+  bypass = ["AzureServices"]
 
   private_link_access {
     endpoint_resource_id = each.value

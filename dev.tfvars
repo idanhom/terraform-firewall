@@ -72,11 +72,3 @@ log_categories = [
   "AzureFirewallDnsProxy"
 ]
 
-
-# log_analytics_saved_search = {
-#   search1 = {
-#     category = "AzureFirewallNetworkRule"
-#     display_name = "Sample Network Rule Logs"
-#     query = "search *"
-#   }
-# }
