@@ -27,7 +27,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
   public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
-  default_to_oauth_authentication = true
+  default_to_oauth_authentication = false
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
   large_file_share_enabled        = true //false?
