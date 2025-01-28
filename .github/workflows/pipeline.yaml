@@ -122,7 +122,7 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
-        run: terraform plan -input=false -out=plan.out  -var-file='dev.tfvars'
+        run: terraform plan -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -out=plan.out  -var-file='dev.tfvars'
             #-var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}"
       - name: Terraform Apply
         env:
@@ -130,7 +130,7 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
-        run: terraform apply -auto-approve -input=false -var-file='dev.tfvars'
+        run: terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
             #-var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}"
         
 
