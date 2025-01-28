@@ -55,7 +55,7 @@ jobs:
   #   steps:
   #     - name: Output issue event data
   #       run: echo '${{ toJSON(github.event) }}'
-
+#
   cicd:
     runs-on: ubuntu-latest
     environment: azure-deployment
