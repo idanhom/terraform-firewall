@@ -116,9 +116,6 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
   default_action = "Deny"
   bypass = ["AzureServices"]
 
-  private_link_access {
-    endpoint_resource_id = each.value
-  }
 }
 
 
