@@ -163,10 +163,6 @@ resource "azurerm_storage_blob" "script_blob" {
   type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh"
   #is below necessary?
-  depends_on = [
-    azurerm_storage_container.script_container,
-    azurerm_storage_account_network_rules.storage_rules
-  ]
   #depends_on = [azurerm_storage_container.script_container]
 }
 
@@ -175,7 +171,6 @@ resource "azurerm_storage_blob" "script_blob" {
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
   https_only        = true
-  #signed_version    = "2022-11-02"
 
   resource_types {
     service   = true
