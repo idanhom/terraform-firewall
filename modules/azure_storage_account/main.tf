@@ -44,7 +44,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   account_replication_type        = "LRS"
   account_kind                    = "StorageV2"
   access_tier                     = "Cool"
-  public_network_access_enabled   = false // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
+  public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
@@ -152,7 +152,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   services {
     blob  = true
     queue = false
-    table = false
+    table = true
     file  = false
   }
 
