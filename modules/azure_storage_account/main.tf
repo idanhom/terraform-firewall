@@ -117,7 +117,7 @@ resource "azurerm_storage_account_network_rules" "private_link_access" {
 } */
 
 
-resource "azurerm_storage_account_network_rules" "this" {
+resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
   default_action = "Deny"  # Deny all traffic by default
@@ -164,8 +164,6 @@ resource "azurerm_storage_blob" "script_blob" {
   storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh"
-  #is below necessary?
-  #depends_on = [azurerm_storage_container.script_container]
 }
 
 
