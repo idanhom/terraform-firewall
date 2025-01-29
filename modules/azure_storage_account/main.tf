@@ -64,7 +64,9 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
 
 # I think the reason this happens is that Github actions uses multiple runners. The first runner (which gets the IP) is not the same that then tries to upload the script to the blob?
 # One way to solve this would be to do private runners and allow ip and subnet of it.
-
+# to filter ip addresses for github actions:
+# curl -s https://api.github.com/meta \
+#  | jq '.actions[] | select(contains(":") | not)'
 
 
   virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
