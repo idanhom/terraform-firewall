@@ -14,7 +14,24 @@ resource "azurerm_virtual_network" "my_vnet" {
 # │ Virtual Network Name: "vnet1"): performing Delete: unexpected status 400 (400 Bad Request) with error: InUseSubnetCannotBeDeleted: Subnet subnet1 is in use by /subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/RG_PROJECT1/providers/Microsoft.Network/networkInterfaces/NIC1/ipConfigurations/INTERNAL and cannot be deleted. In order to delete the subnet, delete all the resources within the subnet. See aka.ms/deletesubnet.
 
 
+
+
 resource "azurerm_subnet" "my_subnet" {
+  for_each = var.vnets
+
+  resource_group_name  = var.resource_group_name
+  name                 = each.value.subnet_name
+  virtual_network_name = azurerm_virtual_network.my_vnet[each.key].name
+  address_prefixes     = each.value.subnet_prefix
+
+  service_endpoints = ["Microsoft.Storage"]
+
+  depends_on = [azurerm_virtual_network.my_vnet]
+}
+
+
+# Before added service endpoints to allow private access to storage acocunt
+/* resource "azurerm_subnet" "my_subnet" {
   for_each = var.vnets
 
   resource_group_name  = var.resource_group_name
@@ -23,7 +40,8 @@ resource "azurerm_subnet" "my_subnet" {
   address_prefixes     = each.value.subnet_prefix
 
   depends_on = [azurerm_virtual_network.my_vnet]
-}
+} */
+
 
 #---------------------------------
 
@@ -31,12 +49,12 @@ resource "azurerm_subnet" "my_subnet" {
 resource "azurerm_virtual_network" "firewall_vnet" {
   resource_group_name = var.resource_group_name
   location            = var.location
-  name          = var.afw.firewall_vnet_name
-  address_space = var.afw.firewall_vnet_prefix
+  name                = var.afw.firewall_vnet_name
+  address_space       = var.afw.firewall_vnet_prefix
 }
 
 resource "azurerm_subnet" "firewall_subnet" {
-  resource_group_name = var.resource_group_name
+  resource_group_name  = var.resource_group_name
   name                 = var.afw.firewall_subnet_name
   virtual_network_name = var.afw.firewall_vnet_name
   address_prefixes     = var.afw.firewall_subnet_prefix
@@ -150,12 +168,12 @@ resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
   }
 }
 
-## Allows compute to resolve domain names via Azure DNS
+## Allows compute to resolve domain names via Azure DNS (important for resolving the *storage-account*.privatelink... url)
 resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   name                = "allow_dns"
   azure_firewall_name = azurerm_firewall.firewall.name
   resource_group_name = var.resource_group_name
-  priority            = 200 
+  priority            = 200
   action              = "Allow"
 
   rule {
@@ -179,7 +197,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet1"
     source_addresses      = ["10.0.0.0/16"] # Only include the subnet range for vnet1
-    destination_addresses = ["Storage"]  
+    destination_addresses = ["Storage"]
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
@@ -188,7 +206,7 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
   rule {
     name                  = "allow-blob-storage-vnet2"
     source_addresses      = ["10.1.0.0/16"] # Only include the subnet range for vnet2
-    destination_addresses = ["Storage"] 
+    destination_addresses = ["Storage"]
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
@@ -226,7 +244,6 @@ resource "azurerm_firewall_nat_rule_collection" "nginx_inbound_dnat" {
   }
 }
 
-
 ## Allows secure outbound internet access for VMs in vnet1 and vnet2
 resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
   name                = "allow_outbound_internet"
@@ -243,11 +260,3 @@ resource "azurerm_firewall_network_rule_collection" "outbound_internet" {
     protocols             = ["TCP"]
   }
 }
-
-
-#
-
-
-//also create outbound nginx rule to servers?
-
-

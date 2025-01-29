@@ -84,6 +84,12 @@ variable "admin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "terraform_sp_object_id" {
+  description = "The Object ID of the Service Principal used by Terraform"
+  type        = string
+}
+
 #
 variable "runner_public_ip" {
   type        = string

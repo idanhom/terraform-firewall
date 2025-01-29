@@ -31,9 +31,9 @@ name: terraform ci/cd
 
 on:
   push:
-    branches: [main, 'fix-**', 'feature/**']
+    branches: [main, 'fix/**', 'feature/**']
   pull_request:
-    branches: [main, 'fix-**', 'feature/**']
+    branches: [main, 'fix/**', 'feature/**']
 
   workflow_dispatch:
 
@@ -55,7 +55,6 @@ jobs:
   #   steps:
   #     - name: Output issue event data
   #       run: echo '${{ toJSON(github.event) }}'
-
   cicd:
     runs-on: ubuntu-latest
     environment: azure-deployment
@@ -63,13 +62,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+#
       - name: Azure Login
         uses: Azure/login@v2.2.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+
+      # - name: Assign Storage Account Contributor Role to SP
+      #   run: |
+      #     az role assignment create \
+      #       --assignee ${{ secrets.AZURE_CLIENT_ID }} \
+      #       --role "Storage Account Contributor" \
+      #       --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #   continue-on-error: false
+
+           
+      # - name: Assign Storage Blob Data Contributor to Service Principal
+      #   run: |
+      #     az role assignment create \
+      #       --assignee ${{ secrets.AZURE_CLIENT_ID }} \
+      #       --role "Storage Blob Data Contributor" \
+      #       --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #   continue-on-error: false
+
+
+      # - name: Wait for Role Assignment Propagation
+      #   run: sleep 30
+
 
       - name: Export Azure env vars for Terraform
         run: |
@@ -84,7 +106,7 @@ jobs:
           
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
-        
+       # 
 
 
       - name: Setup Terraform
@@ -112,7 +134,7 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
-        run: terraform plan -input=false -out=plan.out -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
+        run: terraform plan -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -out=plan.out  -var-file='dev.tfvars'
 
       - name: Terraform Apply
         env:

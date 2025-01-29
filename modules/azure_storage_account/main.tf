@@ -17,6 +17,22 @@ locals {
   )
 }
 
+//break these out in their own module
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_role_assignment" "storage_account_contributor" {
+  principal_id   = data.azurerm_client_config.current.object_id
+  role_definition_name = "Storage Account Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  principal_id   = data.azurerm_client_config.current.object_id
+  role_definition_name = "Storage Blob Data Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
+
+
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
@@ -27,35 +43,39 @@ resource "azurerm_storage_account" "blob_storage_account" {
   access_tier                     = "Cool"
   public_network_access_enabled   = true // enabled because i need SP to deploy script. otherwise would need self-hosted SP runner and enable network connection from it to storage account.
   default_to_oauth_authentication = true
-
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
-  large_file_share_enabled        = true
+  large_file_share_enabled        = true //false?
   shared_access_key_enabled       = true
-
-  blob_properties {
-    container_delete_retention_policy {
-      days = 7
-    }
-
-    delete_retention_policy {
-      days                     = 7
-      permanent_delete_enabled = false
-    }
-  }
-
-  network_rules {
-    default_action = "Allow" 
-    #ip_rules = [var.runner_public_ip] //remnant from trying to allow SP to deploy script to script container. however for this to work i need a self-hosted runner in a vnet...
-    bypass = ["AzureServices"]
-  }
-
-  share_properties {
-    retention_policy {
-      days = 7
-    }
-  }
 }
+
+
+resource "azurerm_storage_account_network_rules" "storage_rules" {
+  storage_account_id = azurerm_storage_account.blob_storage_account.id
+
+  default_action = "Allow" #Allow/Deny... I want this to be Deny because otherwise there's no use in my "private endpoints configs"... However, when i put Deny I get the following error:
+  
+#   │ Error: retrieving properties for Blob "script.sh" (Account "Account \"examplestoraccount5421\" (IsEdgeZone false / ZoneName \"\" / Subdomain Type \"blob\" / DomainSuffix \"core.windows.net\")" / Container Name "scripts"): executing request: unexpected status 403 (403 This request is not authorized to perform this operation.) with EOF
+# │ 
+# │   with module.storage_account.azurerm_storage_blob.script_blob,
+# │   on modules/azure_storage_account/main.tf line 74, in resource "azurerm_storage_blob" "script_blob":
+# │   74: resource "azurerm_storage_blob" "script_blob" {
+#   bypass         = ["AzureServices"]
+
+# I think the reason this happens is that Github actions uses multiple runners. The first runner (which gets the IP) is not the same that then tries to upload the script to the blob?
+# One way to solve this would be to do private runners and allow ip and subnet of it.
+# to filter ip addresses for github actions:
+# curl -s https://api.github.com/meta \
+#  | jq '.actions[] | select(contains(":") | not)'
+
+
+  virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
+  ip_rules = [var.runner_public_ip] //attempt to whitelist IP of github runner to allow hosting script. however ip of public runners are ephemeral so changes. makes unable to upload blob using SP with default action "Deny"
+}
+
+
+
+
 
 
 resource "azurerm_storage_container" "script_container" {
@@ -70,9 +90,9 @@ resource "azurerm_storage_blob" "script_blob" {
   storage_account_name   = azurerm_storage_account.blob_storage_account.name
   storage_container_name = azurerm_storage_container.script_container.name
   type                   = "Block"
-  source                 = "${path.module}/custom_data/docker.sh" 
+  source                 = "${path.module}/custom_data/docker.sh"
+  depends_on             = [azurerm_storage_container.script_container]
 
-  depends_on = [azurerm_storage_container.script_container]
 }
 
 
@@ -80,7 +100,6 @@ resource "azurerm_storage_blob" "script_blob" {
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
   https_only        = true
-  signed_version    = "2022-11-02"
 
   resource_types {
     service   = true
@@ -91,17 +110,17 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   services {
     blob  = true
     queue = false
-    table = false
+    table = true #can be disabled?
     file  = false
   }
 
-  start  = timestamp()                     
-  expiry = timeadd(timestamp(), "24h")
+  start  = timestamp()
+  expiry = timeadd(timestamp(), "3h")
 
   permissions {
-    read    = true
-    create  = true
-    write   = true
+    read    = true 
+    write   = true # can be disabled?
+    create  = true # can be disabled?
     list    = false
     delete  = false
     add     = false
@@ -147,14 +166,19 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
     private_connection_resource_id = azurerm_storage_account.blob_storage_account.id
     subresource_names              = ["blob"]
   }
-  depends_on = [azurerm_storage_account.blob_storage_account] //can be removed because of implicit dep. from private_connection_...
+
+  private_dns_zone_group {
+    name = "default"
+    private_dns_zone_ids = [
+      azurerm_private_dns_zone.blob_dns_zone.id
+    ]
+  }
 }
 
 
-
-resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
+/* resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
   # We also do for_each on var.subnet_ids to match the multiple endpoints above.
-  for_each           = var.subnet_ids
+  for_each = var.subnet_ids
 
   name                = azurerm_storage_account.blob_storage_account.name
   zone_name           = azurerm_private_dns_zone.blob_dns_zone.name
@@ -165,62 +189,14 @@ resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
     # Link each A-record to the correct private endpoint’s IP address
     azurerm_private_endpoint.blob_private_endpoint[each.key].private_service_connection[0].private_ip_address
   ]
-}
+} */
+
+# commented out because of having it here isntead:
+  # private_dns_zone_group {
+  #   name = "default"
+  #   private_dns_zone_ids = [
+  #     azurerm_private_dns_zone.blob_dns_zone.id
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-
-resource "azurerm_private_endpoint" "example1" {
-  name                = "vnet1_access"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet1/subnets/subnet1"
-
-  private_service_connection {
-    name                              = "vnet1_access_connection"
-    is_manual_connection = false
-    private_connection_resource_id    = azurerm_storage_account.example.id
-    subresource_names                 = ["blob"]
-  }
-}
-
-
-resource "azurerm_private_endpoint" "example2" {
-  name                = "vnet2_access"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = "/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/virtualNetworks/vnet2/subnets/subnet2"
-
-  private_service_connection {
-    name                              = "vnet2_access_connection"
-    is_manual_connection = false
-    private_connection_resource_id    = azurerm_storage_account.example.id
-    subresource_names                 = ["blob"]
-  }
-}
-
- */
