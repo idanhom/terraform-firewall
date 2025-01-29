@@ -114,10 +114,10 @@ jobs:
 
 
 
-      # - name: Setup TFLint
-      #   uses: terraform-linters/setup-tflint@v4
-      #   with:
-      #     tflint_version: v0.52.0
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.52.0
 
 
 
@@ -131,8 +131,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      # - name: Run TFLint
-      #   run: tflint -f compact
+      - name: Run TFLint
+        run: tflint -f compact
 
 
       - name: Terraform Plan
