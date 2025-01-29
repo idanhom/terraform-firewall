@@ -62,23 +62,6 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
 
 
 
-###################
-# version 2...? fix
-# resource "azurerm_storage_account_network_rules" "this" {
-#   storage_account_id = azurerm_storage_account.blob_storage_account.id
-#   default_action     = "Deny"
-#   bypass            = ["AzureServices"]
-
-#   virtual_network_subnet_ids = values(var.subnet_ids)
-
-#   dynamic "private_link_access" {
-#     for_each = var.subnet_ids
-#     content {
-#       endpoint_resource_id = ...
-#     }
-#   }
-# }
-
 
 
 resource "azurerm_storage_container" "script_container" {
