@@ -104,6 +104,20 @@ jobs:
             terraform-plugins-${{ runner.os }}-
 
 
+            
+
+              
+      # 🔐 Install Trivy (Official script method)
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
+
+      # 🔐 Run Trivy to scan Terraform code for security issues
+      - name: Run Trivy IaC scan
+        run: trivy iac --severity HIGH,CRITICAL --exit-code 1 --no-progress .
+            
+
+
 
 
       - name: Terraform Init with debug
