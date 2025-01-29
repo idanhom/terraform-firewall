@@ -151,14 +151,3 @@ jobs:
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
         
-
-
-      # integrate linting as next workflow-step. check out the upload/artefacts..      #
-      # - name: Upload Terraform Plan
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: tf-plan
-      #     path: plan.out
-      #
-      # samt... logik "om pull request inte är typ "fix-" kommer den faila och outputta "ditt namn är fel".
-      # 
