@@ -3,6 +3,7 @@
 
 
 terraform {
+  required_version = "~>1.9"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -29,7 +30,7 @@ provider "azurerm" {
 }
 
 
-data "azurerm_client_config" "current" {}
+# data "azurerm_client_config" "current" {}
 
 
 

@@ -76,17 +76,3 @@ EOT
 
 
 
-/* 
-resource "azurerm_log_analytics_saved_search" "saved_search" {
-  for_each = var.log_analytics_saved_search
-
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
-
-  name         = each.key
-  category     = each.value.category
-  display_name = each.value.display_name
-  query        = each.value.query
-}
- */
-
-

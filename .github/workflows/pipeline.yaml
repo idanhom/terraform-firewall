@@ -5,10 +5,6 @@
 # add terraform-docs?
 # https://github.com/terraform-docs/terraform-docs/
 
-# how to pass the .tfvars file for deployment? for all or one job?
-#
-#---------
-  
 # the problem i'm having with deployment using github actions
 # https://chatgpt.com/c/6777f24d-29c4-800b-bebc-3f420b9626ee
 
@@ -19,15 +15,17 @@
 # https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 # https://github.com/Azure/login#login-with-a-service-principal-secret
 
-name: terraform ci/cd
-
-#
-
 
 # add dependency caching
 # see guide 73-75 \OneDrive - Redeploy AB\Documents\Knowledge Nexus\01 Project\Learnings\GitHub Actions\Udemy\V1\Section 5. Job Artifacts and Outputs
 
 #
+
+
+
+
+
+name: terraform ci/cd
 
 on:
   push:
@@ -48,13 +46,6 @@ permissions:
   contents: read
 
 jobs:
-  # Disabled until implemented nginx-storage-account-mess
-  # log-issues:
-  #   if: github.event_name == 'issues'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Output issue event data
-  #       run: echo '${{ toJSON(github.event) }}'
   cicd:
     runs-on: ubuntu-latest
     environment: azure-deployment
@@ -70,29 +61,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-
-      # - name: Assign Storage Account Contributor Role to SP
-      #   run: |
-      #     az role assignment create \
-      #       --assignee ${{ secrets.AZURE_CLIENT_ID }} \
-      #       --role "Storage Account Contributor" \
-      #       --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #   continue-on-error: false
-
-           
-      # - name: Assign Storage Blob Data Contributor to Service Principal
-      #   run: |
-      #     az role assignment create \
-      #       --assignee ${{ secrets.AZURE_CLIENT_ID }} \
-      #       --role "Storage Blob Data Contributor" \
-      #       --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #   continue-on-error: false
-
-
-      # - name: Wait for Role Assignment Propagation
-      #   run: sleep 30
-
-
       - name: Export Azure env vars for Terraform
         run: |
           echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
@@ -106,27 +74,66 @@ jobs:
           
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
-       # 
-
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "~>1.9"
           
+      # Set Terraform Plugin Cache Directory
+      - name: Set Terraform Plugin Cache Directory
+        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
+
+
+      - name: Cache Terraform dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .terraform
+            .terraform.lock.hcl
+          key: terraform-${{ runner.os }}-${{ hashFiles('**/modules/**/*.tf', '**/main.tf') }}
+          restore-keys: |
+            terraform-${{ runner.os }}-
+
+      - name: Cache Terraform Plugin Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.terraform.d/plugin-cache
+          key: terraform-plugins-${{ runner.os }}-${{ hashFiles('**/modules/**/*.tf', '**/main.tf') }}
+          restore-keys: |
+            terraform-plugins-${{ runner.os }}-
+
+
+
+
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
-        # i riktig miljö kommer det vara separerade repos för dev, test och prod
-        # innebär att det undivker "problemet" med att .tfvars är hårdkodad i github pipen.
-        #env:
-          #TF_LOG: DEBUG
+ 
 
-#
+
+
+
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.52.0
+
+
+
+
+
+
+
       - name: Terraform Format
         run: terraform fmt -recursive 
 
       - name: Terraform Validate
         run: terraform validate
+
+      - name: Run TFLint
+        run: tflint -f compact
+
 
       - name: Terraform Plan
         env:
@@ -144,15 +151,3 @@ jobs:
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
         
-
-
-
-      # integrate linting as next workflow-step. check out the upload/artefacts..      #
-      # - name: Upload Terraform Plan
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: tf-plan
-      #     path: plan.out
-      #
-      # samt... logik "om pull request inte är typ "fix-" kommer den faila och outputta "ditt namn är fel".
-      # 
