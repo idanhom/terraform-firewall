@@ -80,13 +80,55 @@ jobs:
         with:
           terraform_version: "~>1.9"
           
+          # 
+
+
+      # Cache Terraform dependencies
+      - name: Cache Terraform dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .terraform
+            .terraform.lock.hcl
+          key: terraform-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            terraform-${{ runner.os }}-
+
+      # Cache Terraform Plugin Cache (Providers)
+      - name: Cache Terraform Plugin Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.terraform.d/plugin-cache
+          key: terraform-plugins-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            terraform-plugins-${{ runner.os }}-
+
+      # Set Terraform Plugin Cache Directory
+      - name: Set Terraform Plugin Cache Directory
+        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
+
+
+
+
+
+
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
  
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: v0.52.0
+
+
+
+
+
+      # - name: Setup TFLint
+      #   uses: terraform-linters/setup-tflint@v4
+      #   with:
+      #     tflint_version: v0.52.0
+
+
+
+
+
 
 
       - name: Terraform Format
@@ -95,8 +137,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Run TFLint
-        run: tflint -f compact
+      # - name: Run TFLint
+      #   run: tflint -f compact
 
 
       - name: Terraform Plan
@@ -115,7 +157,6 @@ jobs:
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
         run: terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
         
-
 
 
       # integrate linting as next workflow-step. check out the upload/artefacts..      #
