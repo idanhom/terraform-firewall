@@ -68,7 +68,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
 
 
   virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
-  ip_rules = [var.runner_public_ip] //whitelist IP of github runner to allow hosting script
+  ip_rules = [var.runner_public_ip] //attempt to whitelist IP of github runner to allow hosting script. however ip of public runners are ephemeral so changes. makes unable to upload blob using SP with default action "Deny"
 }
 
 
