@@ -106,18 +106,23 @@ jobs:
 
             
 
-              
-      # 🔐 Install Trivy (Official script method)
-      - name: Install Trivy
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
-      # 🔐 Run Trivy to scan Terraform code for security issues
-      - name: Run Trivy IaC scan
-        run: trivy iac --severity HIGH,CRITICAL --exit-code 1 --no-progress .
-            
+      # 🔐 Security Scan: Trivy (Correct Method)
+      - name: Run Trivy Terraform Security Scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'config'  # Scans Terraform files
+          hide-progress: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
 
-
+      # 🔐 Upload Trivy Scan Results to GitHub Security Tab (Optional)
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
 
 
       - name: Terraform Init with debug
