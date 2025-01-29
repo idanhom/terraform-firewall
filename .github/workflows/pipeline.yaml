@@ -80,34 +80,28 @@ jobs:
         with:
           terraform_version: "~>1.9"
           
-          # 
+      # Set Terraform Plugin Cache Directory
+      - name: Set Terraform Plugin Cache Directory
+        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
 
 
-      # Cache Terraform dependencies
       - name: Cache Terraform dependencies
         uses: actions/cache@v4
         with:
           path: |
             .terraform
             .terraform.lock.hcl
-          key: terraform-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+          key: terraform-${{ runner.os }}-${{ hashFiles('**/modules/**/*.tf', '**/main.tf') }}
           restore-keys: |
             terraform-${{ runner.os }}-
 
-      # Cache Terraform Plugin Cache (Providers)
       - name: Cache Terraform Plugin Cache
         uses: actions/cache@v4
         with:
           path: ~/.terraform.d/plugin-cache
-          key: terraform-plugins-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+          key: terraform-plugins-${{ runner.os }}-${{ hashFiles('**/modules/**/*.tf', '**/main.tf') }}
           restore-keys: |
             terraform-plugins-${{ runner.os }}-
-
-      # Set Terraform Plugin Cache Directory
-      - name: Set Terraform Plugin Cache Directory
-        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
-
-
 
 
 
