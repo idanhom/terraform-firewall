@@ -67,8 +67,8 @@ vnet_route_table = {
 
 
 log_categories = [
-  "AzureFirewallApplicationRule",
-  "AzureFirewallNetworkRule",
-  "AzureFirewallDnsProxy"
+  "azurefirewallapplicationrule",
+  "azurefirewallnetworkrule",
+  "azurefirewalldnsproxy"
 ]
 

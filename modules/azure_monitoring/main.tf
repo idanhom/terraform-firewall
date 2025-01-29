@@ -14,11 +14,11 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 
 
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
-  name                       = "$var.firewall_id-diagnostic-settings"
+  name                       = "${var.firewall_id}-diagnostics"
   target_resource_id         = var.firewall_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
 
-  # Dynamically enable logs
+/*   # Dynamically enable logs
   dynamic "enabled_log" {
     for_each = var.log_categories
 
@@ -26,13 +26,29 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
       category = enabled_log.value
     }
   }
-
-  # Metrics
+ */
   metric {
+    category = "azurefirewallapplicationrule"
+    enabled = true
+  }
+
+
+  metric {
+    category = "azurefirewallnetworkrule"
+    enabled = true
+  }
+
+
+  metric {
+    category = "azurefirewalldnsproxy"
+    enabled = true
+  }
+
+/*   metric {
     category = "AllMetrics"
     enabled  = true
   }
-
+ */
   depends_on = [
     azurerm_log_analytics_workspace.firewall_logs,
     var.firewall_id
