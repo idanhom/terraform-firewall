@@ -17,6 +17,7 @@ locals {
   )
 }
 
+//break these out in their own module
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "storage_account_contributor" {
