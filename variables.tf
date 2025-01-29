@@ -21,7 +21,7 @@ variable "vnets" {
 }
 
 //what happens if i remove these? when applied, i get both standard and my rules, which is not what i want.
-variable "nsg_rules" {
+/* variable "nsg_rules" {
   description = "rules for nsg"
   type = list(object({
     name                       = string
@@ -37,7 +37,7 @@ variable "nsg_rules" {
 
   default = []
 }
-
+ */
 
 variable "afw" {
   type = object({
@@ -98,12 +98,3 @@ variable "runner_public_ip" {
 
 
 
-
-# variable "log_analytics_saved_search" {
-#   description = "list of object for log analytics saved searches"
-#   type = map(object({
-#     category     = string
-#     display_name = string
-#     query        = string
-#   }))
-# }
