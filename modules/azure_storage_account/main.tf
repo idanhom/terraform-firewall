@@ -1,10 +1,19 @@
-# Note, have currently opened up the networking too wide. See arg like public_network_access_enabled and block network_rules (default_action)
-# see this gpt, and note that it's o1....
-#https://chatgpt.com/c/67866ed2-4940-800b-9f52-e8e347d55182
-# https://chatgpt.com/g/g-pDLabuKvD-terraform-guide/c/67866ea3-e628-800b-947a-4ce87035ddd1
+//break these out in their own module. for having SP upload script (docker.sh) to blob storage.
+//possibly, only storage_blob_data_contributor is needed...
+# data "azurerm_client_config" "current" {}
 
+# resource "azurerm_role_assignment" "storage_account_contributor" {
+#   principal_id   = data.azurerm_client_config.current.object_id
+#   role_definition_name = "Storage Account Contributor"
+#   scope          = azurerm_storage_account.blob_storage_account.id
+# }
 
-# https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
+# resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+#   principal_id   = data.azurerm_client_config.current.object_id
+#   role_definition_name = "Storage Blob Data Contributor"
+#   scope          = azurerm_storage_account.blob_storage_account.id
+# }
+
 
 
 locals {
@@ -16,22 +25,6 @@ locals {
     data.azurerm_storage_account_sas.scripts_sas.sas
   )
 }
-
-//break these out in their own module
-data "azurerm_client_config" "current" {}
-
-resource "azurerm_role_assignment" "storage_account_contributor" {
-  principal_id   = data.azurerm_client_config.current.object_id
-  role_definition_name = "Storage Account Contributor"
-  scope          = azurerm_storage_account.blob_storage_account.id
-}
-
-resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-  principal_id   = data.azurerm_client_config.current.object_id
-  role_definition_name = "Storage Blob Data Contributor"
-  scope          = azurerm_storage_account.blob_storage_account.id
-}
-
 
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
@@ -73,17 +66,11 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   ip_rules = [var.runner_public_ip] //attempt to whitelist IP of github runner to allow hosting script. however ip of public runners are ephemeral so changes. makes unable to upload blob using SP with default action "Deny"
 }
 
-
-
-
-
-
 resource "azurerm_storage_container" "script_container" {
   name                  = "scripts"
   storage_account_id    = azurerm_storage_account.blob_storage_account.id
   container_access_type = "private"
 }
-
 
 resource "azurerm_storage_blob" "script_blob" {
   name                   = "script.sh"
@@ -92,10 +79,7 @@ resource "azurerm_storage_blob" "script_blob" {
   type                   = "Block"
   source                 = "${path.module}/custom_data/docker.sh"
   depends_on             = [azurerm_storage_container.script_container]
-
 }
-
-
 
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
@@ -132,9 +116,6 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   depends_on = [azurerm_storage_blob.script_blob]
 }
 
-
-
-
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
@@ -148,9 +129,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   private_dns_zone_name = azurerm_private_dns_zone.blob_dns_zone.name
   virtual_network_id    = each.value
 }
-
-
-
 
 resource "azurerm_private_endpoint" "blob_private_endpoint" {
   for_each = var.subnet_ids
@@ -174,29 +152,3 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
     ]
   }
 }
-
-
-/* resource "azurerm_private_dns_a_record" "storage_blob_a_record" {
-  # We also do for_each on var.subnet_ids to match the multiple endpoints above.
-  for_each = var.subnet_ids
-
-  name                = azurerm_storage_account.blob_storage_account.name
-  zone_name           = azurerm_private_dns_zone.blob_dns_zone.name
-  resource_group_name = var.resource_group_name
-  ttl                 = 300
-
-  records = [
-    # Link each A-record to the correct private endpoint’s IP address
-    azurerm_private_endpoint.blob_private_endpoint[each.key].private_service_connection[0].private_ip_address
-  ]
-} */
-
-# commented out because of having it here isntead:
-  # private_dns_zone_group {
-  #   name = "default"
-  #   private_dns_zone_ids = [
-  #     azurerm_private_dns_zone.blob_dns_zone.id
-
-
-
-
