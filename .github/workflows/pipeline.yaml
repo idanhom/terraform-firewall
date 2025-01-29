@@ -106,7 +106,7 @@ jobs:
           
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
-        
+       # 
 
 
       - name: Setup Terraform
