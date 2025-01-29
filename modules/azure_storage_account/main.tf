@@ -54,7 +54,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
   default_action = "Allow" #Allow/Deny... I want this to be Deny because otherwise there's no use in my "private endpoints configs"... However, when i put Deny I get the following error:
-
+  
 #   │ Error: retrieving properties for Blob "script.sh" (Account "Account \"examplestoraccount5421\" (IsEdgeZone false / ZoneName \"\" / Subdomain Type \"blob\" / DomainSuffix \"core.windows.net\")" / Container Name "scripts"): executing request: unexpected status 403 (403 This request is not authorized to perform this operation.) with EOF
 # │ 
 # │   with module.storage_account.azurerm_storage_blob.script_blob,
