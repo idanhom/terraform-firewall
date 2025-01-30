@@ -49,6 +49,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
   default_action = "Deny" 
   virtual_network_subnet_ids = values(var.subnet_ids)
+  
 }
 
 resource "azurerm_storage_container" "script_container" {
