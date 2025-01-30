@@ -22,3 +22,8 @@ variable "vnet_ids" {
 variable "terraform_sp_object_id" {
   description = "The Client ID of the Terraform Service Principal"
 }
+
+variable "runner_public_ip" {
+  type        = string
+  description = "Public IP of the GitHub Actions runner"
+}
