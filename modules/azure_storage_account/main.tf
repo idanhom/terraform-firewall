@@ -1,18 +1,18 @@
 //break these out in their own module. for having SP upload script (docker.sh) to blob storage.
 //possibly, only storage_blob_data_contributor is needed...
-# data "azurerm_client_config" "current" {}
+data "azurerm_client_config" "current" {}
 
-# resource "azurerm_role_assignment" "storage_account_contributor" {
-#   principal_id   = data.azurerm_client_config.current.object_id
-#   role_definition_name = "Storage Account Contributor"
-#   scope          = azurerm_storage_account.blob_storage_account.id
-# }
+resource "azurerm_role_assignment" "storage_account_contributor" {
+  principal_id   = data.azurerm_client_config.current.object_id
+  role_definition_name = "Storage Account Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
 
-# resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-#   principal_id   = data.azurerm_client_config.current.object_id
-#   role_definition_name = "Storage Blob Data Contributor"
-#   scope          = azurerm_storage_account.blob_storage_account.id
-# }
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  principal_id   = data.azurerm_client_config.current.object_id
+  role_definition_name = "Storage Blob Data Contributor"
+  scope          = azurerm_storage_account.blob_storage_account.id
+}
 
 
 
@@ -46,7 +46,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
 
-  default_action = "Allow" #Allow/Deny... I want this to be Deny because otherwise there's no use in my "private endpoints configs"... However, when i put Deny I get the following error:
+  default_action = "Deny" #Allow/Deny... I want this to be Deny because otherwise there's no use in my "private endpoints configs"... However, when i put Deny I get the following error:
   
 #   │ Error: retrieving properties for Blob "script.sh" (Account "Account \"examplestoraccount5421\" (IsEdgeZone false / ZoneName \"\" / Subdomain Type \"blob\" / DomainSuffix \"core.windows.net\")" / Container Name "scripts"): executing request: unexpected status 403 (403 This request is not authorized to perform this operation.) with EOF
 # │ 
@@ -60,6 +60,8 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
 # to filter ip addresses for github actions:
 # curl -s https://api.github.com/meta \
 #  | jq '.actions[] | select(contains(":") | not)'
+
+
 
 
   virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
