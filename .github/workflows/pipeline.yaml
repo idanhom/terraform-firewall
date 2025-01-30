@@ -47,6 +47,7 @@ permissions:
   security-events: write
 
 jobs:
+
   # docs:
   #   runs-on: ubuntu-latest
 
@@ -105,11 +106,13 @@ jobs:
         with:
           terraform_version: "~>1.9"
           
+
       - name: Setup Terraform Plugin Cache Directory
         run: |
           export TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
           echo "TF_PLUGIN_CACHE_DIR=$TF_PLUGIN_CACHE_DIR" >> $GITHUB_ENV
           mkdir -p $TF_PLUGIN_CACHE_DIR
+
 
 
 
@@ -134,7 +137,6 @@ jobs:
             terraform-plugins-${{ runner.os }}-
 
 
-            
 
 
       - name: Run Trivy Terraform Security Scan
@@ -155,13 +157,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
+
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
  
+
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.52.0
+
 
       - name: Terraform Format
         run: terraform fmt -recursive 
@@ -187,5 +192,7 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
+
         run: terraform apply -auto-approve -input=false -var-file='dev.tfvars'
+
         

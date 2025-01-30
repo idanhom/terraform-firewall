@@ -1,5 +1,6 @@
 //break these out in their own module. for having SP upload script (docker.sh) to blob storage.
 //possibly, only storage_blob_data_contributor is needed...
+
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "storage_account_contributor" {
@@ -13,6 +14,7 @@ resource "azurerm_role_assignment" "storage_blob_data_contributor" {
   role_definition_name = "Storage Blob Data Contributor"
   scope          = azurerm_storage_account.blob_storage_account.id
 }
+
 
 
 
