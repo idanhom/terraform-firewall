@@ -40,7 +40,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   default_to_oauth_authentication = true
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
-  large_file_share_enabled        = true //false?
+  large_file_share_enabled        = true 
   shared_access_key_enabled       = true
 }
 
@@ -49,7 +49,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
   default_action = "Deny" 
   virtual_network_subnet_ids = values(var.subnet_ids)
-  ip_rules = [var.runner_public_ip]
+  ip_rules = [var.runner_public_ip] //allow runner ip for 
 }
 
 resource "azurerm_storage_container" "script_container" {
