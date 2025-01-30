@@ -140,11 +140,11 @@ jobs:
       - name: Run Trivy Terraform Security Scan
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          scan-type: 'config'  # Scans Terraform files
+          scan-type: 'config'
           hide-progress: true
           format: 'sarif'
           output: 'trivy-results.sarif'
-          exit-code: '0'  # Change from 1 to 0 (Allows pipeline to continue)
+          exit-code: '0' 
           severity: 'HIGH,CRITICAL'
 
 
@@ -155,25 +155,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
-
       - name: Terraform Init with debug
         run: terraform init -var-file='dev.tfvars'
  
-
-
-
-
-
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.52.0
-
-
-
-
-
-
 
       - name: Terraform Format
         run: terraform fmt -recursive 
@@ -191,7 +179,7 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }}
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }}
-        run: terraform plan -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -out=plan.out  -var-file='dev.tfvars'
+        run: terraform plan -input=false -out=plan.out -var-file='dev.tfvars'
 
       - name: Terraform Apply
         env:
@@ -199,5 +187,5 @@ jobs:
           # vid utskapande av vm, peka lösenord på secret id.
           TF_VAR_admin_username: ${{ secrets.TF_VAR_admin_username }} # for key vault 
           TF_VAR_admin_password: ${{ secrets.TF_VAR_admin_password }} # for key vault
-        run: terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
+        run: terraform apply -auto-approve -input=false -var-file='dev.tfvars'
         

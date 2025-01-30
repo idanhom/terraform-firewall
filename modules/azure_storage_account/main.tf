@@ -45,27 +45,8 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
-
-  default_action = "Deny" #Allow/Deny... I want this to be Deny because otherwise there's no use in my "private endpoints configs"... However, when i put Deny I get the following error:
-  
-#   │ Error: retrieving properties for Blob "script.sh" (Account "Account \"examplestoraccount5421\" (IsEdgeZone false / ZoneName \"\" / Subdomain Type \"blob\" / DomainSuffix \"core.windows.net\")" / Container Name "scripts"): executing request: unexpected status 403 (403 This request is not authorized to perform this operation.) with EOF
-# │ 
-# │   with module.storage_account.azurerm_storage_blob.script_blob,
-# │   on modules/azure_storage_account/main.tf line 74, in resource "azurerm_storage_blob" "script_blob":
-# │   74: resource "azurerm_storage_blob" "script_blob" {
-#   bypass         = ["AzureServices"]
-
-# I think the reason this happens is that Github actions uses multiple runners. The first runner (which gets the IP) is not the same that then tries to upload the script to the blob?
-# One way to solve this would be to do private runners and allow ip and subnet of it.
-# to filter ip addresses for github actions:
-# curl -s https://api.github.com/meta \
-#  | jq '.actions[] | select(contains(":") | not)'
-
-
-
-
-  virtual_network_subnet_ids = values(var.subnet_ids) //allow vnets to access blob to download script
-  #ip_rules = [var.runner_public_ip] //attempt to whitelist IP of github runner to allow hosting script. however ip of public runners are ephemeral so changes. makes unable to upload blob using SP with default action "Deny"
+  default_action = "Deny" 
+  virtual_network_subnet_ids = values(var.subnet_ids)
 }
 
 resource "azurerm_storage_container" "script_container" {
