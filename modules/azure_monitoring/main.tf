@@ -14,8 +14,8 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 
 
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
-  name                       = "diagnostics-settings-${module.networking.firewall_id}"
-  target_resource_id         = module.networking.firewall_id
+  name                       = "diagnostics-settings-${var.firewall_id}"
+  target_resource_id         = var.firewall_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
 
 
@@ -40,7 +40,7 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
 
   depends_on = [
     azurerm_log_analytics_workspace.firewall_logs,
-    azurerm_firewall.firewall
+   
   ]
 }
 
