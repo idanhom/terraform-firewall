@@ -1,6 +1,6 @@
 # Bugs:
 ## Bug 1
-In module azure_storage_account, there's a problem with deploying script "docker.sh" to blob if it already exists. I am whitelisting the SP's ip, but unable to figure out why it can't replace-upload if the blob/storage already exists. Solution is to remove the resource and then run the deployment.
+In module azure_storage_account, there's a problem with deploying script "docker.sh" to blob if it already exists. I am whitelisting the SP's ip, but unable to figure out why it can't replace-upload if the blob/storage already exists. Solution is to remove the resource and then run the deployment or "Enabled from all networks" in Storage account -> Networking (and then do "Enabled from selected virtual networks and IP addresses")
 
 
 ## Bug 2
