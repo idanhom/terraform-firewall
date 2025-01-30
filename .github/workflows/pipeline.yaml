@@ -47,22 +47,22 @@ permissions:
   security-events: write
 
 jobs:
-  docs:
-    runs-on: ubuntu-latest
+  # docs:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Generate Terraform Documentation
-        uses: terraform-docs/gh-actions@main
-        with:
-          working-dir: .
-          output-file: README.md
-          output-method: inject
-          git-push: "true"
+  #     - name: Generate Terraform Documentation
+  #       uses: terraform-docs/gh-actions@main
+  #       with:
+  #         working-dir: .
+  #         output-file: README.md
+  #         output-method: inject
+  #         git-push: "true"
 
 
 
@@ -73,7 +73,7 @@ jobs:
   cicd:
     runs-on: ubuntu-latest
     environment: azure-deployment
-    needs: docs
+    #needs: docs
 
     steps:
       - name: Checkout repository
