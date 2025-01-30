@@ -9,12 +9,6 @@ resource "azurerm_virtual_network" "my_vnet" {
   name                = each.value.vnet_name
   address_space       = each.value.vnet_prefix
 }
-#  Error: deleting Virtual Network (Subscription: "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
-# │ Resource Group Name: "rg_project1"
-# │ Virtual Network Name: "vnet1"): performing Delete: unexpected status 400 (400 Bad Request) with error: InUseSubnetCannotBeDeleted: Subnet subnet1 is in use by /subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/RG_PROJECT1/providers/Microsoft.Network/networkInterfaces/NIC1/ipConfigurations/INTERNAL and cannot be deleted. In order to delete the subnet, delete all the resources within the subnet. See aka.ms/deletesubnet.
-
-
-
 
 resource "azurerm_subnet" "my_subnet" {
   for_each = var.vnets
@@ -29,18 +23,6 @@ resource "azurerm_subnet" "my_subnet" {
   depends_on = [azurerm_virtual_network.my_vnet]
 }
 
-
-# Before added service endpoints to allow private access to storage acocunt
-/* resource "azurerm_subnet" "my_subnet" {
-  for_each = var.vnets
-
-  resource_group_name  = var.resource_group_name
-  name                 = each.value.subnet_name
-  virtual_network_name = each.value.vnet_name
-  address_prefixes     = each.value.subnet_prefix
-
-  depends_on = [azurerm_virtual_network.my_vnet]
-} */
 
 
 #---------------------------------

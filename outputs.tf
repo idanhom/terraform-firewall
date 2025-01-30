@@ -19,13 +19,6 @@ output "vm_private_ip" {
 }
 
 
-
-#
-# output "vm_public_ip" {
-#   description = "map of vm to public ip"
-#   value       = module.compute.vm_public_ip
-# }
-
 output "scripts_sas_token" {
   value     = module.storage_account.scripts_sas_token
   sensitive = true
@@ -36,8 +29,3 @@ output "scripts_sas_url_main" {
   description = "The SAS URL for the script blob, used for deployment"
   sensitive   = true
 }
-
-/* output "blob_url" {
-  description = "url of SAS token to container"
-  value = module.storage_account.blob_url
-} */

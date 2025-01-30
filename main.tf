@@ -20,17 +20,17 @@ terraform {
 }
 
 provider "azurerm" {
+  storage_use_azuread = true
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
     }
   }
-  # subscription env set locally and using CI/CD to troubleshoot code easier without going through github actions 
-  # subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
 }
 
 
 # data "azurerm_client_config" "current" {}
+
 
 
 
