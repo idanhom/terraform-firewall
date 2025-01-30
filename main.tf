@@ -18,7 +18,7 @@ terraform {
     key                  = "terraform.tfstate"
   }
 }
-
+#
 provider "azurerm" {
   storage_use_azuread = true
   features {
