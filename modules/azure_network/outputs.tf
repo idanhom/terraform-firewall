@@ -24,7 +24,7 @@ output "firewall_subnet_id" {
 
 
 output "firewall_id" {
-  description = "ID of firewalll"
+  description = "ID of firewall"
   value       = azurerm_firewall.firewall.id
 }
 

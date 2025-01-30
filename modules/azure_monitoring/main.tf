@@ -5,7 +5,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   sku                 = "PerGB2018"
   retention_in_days   = var.workspace_retention_in_days
 
-  depends_on = [azurerm_firewall.firewall]
+#  depends_on = [module.networking.fire]
 }
 
 
@@ -14,7 +14,7 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
 
 
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
-  name                       = "diagnostics-settings-${var.afw.firewall_name}"
+  name                       = "diagnostics-settings-${var.firewall_id}"
   target_resource_id         = var.firewall_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.firewall_logs.id
 
