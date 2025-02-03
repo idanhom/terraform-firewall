@@ -1,24 +1,9 @@
-
-# add tflint
-# https://github.com/terraform-linters/tflint?tab=readme-ov-file#github-actions
-
 # add terraform-docs?
 # https://github.com/terraform-docs/terraform-docs/
-
-# the problem i'm having with deployment using github actions
-# https://chatgpt.com/c/6777f24d-29c4-800b-bebc-3f420b9626ee
-
-# the actual issue i'm having... read up on
-# https://duckduckgo.com/?q=Error+Code%09900023Message%09Specified+tenant+identifier+%27%7Btenant_id%7D%27+is+neither+a+valid+DNS+name%2C+nor+a+valid+external+domain.Remediation%09Application+error+-+the+login+request+was+malformed+and+could+not+be+matched+with+an+existing+authentication+endpoint+or+instance.&t=vivaldi&ia=web
 
 # read up on 
 # https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 # https://github.com/Azure/login#login-with-a-service-principal-secret
-
-
-# add dependency caching
-# see guide 73-75 \OneDrive - Redeploy AB\Documents\Knowledge Nexus\01 Project\Learnings\GitHub Actions\Udemy\V1\Section 5. Job Artifacts and Outputs
-
 
 name: terraform ci/cd
 
@@ -30,11 +15,11 @@ on:
 
   workflow_dispatch:
 
-  issues:
-    types:
-      - opened
-      - edited
-      - closed
+  # issues:
+  #   types:
+  #     - opened
+  #     - edited
+  #     - closed
 
 permissions:
   id-token: write
@@ -42,7 +27,6 @@ permissions:
   security-events: write
 
 jobs:
-
   # docs:
   #   runs-on: ubuntu-latest
 

@@ -62,6 +62,14 @@ variable "vnet_route_table" {
   })))
 }
 
+
+variable "vm_private_ip" {
+  description = "map of vm names to their private ip addresses"
+  type        = map(string)
+}
+
+
+
 #Uncommented because removed vWAN to simplify topology
 # variable "firewall_route_table" {
 #   description = "object containing firewall route table"
@@ -81,8 +89,3 @@ variable "vnet_route_table" {
 #     })
 #   })
 # }
-
-variable "vm_private_ip" {
-  description = "map of vm names to their private ip addresses"
-  type        = map(string)
-}
