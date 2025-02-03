@@ -20,24 +20,7 @@ variable "vnets" {
   }))
 }
 
-//what happens if i remove these? when applied, i get both standard and my rules, which is not what i want.
-/* variable "nsg_rules" {
-  description = "rules for nsg"
-  type = list(object({
-    name                       = string
-    priority                   = number
-    direction                  = string
-    access                     = string
-    protocol                   = string
-    source_port_range          = string
-    destination_port_range     = string
-    source_address_prefix      = string
-    destination_address_prefix = string
-  }))
 
-  default = []
-}
- */
 
 variable "afw" {
   type = object({

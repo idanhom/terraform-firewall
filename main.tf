@@ -52,7 +52,6 @@ module "networking" {
   afw                 = var.afw
   vnet_route_table    = var.vnet_route_table
   vm_private_ip       = module.compute.vm_private_ip
-  # v1 of route table, from having vWAN artchitecture: firewall_route_table = var.firewall_route_table
 }
 
 #
@@ -61,7 +60,6 @@ module "compute" {
   resource_group_name = azurerm_resource_group.rg_project.name
   location            = var.location
   vnets               = var.vnets
-  #subnet_ids = module.networking.subnet_id //commented out because replaced with _ids instead.
 
   vnet_ids   = module.networking.vnet_ids
   subnet_ids = module.networking.subnet_ids

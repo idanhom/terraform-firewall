@@ -6,7 +6,6 @@ resource "azurerm_log_analytics_workspace" "firewall_logs" {
   retention_in_days   = var.workspace_retention_in_days
 }
 
-
 resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   name                       = "diagnostics-settings"
   target_resource_id         = var.firewall_id
@@ -56,7 +55,8 @@ AzureDiagnostics
 EOT
 }
 
-
+# https://chatgpt.com/c/67a07aa3-3be8-800b-b1d7-a7f06609e769
+# o3 dialog
 
 # /* # │ Error: A resource with the ID "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall|firewall-diagnostic-setting" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_monitor_diagnostic_setting" for more information.
 # │ 
