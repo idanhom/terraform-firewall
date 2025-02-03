@@ -1,7 +1,3 @@
-# note, for simplicity, i have disabled github actions while i work on this.
-# active it here: https://github.com/idanhom/terraform-firewall/settings/actions
-
-
 terraform {
   required_version = "~>1.9"
   required_providers {
@@ -71,6 +67,7 @@ module "compute" {
   storage_account_name = module.storage_account.storage_account_name
   container_name       = module.storage_account.container_name
   blob_name            = module.storage_account.blob_name
+  storage_blob_id = module.storage_account.storage_blob_id  
   custom_data_sas_url  = module.storage_account.scripts_sas_url
 }
 
