@@ -161,8 +161,8 @@ resource "azurerm_firewall_network_rule_collection" "dns_allow" {
   rule {
     name                  = "allow-dns"
     source_addresses      = ["10.0.0.0/16", "10.1.0.0/16"]
-    destination_addresses = ["168.63.129.16"]
-    destination_ports     = ["53"]
+    destination_addresses = ["168.63.129.16"] //Enables VMs and services to communicate with Azure DNS for internal name resolution
+    destination_ports     = ["53"] //port for DNS queries
     protocols             = ["UDP", "TCP"]
   }
 }
@@ -192,6 +192,8 @@ resource "azurerm_firewall_network_rule_collection" "allow_azure_storage" {
     destination_ports     = ["443"]
     protocols             = ["TCP"]
   }
+  
+  //note, when creating self-hosted runner, also allow access from it to storage account
 }
 
 
