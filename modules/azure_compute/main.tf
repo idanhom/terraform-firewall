@@ -49,5 +49,5 @@ resource "azurerm_linux_virtual_machine" "my_vms" {
   lifecycle {
     prevent_destroy = false
   }
-  depends_on = [var.storage_account_module] 
+  depends_on = [var.storage_account_module] //depends on storage account module to ensure it fetches the script from the blob
 }

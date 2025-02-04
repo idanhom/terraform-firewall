@@ -69,3 +69,9 @@ EOT
 
 
 
+# Another issue?
+# │ Error: creating Monitor Diagnostics Setting "diagnostics-settings1" for Resource "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall": unexpected status 409 (409 Conflict) with response: {"code":"Conflict","message":"Data sink '/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.OperationalInsights/workspaces/firewalllaw' is already used in diagnostic setting 'diagnostics-settings' for category 'azurefirewallapplicationrule'. Data sinks can't be reused in different settings on the same category for the same resource."}
+# │ 
+# │   with module.monitoring.azurerm_monitor_diagnostic_setting.firewall_diagnostics,
+# │   on modules/azure_monitoring/main.tf line 9, in resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics":
+# │    9: resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
