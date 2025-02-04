@@ -1,4 +1,4 @@
-esource_group_name = "rg_project1"
+resource_group_name = "rg_project1"
 location            = "North Europe"
 
 vnets = {
