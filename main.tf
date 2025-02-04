@@ -67,9 +67,9 @@ module "compute" {
   storage_account_name = module.storage_account.storage_account_name
   container_name       = module.storage_account.container_name
   blob_name            = module.storage_account.blob_name
- # storage_blob_id = module.storage_account.storage_blob_id  
-  custom_data_sas_url  = module.storage_account.scripts_sas_url
-  storage_account_module = module.storage_account  
+  # storage_blob_id = module.storage_account.storage_blob_id  
+  custom_data_sas_url    = module.storage_account.scripts_sas_url
+  storage_account_module = module.storage_account
 }
 
 
@@ -83,16 +83,15 @@ module "monitoring" {
 
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
-
 }
 
 module "storage_account" {
-  source              = "./modules/azure_storage_account"
-  resource_group_name = azurerm_resource_group.rg_project.name
-  location            = var.location
-  subnet_ids          = module.networking.subnet_ids
-  vnet_ids            = module.networking.vnet_ids
+  source                 = "./modules/azure_storage_account"
+  resource_group_name    = azurerm_resource_group.rg_project.name
+  location               = var.location
+  subnet_ids             = module.networking.subnet_ids
+  vnet_ids               = module.networking.vnet_ids
   terraform_sp_object_id = var.terraform_sp_object_id
-  runner_public_ip = var.runner_public_ip
+  runner_public_ip       = var.runner_public_ip
 }
 

@@ -4,15 +4,15 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "storage_account_contributor" {
-  principal_id   = data.azurerm_client_config.current.object_id
+  principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Storage Account Contributor"
-  scope          = azurerm_storage_account.blob_storage_account.id
+  scope                = azurerm_storage_account.blob_storage_account.id
 }
 
 resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-  principal_id   = data.azurerm_client_config.current.object_id
+  principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Storage Blob Data Contributor"
-  scope          = azurerm_storage_account.blob_storage_account.id
+  scope                = azurerm_storage_account.blob_storage_account.id
 }
 
 
@@ -68,16 +68,16 @@ resource "azurerm_storage_account" "blob_storage_account" {
   default_to_oauth_authentication = true
   allow_nested_items_to_be_public = false
   https_traffic_only_enabled      = true
-  large_file_share_enabled        = true 
+  large_file_share_enabled        = true
   shared_access_key_enabled       = true
 }
 
 
 resource "azurerm_storage_account_network_rules" "storage_rules" {
-  storage_account_id = azurerm_storage_account.blob_storage_account.id
-  default_action = "Allow" //allow/deny 
+  storage_account_id         = azurerm_storage_account.blob_storage_account.id
+  default_action             = "Allow" //since using github actions runners, need "Allow" at initial deployment for SP to deploy script. then "Deny". robust solution: self hosted runner with static ip and allow vnet in storage account rule.
   virtual_network_subnet_ids = values(var.subnet_ids)
-  ip_rules = [var.runner_public_ip] //allow runner ip for github actions deployment through service principal
+  ip_rules                   = [var.runner_public_ip] //allow runner ip for github actions deployment through service principal
 }
 
 resource "azurerm_storage_container" "script_container" {
@@ -116,7 +116,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   expiry = timeadd(timestamp(), "3h")
 
   permissions {
-    read    = true 
+    read    = true
     write   = true # can be disabled?
     create  = true # can be disabled?
     list    = false

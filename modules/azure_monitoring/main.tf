@@ -28,7 +28,7 @@ resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
   // Enable metrics
   metric {
     category = "AllMetrics"
-    enabled = true
+    enabled  = true
   }
 
   depends_on = [
