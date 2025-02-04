@@ -128,8 +128,7 @@ jobs:
 
             # Try deleting the diagnostic setting
             az rest --method delete \
-              --url "https://management.azure.com${RESOURCE_URI}/providers/Microsoft.Insights/diagnosticSettings/${DIAG_SETTING_NAME}?api-version=2021-05-01-preview" \
-              || echo "Warning: Deletion request failed (may need retrying)."
+              --url "https://management.azure.com${RESOURCE_URI}/providers/Microsoft.Insights/diagnosticSettings/${DIAG_SETTING_NAME}?api-version=2021-05-01-preview"
 
             echo "Waiting for deletion to complete..."
             
@@ -153,7 +152,6 @@ jobs:
           else
             echo "No existing diagnostic setting found. Proceeding..."
           fi
-
 
 
 
