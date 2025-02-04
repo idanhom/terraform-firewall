@@ -67,6 +67,7 @@ module "compute" {
   storage_account_name = module.storage_account.storage_account_name
   container_name       = module.storage_account.container_name
   blob_name            = module.storage_account.blob_name
+  storage_account_module = module.storage_account  
  # storage_blob_id = module.storage_account.storage_blob_id  
   custom_data_sas_url  = module.storage_account.scripts_sas_url
 }
@@ -83,7 +84,6 @@ module "monitoring" {
   workspace_retention_in_days = var.workspace_retention_in_days
   log_categories              = var.log_categories
 
-  depends_on = [module.networking]
 }
 
 module "storage_account" {

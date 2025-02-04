@@ -64,6 +64,12 @@ variable "custom_data_sas_url" {
   type        = string
 }
 
+variable "storage_account_module" {
+  description = "Reference to the storage account module to enforce dependencies"
+  type        = any
+}
+
+
 /* variable "storage_blob_id" {
   description = "The ID of the script blob in the storage account"
   type        = string
