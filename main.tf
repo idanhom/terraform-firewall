@@ -27,9 +27,6 @@ provider "azurerm" {
 
 # data "azurerm_client_config" "current" {}
 
-
-
-
 resource "azurerm_resource_group" "rg_project" {
   name     = var.resource_group_name
   location = var.location
@@ -67,8 +64,7 @@ module "compute" {
   storage_account_name = module.storage_account.storage_account_name
   container_name       = module.storage_account.container_name
   blob_name            = module.storage_account.blob_name
-  # storage_blob_id = module.storage_account.storage_blob_id  
-  custom_data_sas_url    = module.storage_account.scripts_sas_url
+  custom_data_sas_url    = module.storage_account.scripts_sas_url_main
   storage_account_module = module.storage_account
 }
 

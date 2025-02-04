@@ -15,9 +15,6 @@ resource "azurerm_role_assignment" "storage_blob_data_contributor" {
   scope                = azurerm_storage_account.blob_storage_account.id
 }
 
-
-
-
 locals {
   scripts_sas_url = format(
     "https://%s.blob.core.windows.net/%s/%s?%s",
@@ -97,7 +94,7 @@ resource "azurerm_storage_blob" "script_blob" {
 
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
-  https_only        = true
+  https_only        = false //can be true also
 
   resource_types {
     service   = true
@@ -108,7 +105,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
   services {
     blob  = true
     queue = false
-    table = true #can be disabled?
+    table = false 
     file  = false
   }
 
