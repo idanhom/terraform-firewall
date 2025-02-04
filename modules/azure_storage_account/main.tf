@@ -48,7 +48,7 @@ locals {
 # │   on modules/azure_storage_account/main.tf line 61, in resource "azurerm_storage_blob" "script_blob":
 # │   61: resource "azurerm_storage_blob" "script_blob" {
 # │ 
-# ╵
+# #╵
 # ::error::Terraform exited with code 1.
 
 
