@@ -78,7 +78,7 @@ variable "runner_public_ip" {
   description = "Public IP of the GitHub Actions runner"
 }
 
-variable "storage_blob_id" {
-  description = "The ID of the script blob in the storage account"
-  type        = string
-}
+# variable "storage_blob_id" {
+#   description = "The ID of the script blob in the storage account"
+#   type        = string
+# }

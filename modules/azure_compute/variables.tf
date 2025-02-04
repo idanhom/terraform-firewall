@@ -58,15 +58,16 @@ variable "blob_name" {
   type        = string
 }
 
-variable "storage_blob_id" {
-  description = "The ID of the script blob in the storage account"
-  type        = string
-}
 
 variable "custom_data_sas_url" {
   description = "The SAS URL for the custom script blob"
   type        = string
 }
+
+/* variable "storage_blob_id" {
+  description = "The ID of the script blob in the storage account"
+  type        = string
+} */
 
 
 /* variable "blob_name" {

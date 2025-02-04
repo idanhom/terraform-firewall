@@ -28,10 +28,10 @@ output "scripts_sas_url_main" {
   description = "The SAS URL for the script blob, used for deployment"
 }
 
-output "storage_blob_id" {
-  value = azurerm_storage_blob.script_blob.id 
-  description = "The ID of the script blob in the storage account"
-}
+# output "storage_blob_id" {
+#   value = azurerm_storage_blob.script_blob.id 
+#   description = "The ID of the script blob in the storage account"
+# }
 
 
 
