@@ -75,7 +75,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
 
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id = azurerm_storage_account.blob_storage_account.id
-  default_action = "Deny" 
+  default_action = "Allow" //allow/deny 
   virtual_network_subnet_ids = values(var.subnet_ids)
   ip_rules = [var.runner_public_ip] //allow runner ip for github actions deployment through service principal
 }
