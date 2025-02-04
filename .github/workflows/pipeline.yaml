@@ -96,7 +96,8 @@ jobs:
 #
 
 
-
+# ensure that this make sense regarding following steps (terraform init comes after...
+# how does it work with caching in practice, with following runners, etc...)
       - name: Cache Terraform dependencies
         uses: actions/cache@v4
         with:
@@ -117,7 +118,7 @@ jobs:
 
 
 
-
+# include also Trivy scan in docker script
       - name: Run Trivy Terraform Security Scan
         uses: aquasecurity/trivy-action@0.28.0
         with:

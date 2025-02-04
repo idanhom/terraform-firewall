@@ -94,7 +94,7 @@ resource "azurerm_storage_blob" "script_blob" {
 
 data "azurerm_storage_account_sas" "scripts_sas" {
   connection_string = azurerm_storage_account.blob_storage_account.primary_connection_string
-  https_only        = false //can be true also
+  https_only        = true
 
   resource_types {
     service   = true
@@ -128,7 +128,7 @@ data "azurerm_storage_account_sas" "scripts_sas" {
 }
 
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
-  name                = "privatelink.blob.core.windows.net"
+  name                = "privatelink.blob.core.windows.net" //FQDN for private link for securing access to blob
   resource_group_name = var.resource_group_name
 }
 

@@ -54,6 +54,10 @@ AzureDiagnostics
 | limit 50
 EOT
 }
+# ^above seems to be a bug. work-around:
+# https://learn.microsoft.com/en-us/rest/api/monitor/diagnostic-settings/delete?view=rest-monitor-2021-05-01-preview&tabs=HTTP
+
+# https://github.com/hashicorp/terraform-provider-azurerm/issues/25673
 
 # https://chatgpt.com/c/67a07aa3-3be8-800b-b1d7-a7f06609e769
 # o3 dialog
