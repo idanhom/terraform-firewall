@@ -51,7 +51,8 @@ jobs:
 
 
   cicd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #self-hosted ??
+  # https://github.com/idanhom/terraform-firewall/settings/actions/runners/new?arch=x64&os=linux
     environment: azure-deployment
     #needs: docs
 
@@ -80,20 +81,67 @@ jobs:
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
 
-        # step to delete diagnostic filter in afw. current bug. unresolved as of 2025-02-04
+        # step to delete diagnostic filter in afw from green field deployment using REST API.         
+        # current bug. unresolved as of 2025-02-04
         # https://github.com/hashicorp/terraform-provider-azurerm/issues/25673
-      - name: Delete Pre-existing Diagnostic Setting
+        # https://github.com/hashicorp/terraform-provider-azurerm/issues/11076#issuecomment-963092635
+      # - name: Delete Pre-existing Diagnostic Setting
+      #   run: |
+      #     echo "Attempting to delete existing diagnostic setting..."
+      #     az rest --method delete \
+      #       --url "https://management.azure.com/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall/diagnosticSettings/diagnostics-settings1?api-version=2021-05-01-preview" \
+      #       || echo "Diagnostic setting not found or already deleted."
+      - name: Delete Pre-existing Diagnostic Setting (Retry until Gone)
         run: |
-          echo "Attempting to delete existing diagnostic setting..."
-          az rest --method delete \
-            --url "https://management.azure.com/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall/diagnosticSettings/diagnostics-settings1?api-version=2021-05-01-preview" \
-            || echo "Diagnostic setting not found or already deleted."
+          RESOURCE_URI="/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }}/providers/Microsoft.Network/azureFirewalls/${{ secrets.AZURE_FIREWALL_NAME }}"
+          
+          # Get the existing diagnostic setting name
+          DIAG_SETTING_NAME=$(az monitor diagnostic-settings list --resource "$RESOURCE_URI" --query "[0].name" -o tsv)
+
+          if [ -n "$DIAG_SETTING_NAME" ]; then
+            echo "Found existing diagnostic setting: $DIAG_SETTING_NAME"
+            echo "Attempting to delete it..."
+
+            # Try deleting the diagnostic setting
+            az rest --method delete \
+              --url "https://management.azure.com${RESOURCE_URI}/providers/Microsoft.Insights/diagnosticSettings/${DIAG_SETTING_NAME}?api-version=2021-05-01-preview" \
+              || echo "Warning: Deletion request failed (may need retrying)."
+
+            echo "Waiting for the deletion to complete..."
+            
+            # Retry check until the setting is fully deleted
+            for i in {1..10}; do
+              REMAINING_SETTING=$(az monitor diagnostic-settings list --resource "$RESOURCE_URI" --query "[0].name" -o tsv)
+              if [ -z "$REMAINING_SETTING" ]; then
+                echo "Diagnostic setting successfully deleted."
+                break
+              fi
+              echo "Diagnostic setting still exists... retrying in 10 seconds."
+              sleep 10
+            done
+
+            # Final check to prevent Terraform failure
+            FINAL_SETTING=$(az monitor diagnostic-settings list --resource "$RESOURCE_URI" --query "[0].name" -o tsv)
+            if [ -n "$FINAL_SETTING" ]; then
+              echo "ERROR: Diagnostic setting was not deleted successfully!"
+              exit 1
+            fi
+          else
+            echo "No existing diagnostic setting found. Proceeding..."
+          fi
+          
 
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "~>1.9"
+
+
+
+
+          
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: "~>1.9"
           
 
       - name: Setup Terraform Plugin Cache Directory
