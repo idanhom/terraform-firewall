@@ -90,7 +90,7 @@ jobs:
       #     echo "Attempting to delete existing diagnostic setting..."
       #     az rest --method delete \
       #       --url "https://management.azure.com/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall/diagnosticSettings/diagnostics-settings1?api-version=2021-05-01-preview" \
-      #       || echo "Diagnostic setting not found or already deleted."
+      # #      || echo "Diagnostic setting not found or already deleted."
           
       - name: Find and Delete Pre-existing Diagnostic Setting
         run: |
@@ -153,7 +153,6 @@ jobs:
           else
             echo "No existing diagnostic setting found. Proceeding..."
           fi
-
 
 
 
