@@ -80,6 +80,16 @@ jobs:
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
 
+        # step to delete diagnostic filter in afw. current bug. unresolved as of 2025-02-04
+        # https://github.com/hashicorp/terraform-provider-azurerm/issues/25673
+      - name: Delete Pre-existing Diagnostic Setting
+        run: |
+          echo "Attempting to delete existing diagnostic setting..."
+          az rest --method delete \
+            --url "https://management.azure.com/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall/diagnosticSettings/diagnostics-settings1?api-version=2021-05-01-preview" \
+            || echo "Diagnostic setting not found or already deleted."
+
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
