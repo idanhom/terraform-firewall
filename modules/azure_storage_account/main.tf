@@ -9,11 +9,11 @@ data "azurerm_client_config" "current" {}
   scope                = azurerm_storage_account.blob_storage_account.id
 } */
 
-resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+/* resource "azurerm_role_assignment" "storage_blob_data_contributor" {
   principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Storage Blob Data Contributor"
   scope                = azurerm_storage_blob.script_blob.id #azurerm_storage_account.blob_storage_account.id
-}
+} */
 
 locals {
   scripts_sas_url = format(
