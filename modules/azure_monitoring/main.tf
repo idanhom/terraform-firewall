@@ -54,28 +54,3 @@ AzureDiagnostics
 | limit 50
 EOT
 }
-# ^above seems to be a bug. work-around:
-# https://learn.microsoft.com/en-us/rest/api/monitor/diagnostic-settings/delete?view=rest-monitor-2021-05-01-preview&tabs=HTTP
-
-# https://github.com/hashicorp/terraform-provider-azurerm/issues/25673
-
-# https://chatgpt.com/c/67a07aa3-3be8-800b-b1d7-a7f06609e769
-# o3 dialog
-
-# /* # │ Error: A resource with the ID "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall|firewall-diagnostic-setting" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_monitor_diagnostic_setting" for more information.
-# │ 
-# │   with module.monitoring.azurerm_monitor_diagnostic_setting.firewall_diagnostics,
-# │   on modules/azure_monitoring/main.tf line 16, in resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics":
-# │   16: resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics */" {
-# │ 
-# ╵
-# https://chatgpt.com/c/6784deb7-28d0-800b-b2ce-b173ce333f30
-
-
-
-# Another issue?
-# │ Error: creating Monitor Diagnostics Setting "diagnostics-settings1" for Resource "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Network/azureFirewalls/firewall": unexpected status 409 (409 Conflict) with response: {"code":"Conflict","message":"Data sink '/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.OperationalInsights/workspaces/firewalllaw' is already used in diagnostic setting 'diagnostics-settings' for category 'azurefirewallapplicationrule'. Data sinks can't be reused in different settings on the same category for the same resource."}
-# │ 
-# │   with module.monitoring.azurerm_monitor_diagnostic_setting.firewall_diagnostics,
-# │   on modules/azure_monitoring/main.tf line 9, in resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics":
-# │    9: resource "azurerm_monitor_diagnostic_setting" "firewall_diagnostics" {
