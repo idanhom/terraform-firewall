@@ -25,34 +25,6 @@ locals {
   )
 }
 
-
-# module.storage_account.azurerm_storage_blob.script_blob: Refreshing state... [id=https://examplestoraccount5421.blob.core.windows.net/scripts/script.sh]
-# Terraform used the selected providers to generate the following execution
-# plan. Resource actions are indicated with the following symbols:
-#   ~ update in-place
-# Terraform planned the following actions, but then encountered a problem:
-#   # module.storage_account.azurerm_storage_account_network_rules.storage_rules will be updated in-place
-#   ~ resource "azurerm_storage_account_network_rules" "storage_rules" {
-#         id                         = "/subscriptions/***/resourceGroups/rg_project1/providers/Microsoft.Storage/storageAccounts/examplestoraccount5421"
-#       ~ ip_rules                   = [
-#           - "20.246.79.245",
-#           + "172.183.77.19",
-#         ]
-#         # (4 unchanged attributes hidden)
-#     }
-# Plan: 0 to add, 1 to change, 0 to destroy.
-# ╷
-# │ Error: retrieving properties for Blob "script.sh" (Account "Account \"examplestoraccount5421\" (IsEdgeZone false / ZoneName \"\" / Subdomain Type \"blob\" / DomainSuffix \"core.windows.net\")" / Container Name "scripts"): executing request: unexpected status 403 (403 This request is not authorized to perform this operation.) with EOF
-# │ 
-# │   with module.storage_account.azurerm_storage_blob.script_blob,
-# │   on modules/azure_storage_account/main.tf line 61, in resource "azurerm_storage_blob" "script_blob":
-# │   61: resource "azurerm_storage_blob" "script_blob" {
-# │ 
-# #╵
-# ::error::Terraform exited with code 1.
-
-
-
 resource "azurerm_storage_account" "blob_storage_account" {
   name                            = "examplestoraccount5421"
   resource_group_name             = var.resource_group_name
