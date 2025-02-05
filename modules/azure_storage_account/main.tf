@@ -3,16 +3,16 @@
 
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_role_assignment" "storage_account_contributor" {
+/* resource "azurerm_role_assignment" "storage_account_contributor" {
   principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Storage Account Contributor"
   scope                = azurerm_storage_account.blob_storage_account.id
-}
+} */
 
 resource "azurerm_role_assignment" "storage_blob_data_contributor" {
   principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Storage Blob Data Contributor"
-  scope                = azurerm_storage_account.blob_storage_account.id
+  scope                = azurerm_storage_blob.script_blob.id #azurerm_storage_account.blob_storage_account.id
 }
 
 locals {

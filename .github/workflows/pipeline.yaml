@@ -51,7 +51,7 @@ jobs:
 
 
   cicd:
-    runs-on: ubuntu-latest #self-hosted ?? note that it's against github actions recommendations to run self-hosted in public repo
+    runs-on: self-hosted #ubuntu-latest #self-hosted ?? note that it's against github actions recommendations to run self-hosted in public repo
   # https://github.com/idanhom/terraform-firewall/settings/actions/runners/new?arch=x64&os=linux
     environment: azure-deployment
     #needs: docs
