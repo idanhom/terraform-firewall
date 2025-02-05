@@ -80,7 +80,7 @@ jobs:
           
       - name: Print IP (for debugging)
         run: echo "My IP is ${{ steps.discover_ip.outputs.public_ip }}"
-#
+
         # step to delete diagnostic filter in afw from green field deployment using REST API.         
         # current bug. unresolved as of 2025-02-04
         # https://github.com/hashicorp/terraform-provider-azurerm/issues/25673
