@@ -100,21 +100,22 @@ jobs:
             exit 1
           fi
 
-          # Find the resource group containing the Azure Firewall
-          RESOURCE_GROUP=$(az network firewall list --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --query "[0].resourceGroup" -o tsv)
-
-          # Find the firewall name
-          FIREWALL_NAME=$(az network firewall list --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --query "[0].name" -o tsv)
-
-          # Ensure values were found
-          if [ -z "$RESOURCE_GROUP" ] || [ -z "$FIREWALL_NAME" ]; then
-            echo "ERROR: Could not find a firewall in the subscription!"
-            exit 1
+          echo "Listing Azure Firewalls in the subscription..."
+          FIREWALLS=$(az network firewall list --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --query "[].{resourceGroup: resourceGroup, name: name}" -o tsv)
+          
+          # If no firewall is found, skip the deletion step.
+          if [ -z "$FIREWALLS" ]; then
+            echo "No firewall found in the subscription. Skipping diagnostic deletion."
+            exit 0
           fi
+
+          # If there are multiple, pick the first one.
+          RESOURCE_GROUP=$(echo "$FIREWALLS" | awk '{print $1}' | head -n1)
+          FIREWALL_NAME=$(echo "$FIREWALLS" | awk '{print $2}' | head -n1)
 
           echo "Found Firewall: $FIREWALL_NAME in Resource Group: $RESOURCE_GROUP"
 
-          # Construct the correct firewall resource ID
+          # Construct the correct firewall resource ID.
           RESOURCE_URI="/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/azureFirewalls/$FIREWALL_NAME"
 
           echo "Checking existing diagnostic settings for firewall: $RESOURCE_URI"
@@ -126,13 +127,13 @@ jobs:
             echo "Found existing diagnostic setting: $DIAG_SETTING_NAME"
             echo "Attempting to delete it..."
 
-            # Try deleting the diagnostic setting
+            # Try deleting the diagnostic setting.
             az rest --method delete \
               --url "https://management.azure.com${RESOURCE_URI}/providers/Microsoft.Insights/diagnosticSettings/${DIAG_SETTING_NAME}?api-version=2021-05-01-preview"
 
             echo "Waiting for deletion to complete..."
             
-            # Retry check until the setting is fully deleted
+            # Retry check until the setting is fully deleted.
             for i in {1..10}; do
               REMAINING_SETTING=$(az monitor diagnostic-settings list --resource "$RESOURCE_URI" --query "[0].name" -o tsv)
               if [ -z "$REMAINING_SETTING" ]; then
@@ -143,7 +144,7 @@ jobs:
               sleep 10
             done
 
-            # Final check to prevent Terraform failure
+            # Final check to prevent Terraform failure.
             FINAL_SETTING=$(az monitor diagnostic-settings list --resource "$RESOURCE_URI" --query "[0].name" -o tsv)
             if [ -n "$FINAL_SETTING" ]; then
               echo "ERROR: Diagnostic setting was not deleted successfully!"
@@ -152,8 +153,6 @@ jobs:
           else
             echo "No existing diagnostic setting found. Proceeding..."
           fi
-
-
 
 
 
