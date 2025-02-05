@@ -28,31 +28,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          
-
-      - name: Ensure Self-Hosted Runner VM is Running
-        run: |
-          VM_STATE=$(az vm get-instance-view --resource-group terraformstate-rg --name self-hosted-runner --query "instanceView.statuses[?code=='PowerState/running']" -o tsv)
-
-          if [[ -z "$VM_STATE" ]]; then
-            echo "VM is not running. Starting it now..."
-            az vm start --resource-group terraformstate-rg --name self-hosted-runner
-          else
-            echo "VM is already running. Skipping start."
-          fi
-
-
-
-      # - name: Set Azure Subscription
-      #   run: |
-      #     az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      # - name: Verify Azure Subscription
-      #   run: |
-      #     az account show
-
-
-
-
+  
 
       - name: Export Azure env vars for Terraform
         run: |

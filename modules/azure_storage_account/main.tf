@@ -47,9 +47,6 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   default_action             = "Deny" //since using github actions runners, need "Allow" at initial deployment for SP to deploy script. then "Deny". robust solution: self hosted runner with static ip and allow vnet in storage account rule.
   virtual_network_subnet_ids = values(var.subnet_ids)
   ip_rules                   = ["20.123.40.106"] #static ip of self-hosted runner. need to also allow subnet of self-hosted runner    #[var.runner_public_ip] //allow runner ip for github actions deployment through service principal
-  # https://portal.azure.com/#@pson93hotmail.onmicrosoft.com/resource/subscriptions/3e00befb-2b03-4b60-b8a0-faf06ad28b5e/resourceGroups/terraformstate-rg/overview
-  # https://chatgpt.com/g/g-6775826f391c819199a244f33f0d8ac6-github-actions-guru/c/67a20876-3e38-800b-8a4a-ec7ae89e4267
-  # https://github.com/idanhom/terraform-firewall/settings/actions/runners/new?arch=x64&os=linux
 }
 
 resource "azurerm_storage_container" "script_container" {
