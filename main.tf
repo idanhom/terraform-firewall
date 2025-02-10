@@ -95,12 +95,3 @@ module "storage_account" {
   runner_public_ip       = var.runner_public_ip
 }
 
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "main" {
-  name     = "terraform-firewall-rg"
-  location = var.location
-}
-
