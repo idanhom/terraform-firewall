@@ -81,6 +81,10 @@ module "monitoring" {
   log_categories              = var.log_categories
 }
 
+
+
+
+
 module "storage_account" {
   source                 = "./modules/azure_storage_account"
   resource_group_name    = azurerm_resource_group.rg_project.name
@@ -89,5 +93,14 @@ module "storage_account" {
   vnet_ids               = module.networking.vnet_ids
   terraform_sp_object_id = var.terraform_sp_object_id
   runner_public_ip       = var.runner_public_ip
+}
+
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "main" {
+  name     = "terraform-firewall-rg"
+  location = var.location
 }
 
