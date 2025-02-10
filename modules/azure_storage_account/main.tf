@@ -1,19 +1,4 @@
-//break these out in their own module. for having SP upload script (docker.sh) to blob storage.
-//possibly, only storage_blob_data_contributor is needed...
-
 data "azurerm_client_config" "current" {}
-
-/* resource "azurerm_role_assignment" "storage_account_contributor" {
-  principal_id         = data.azurerm_client_config.current.object_id
-  role_definition_name = "Storage Account Contributor"
-  scope                = azurerm_storage_account.blob_storage_account.id
-} */
-
-/* resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-  principal_id         = data.azurerm_client_config.current.object_id
-  role_definition_name = "Storage Blob Data Contributor"
-  scope                = azurerm_storage_blob.script_blob.id #azurerm_storage_account.blob_storage_account.id
-} */
 
 locals {
   scripts_sas_url = format(
@@ -46,7 +31,7 @@ resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id         = azurerm_storage_account.blob_storage_account.id
   default_action             = "Deny" //since using github actions runners, need "Allow" at initial deployment for SP to deploy script. then "Deny". robust solution: self hosted runner with static ip and allow vnet in storage account rule.
   virtual_network_subnet_ids = values(var.subnet_ids)
-  ip_rules                   = ["20.123.40.106"] #static ip of self-hosted runner. need to also allow subnet of self-hosted runner    #[var.runner_public_ip] //allow runner ip for github actions deployment through service principal
+  ip_rules                   = ["20.123.40.106"] //static ip of self-hosted runner. need to also allow subnet of self-hosted runner    #[var.runner_public_ip] //allow runner ip for github actions deployment through service principal
 }
 
 resource "azurerm_storage_container" "script_container" {
@@ -134,4 +119,8 @@ resource "azurerm_private_endpoint" "blob_private_endpoint" {
       azurerm_private_dns_zone.blob_dns_zone.id
     ]
   }
+}
+
+output "script_blob_id" {
+  value = azurerm_storage_blob.script_blob.id
 }

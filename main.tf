@@ -95,3 +95,9 @@ module "storage_account" {
   runner_public_ip       = var.runner_public_ip
 }
 
+module "role_assignment" {
+  source                = "./modules/azure_role_assignment"
+  terraform_sp_object_id = var.terraform_sp_object_id
+  script_blob_id        = module.storage_account.script_blob_id
+}
+
