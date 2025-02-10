@@ -131,7 +131,7 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
 
 # ----------------------------------
 
-# Firewall rule collections
+# Firewall rule collections#
 
 ## Enables compute in vnet1 and vnet2 to communicate directly
 resource "azurerm_firewall_network_rule_collection" "inter_vm_traffic" {
