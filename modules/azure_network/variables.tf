@@ -33,7 +33,7 @@ variable "afw" {
     firewall_name          = string
   })
 }
-
+#
 variable "vnet_route_table" {
   description = "mapping of routes for vnets"
   type = map(map(object({
