@@ -196,7 +196,7 @@ jobs:
             scope                = var.script_blob_id
           }
           EOF
-
+#
       - name: Terraform Plan
         env:
           # inte bra. impelmentera terraform som använder keyvaults och secrets med random module.
