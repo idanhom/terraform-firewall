@@ -16,7 +16,8 @@ terraform {
 }
 #
 provider "azurerm" {
-  storage_use_azuread = true
+  subscription_id       = var.subscription_id
+  storage_use_azuread   = true
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
@@ -99,5 +100,6 @@ module "role_assignment" {
   source                = "./modules/azure_role_assignment"
   terraform_sp_object_id = var.terraform_sp_object_id
   script_blob_id        = module.storage_account.script_blob_id
+  subscription_id       = var.subscription_id
 }
 
