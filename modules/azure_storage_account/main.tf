@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   large_file_share_enabled        = true
   shared_access_key_enabled       = true
 }
-
+#
 
 resource "azurerm_storage_account_network_rules" "storage_rules" {
   storage_account_id         = azurerm_storage_account.blob_storage_account.id
