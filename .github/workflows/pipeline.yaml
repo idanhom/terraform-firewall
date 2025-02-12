@@ -188,8 +188,8 @@ jobs:
 
       - name: Assign Role to Terraform Service Principal
         run: |
-          terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars'
-          terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var-file='dev.tfvars' <<EOF
+          terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var "admin_username=${{ secrets.TF_VAR_admin_username }}" -var "admin_password=${{ secrets.TF_VAR_admin_password }}" -var-file='dev.tfvars'
+          terraform apply -auto-approve -input=false -var "runner_public_ip=${{ steps.discover_ip.outputs.public_ip }}" -var "admin_username=${{ secrets.TF_VAR_admin_username }}" -var "admin_password=${{ secrets.TF_VAR_admin_password }}" -var-file='dev.tfvars' <<EOF
           resource "azurerm_role_assignment" "script_blob_data_contributor" {
             principal_id         = var.terraform_sp_object_id
             role_definition_name = "Storage Blob Data Contributor"
