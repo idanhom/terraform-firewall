@@ -1,3 +1,5 @@
+subscription_id = "3e00befb-2b03-4b60-b8a0-faf06ad28b5e"
+
 resource_group_name = "rg_project1"
 location            = "North Europe"
 
